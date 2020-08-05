@@ -1,0 +1,150 @@
+<div id="addCostModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><%= t('action.add_model', :model => t(:payment_info)) %></h4>
+                <button type="button" data-dismiss="modal" class="close">&times;</button>
+            </div>
+
+            <%= form_tag add_cost_project_task_path(project_task), :method => :post, :remote => true do %>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :category, mt(:project_task_cost, :category) %><span class="text-red">*</span>
+                            <%= select_tag :category, options_for_select(project_task_cost_category_options(project_task)),
+                                           :prompt => default_prompt, :required => true, :class => 'form-control select2' %>
+                        </div>
+                        <div class="col-lg-9 col-12 form-group">
+                            <%= label_tag :template_expert, t(:select_payment_info) %>
+                            <%= select_tag :template_expert, options_for_select(project_task_cost_template_expert_options(project_task)),
+                                           :prompt => t('action.new_model', :model => mt(:candidate_payment_info)), :class => 'form-control select2' %>
+                        </div>
+                        <div class="col-lg-9 col-12 form-group">
+                            <%= label_tag :template_recommend, t(:select_payment_info) %>  <span class="text-gray"><%= "##{project_task.expert.recommender.uid_name}" rescue nil %></span>
+                            <%= select_tag :template_recommend, options_for_select(project_task_cost_template_recommend_options(project_task)),
+                                           :prompt => t('action.new_model', :model => mt(:candidate_payment_info)), :class => 'form-control select2' %>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :price, mt(:project_task_cost, :price) %><span class="text-red">*</span>
+                            <%= number_field_tag :price, nil, :min => 0, :step => 0.01, :required => true, :class => 'form-control' %>
+                        </div>
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :currency, mt(:project_task_cost, :currency) %><span class="text-red">*</span>
+                            <%= select_tag :currency, options_for_select(currency_options), :required => true, :class => 'form-control select2' %>
+                        </div>
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :payment_info_category, mt(:project_task_cost, :payment_way) %><span class="text-red">*</span>
+                            <%= select_tag :'payment_info[category]', options_for_select(CandidatePaymentInfo::CATEGORY.to_a.map(&:reverse)),
+                                           :prompt => default_prompt, :required => true, :class => 'form-control select2' %>
+                        </div>
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :advance_payment, t(:advance_payment) %>
+                            <%= select_tag :advance_payment, options_for_select(boolean_options, false), :class => 'form-control select2' %>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :payment_info_bank, mt(:candidate_payment_info, :bank) %><span class="text-red">*</span>
+                            <%= select_tag :'payment_info[bank]', options_for_select(bank_options), :prompt => default_prompt,
+                                           :required => true, :class => 'form-control select2' %>
+                        </div>
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :payment_info_sub_branch, mt(:candidate_payment_info, :sub_branch) %><span class="text-red">*</span>
+                            <%= text_field_tag :'payment_info[sub_branch]', nil, :class => 'form-control' %>
+                        </div>
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :payment_info_account, mt(:candidate_payment_info, :account) %><span class="text-red">*</span>
+                            <%= text_field_tag :'payment_info[account]', nil, :required => true, :class => 'form-control' %>
+                        </div>
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :payment_info_username, mt(:candidate_payment_info, :username) %><span class="text-red">*</span>
+                            <%= text_field_tag :'payment_info[username]', nil, :required => true, :class => 'form-control' %>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <%= label_tag :memo, mt(:project_task_cost, :memo) %>
+                            <%= text_field_tag :memo, nil, :class => 'form-control' %>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-back"><%= t('action.close') %></button>
+                    <%= submit_tag t('action.submit'), :class => 'btn btn-submit' %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        refresh_template();
+        refresh_payment_info_category();
+        refresh_cost_form();
+    });
+    $('#category').change(function(){ refresh_template(); });  // 费用类型change事件
+    $('#template_expert').change(function(){ refresh_payment_info_category(); });  // 专家支付信息模板change事件
+    $('#template_recommend').change(function(){ refresh_payment_info_category(); });  // 推荐专家支付信息模板change事件
+    $('#payment_info_category').change(function(){ refresh_cost_form(); }); // 支付类型change事件
+
+    // 1.费用类型触发, project_task_cost.category
+    function refresh_template(){
+        let category = $('#category');
+        let template_expert = $('#template_expert');
+        let template_recommend = $('#template_recommend');
+        let advance_payment = $('#advance_payment');
+        template_expert.parent().hide();
+        template_expert.val('').change();
+        template_recommend.parent().hide();
+        template_recommend.val('').change();
+        advance_payment.parent().hide();
+
+        if(category.val() === 'expert'){
+            template_expert.parent().show();
+            advance_payment.parent().show();
+        }else if(category.val() === 'recommend'){
+            template_recommend.parent().show();
+        }
+    }
+    // 2.支付信息模板触发, template of payment_info
+    function refresh_payment_info_category(){
+        let category = document.getElementById('category');
+        let template_expert = document.getElementById('template_expert');
+        let template_recommend = document.getElementById('template_recommend');
+        if(category.value === 'expert' && template_expert.value ){
+            $('#payment_info_category').val('').change();
+            form_deactivate('payment_info_category');
+        }else if(category.value === 'recommend' && template_recommend.value){
+            $('#payment_info_category').val('').change();
+            form_deactivate('payment_info_category');
+        } else{
+            form_activate('payment_info_category');
+        }
+
+    }
+
+    // 3.支付类型触发, payment_info.category
+    function refresh_cost_form(){
+        let payment_info_category = document.getElementById('payment_info_category');
+        if(payment_info_category.value === 'alipay'){
+            form_deactivate('payment_info_bank');
+            form_deactivate('payment_info_sub_branch');
+            form_activate('payment_info_account');
+            form_activate('payment_info_username');
+        }else if(payment_info_category.value === 'unionpay'){
+            form_activate('payment_info_bank');
+            form_activate('payment_info_sub_branch');
+            form_activate('payment_info_account');
+            form_activate('payment_info_username');
+        }else{
+            form_deactivate('payment_info_bank');
+            form_deactivate('payment_info_sub_branch');
+            form_deactivate('payment_info_account');
+            form_deactivate('payment_info_username');
+        }
+    }
+</script>

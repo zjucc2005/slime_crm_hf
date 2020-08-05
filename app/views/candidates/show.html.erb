@@ -1,0 +1,208 @@
+<div class="card">
+    <div class="card-header">
+        <h5><%= fa_icon_tag('user-circle') %> <%= mt(:expert) %></h5>
+        <%#= link_to fa_icon_tag('close'), 'javascript:history.go(-1);', :class => 'card-header-close' %>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 d-flex flex-column flex-lg-row justify-content-between">
+                <h6>
+                    <span class="text-gray mr-3"><%= "# #{@candidate.uid}" %></span>
+                    <span class="dropdown mr-2" style="line-height: 1.5;">
+                        <a class="status <%= candidate_is_available_status(@candidate.is_available) %>" href="#" role="button" id="cia_<%= @candidate.id %>" data-toggle="dropdown"></a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header"><%= mt(:candidate, :is_available) %></div>
+                            <%= link_to t(:true),    update_is_available_candidate_path(@candidate, is_available: true),  :method => :put, :remote => true, :class => 'dropdown-item status valid' %>
+                            <%= link_to t(:pending), update_is_available_candidate_path(@candidate, is_available: nil),   :method => :put, :remote => true, :class => 'dropdown-item status pending' %>
+                            <%= link_to t(:false),   update_is_available_candidate_path(@candidate, is_available: false), :method => :put, :remote => true, :class => 'dropdown-item status invalid' %>
+                        </div>
+                    </span>
+                    <span><%= @candidate.last_name %> <%= @candidate.first_name %></span>
+                </h6>
+
+                <div class="btn-group btn-group-sm">
+                    <div class="btn-group btn-group-sm">
+                        <%= render :partial => 'candidates/widgets/expert_recommendation', :locals => { :candidate => @candidate } %>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <%= render :partial => 'candidates/widgets/expert_card', :locals => { :uid => @candidate.id } %>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <%= render :partial => 'candidates/widgets/related_projects', :locals => { :candidate => @candidate } %>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => @candidate.id } %>
+                    </div>
+                    <%= link_to comments_candidate_path(@candidate), :class => 'btn btn-default' do %>
+                        <%= fa_icon_tag('commenting') %> <%= t(:candidate_comment) %>
+                        <%= count_badge(@candidate.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).count) %>
+                    <% end if can?(:comments, Candidate) %>
+                    <%= link_to project_tasks_candidate_path(@candidate), :class => 'btn btn-default' do %>
+                        <%= fa_icon_tag('list') %> <%= mt(:candidate, :interview_task) %>
+                        <%= count_badge(normal_project_task_count(@candidate)) %>
+                    <% end if can?(:project_tasks, Candidate) %>
+                    <%= link_to payment_infos_candidate_path(@candidate), :class => 'btn btn-default' do %>
+                        <%= fa_icon_tag('user-circle') %> <%= t(:candidate_payment_info) %>
+                        <%= count_badge(@candidate.payment_infos.count) %>
+                    <% end if can?(:payment_infos, Candidate) %>
+                    <%= link_to edit_candidate_path(@candidate), :class => 'btn btn-dark' do %>
+                        <%= fa_icon_tag('edit') %> <%= t('action.edit_model', :model => mt(:expert)) %>
+                    <% end if can?(:edit, Candidate) %>
+                </div>
+            </div>
+        </div>
+
+        <!-- 基本信息 -->
+        <div class="badge badge-info mb-3 px-4"><%= t(:base_info) %></div>
+        <div class="row border-bottom mb-3">
+            <div class="col-12 form-group">
+                <span class="badge badge-primary"><%= show_candidate_category %></span>
+                <span class="badge badge-warning"><%= show_candidate_data_source %></span>
+                <span class="badge badge-light"><%= show_candidate_creator %></span>
+                <span class="badge badge-light"><%= show_timestamps(@candidate) %></span>
+            </div>
+
+            <!-- content -->
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :name) %></span>
+                </div>
+                <%= content_tag :span, @candidate.name, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :nickname) %></span>
+                </div>
+                <%= content_tag :span, @candidate.nickname, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :gender) %></span>
+                </div>
+                <%= content_tag :span, Candidate::GENDER[@candidate.gender], :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :date_of_birth) %></span>
+                </div>
+                <%= content_tag :span, @candidate.date_of_birth.try(:strftime, '%F'), :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :phone) %></span>
+                </div>
+                <%= content_tag :span, @candidate.phone, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :phone1) %></span>
+                </div>
+                <%= content_tag :span, @candidate.phone1, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :city) %></span>
+                </div>
+                <%= content_tag :span, @candidate.city, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :industry) %></span>
+                </div>
+                <%= content_tag :span, @candidate.industry, :class => 'form-control' %>
+            </div>
+
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :email) %></span>
+                </div>
+                <%= content_tag :span, @candidate.email, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :email1) %></span>
+                </div>
+                <%= content_tag :span, @candidate.email1, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :wechat) %></span>
+                </div>
+                <%= content_tag :span, @candidate.property['wechat'], :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><%= mt(:candidate, :recommender_id) %></span>
+                </div>
+                <%= content_tag :span, @candidate.recommender.try(:uid_name), :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :data_channel) %></span>
+                </div>
+                <%= content_tag :span, Candidate::DATA_CHANNEL[@candidate.data_channel] || @candidate.data_channel, :class => 'form-control' %>
+            </div>
+        </div>
+
+        <div class="row border-bottom mb-3">
+            <!--<div class="col-lg-3 col-6 input-group input-group-sm input-group-align">-->
+                <!--<div class="input-group-prepend">-->
+                    <!--<span class="input-group-text"><%= mt(:candidate, :is_available) %></span>-->
+                <!--</div>-->
+                <!--<%= content_tag :span, candidate_is_available_display(@candidate.is_available), :class => 'form-control' %>-->
+            <!--</div>-->
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :cpt) %></span>
+                </div>
+                <%= content_tag :span, @candidate.cpt, :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :currency) %></span>
+                </div>
+                <%= content_tag :span, currency_display(@candidate.currency), :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :cpt_face_to_face) %></span>
+                </div>
+                <%= content_tag :span, @candidate.cpt_face_to_face, :class => 'form-control' %>
+            </div>
+
+
+            <div class="col-12 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :description) %></span>
+                </div>
+                <%= text_area_tag :description, @candidate.description, :rows => 5, :disabled => true, :class => 'form-control bg-white' %>
+            </div>
+        </div>
+
+        <!-- 工作经历 -->
+        <div class="badge badge-info mb-3 px-4"><%= t(:work_experience) %></div>
+        <table class="table table-sm table-striped card-text">
+            <thead>
+            <tr>
+                <th><%= mt(:candidate_experience, :duration) %></th>
+                <th><%= mt(:candidate_experience, :org_cn) %></th>
+                <th><%= mt(:candidate_experience, :org_en) %></th>
+                <th><%= mt(:candidate_experience, :title) %></th>
+                <th><%= mt(:candidate_experience, :duty) %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @candidate.experiences.work.order(:started_at => :desc).each do |exp| %>
+                <tr>
+                    <td style="white-space: nowrap;"><%= exp.friendly_timestamp('%F') %></td>
+                    <td><%= exp.org_cn %></td>
+                    <td><%= exp.org_en %></td>
+                    <td><%= exp.title %></td>
+                    <td style="white-space: pre-line;"><%= exp.description %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>

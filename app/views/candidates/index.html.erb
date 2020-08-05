@@ -1,0 +1,44 @@
+<div class="card p-2 d-flex flex-row mb-1 justify-content-between">
+    <div>
+        <%= link_to new_candidate_path, :class => 'btn btn-primary' do %>
+            <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:expert))}" %>
+        <% end if can?(:new, Candidate) %>
+        <%= render :partial => 'candidates/widgets/btn_import_expert' %>
+        <%= render :partial => 'candidates/widgets/expert_card', :locals => { :uid => nil } %>
+        <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => nil} %>
+    </div>
+    <div>
+        <%= render :partial => 'candidates/widgets/show_history' %>
+        <%= render :partial => 'candidates/widgets/per_page_select' %>
+        <%= render :partial => 'candidates/widgets/search_modal' %>
+    </div>
+</div>
+
+<% if @candidates.any? %>
+    <%= render :partial => 'list_unit' %>
+<% else %>
+    <div class="card p-2">
+        <div class="p-4 text-center">
+            <h5 class="text-gray mb-0"><%= t(:not_found) %></h5>
+        </div>
+    </div>
+<% end %>
+
+<div class="float-bar">
+    <%= button_tag('', :type => 'button', :class => 'float-bar-btn fa fa-map', :title => t(:add_to_project), :data => { :toggle => 'modal', :target => '#addToProjectModal'}) if can?(:add_experts, Project) %>
+    <%= button_tag '', :type => 'button', :class => 'float-bar-btn fa fa-angle-up', :onclick => 'window.scrollTo(0, 0);' %>
+</div>
+
+<script>
+    // 返回锚点
+    $(function() {
+        var _id_ = window.location.hash;
+        if(_id_.startsWith('#')){
+            var m = $(_id_);
+            if(m.offset()){
+                y = m.offset().top - 60;
+                $("html,body").animate({ scrollTop: y }, 500);
+            }
+        }
+    });
+</script>
