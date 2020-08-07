@@ -3,7 +3,7 @@
 echo "============================================="
 echo "`date +"%F %T"` -- running log_cleaner.sh"
 
-log_dir="/opt/rails-app/slime_crm/log"
+log_dir="/opt/rails-app/slime_crm_hf/log"
 log_backup="production.log.backup_`date +"%y%m%d"`"
 cd $log_dir
 echo ">> cd $log_dir"
