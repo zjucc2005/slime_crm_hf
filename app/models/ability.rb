@@ -110,6 +110,8 @@ class Ability
     can [:read, :gen_card, :project_tasks, :comments, :payment_infos], Candidate
     can :manage, Company
     can :manage, Contract
+    can [:index, :show, :project_tasks, :experts], Project
+    can [:show], ProjectTask
     can :manage, Finance
 
     can :manage, LocationDatum
