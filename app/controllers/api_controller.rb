@@ -7,7 +7,8 @@ class ApiController < ApplicationController
   def createExpert
     begin
       load_request_params
-      user_channel = UserChannel.all.order(:id => :asc).first  # default user_channel
+      # user_channel = UserChannel.all.order(:id => :asc).first
+      user_channel = UserChannel.where(name: 'HF').first       # default user_channel
       user = user_channel.users.admin.order(:id => :asc).first # default admin user
       @result = Api::Candidate.create_expert(@request_params, user.id, user_channel.id)
       render :json => @result
