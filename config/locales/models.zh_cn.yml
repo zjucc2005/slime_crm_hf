@@ -64,6 +64,7 @@ zh_cn:
       location_datum: "行政区划数据"
       bank: "银行数据"
       industry: "行业数据"
+      search_alias: "搜索别名数据"
       project: "项目"
       project_requirement: "项目需求"
       project_task: "项目任务"
@@ -214,6 +215,10 @@ zh_cn:
 
       industry:
         name: "名称"
+
+      search_alias:
+        name: "名称"
+        kwlist: "关键词列表"
 
       project:
         name: "项目名称"

@@ -121,6 +121,7 @@ Rails.application.routes.draw do
   end
   resources :banks
   resources :industries
+  resources :search_aliases
   resources :card_templates
 
   resources :statistics do

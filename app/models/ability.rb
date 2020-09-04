@@ -64,6 +64,7 @@ class Ability
     can :manage, LocationDatum
     can :manage, Bank
     can :manage, Industry
+    can :manage, SearchAlias
     can :manage, CardTemplate
     can :manage, Extra
     # can :manage, Statistic

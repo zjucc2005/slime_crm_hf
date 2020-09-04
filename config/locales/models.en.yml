@@ -35,6 +35,7 @@ en:
       location_datum: "Location datum"
       bank: "Bank list"
       industry: "Industry list"
+      search_alias: "Search alias list"
       project: "Project"
       project_requirement: "Project requirement"
       project_task: "Project task"
@@ -185,6 +186,10 @@ en:
 
       industry:
         name: "Name"
+
+      search_alias:
+        name: "Name"
+        kwlist: "Keyword list"
 
       project:
         name: "Project name"

@@ -22,7 +22,6 @@ class CandidatesController < ApplicationController
     # 专家说明
     if params[:description].present?
       @terms = params[:description].split
-      @hl_words += @terms
       if @terms.length > 5
         flash[:error] = t(:keywords_at_most, :limit => 5)
         redirect_to candidates_path and return
@@ -31,9 +30,18 @@ class CandidatesController < ApplicationController
       # or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_experiences.description]
       or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_comments.content]
       @terms.each do |term|
+        sa = SearchAlias.where('kwlist @> ?', term.to_json).first
+        if sa
+          term_plus = sa.kwlist.join('|')
+          @hl_words += sa.kwlist
+        else
+          term_plus = term
+          @hl_words << term
+        end
         # and_conditions << "(#{or_fields.map{|field| "#{field} ~* '#{term}'" }.join(' OR ')})"
-        and_conditions << "(#{or_fields.map{|f| "coalesce(#{f},'')" }.join(' || ')} ~* '#{term}')"
+        and_conditions << "(#{or_fields.map{|f| "coalesce(#{f},'')" }.join(' || ')} ~* '#{term_plus}')"
       end
+      @hl_words.uniq!
       query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id AND candidate_experiences.ended_at IS NULL')
       query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
       query = query.where(and_conditions.join(' AND '))
