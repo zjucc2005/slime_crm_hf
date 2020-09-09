@@ -6,7 +6,7 @@ class SearchAliasesController < ApplicationController
   # GET /search_aliases
   def index
     query = SearchAlias.all
-
+    query = query.where('name ILIKE ? OR kwlist @> ?', params[:name].strip, params[:name].strip.to_json) if params[:name].present?
     @search_aliases = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
