@@ -115,6 +115,7 @@ class Candidate < ApplicationRecord
       when :title        then self.latest_work_experience.try(:title)
       when :expert_level then self._c_t_expert_level
       when :gj_rate      then self._c_t_gj_rate_
+      when :iqvia_rate   then self._c_t_iqvia_rate_
       else nil
     end
   end
@@ -140,6 +141,21 @@ class Candidate < ApplicationRecord
         when 2500..3000 then 5600
         else 'TBD'
       end
+    end
+    _rate_ == 0 ? '' : "电话-#{_rate_}/小时"
+  end
+
+  def _c_t_iqvia_rate_
+    _rate_ = 0
+    if currency == 'RMB'
+      _rate_ = case self.cpt
+                 when 0 then 0
+                 when 0..1000 then 2800
+                 when 1000..1500 then 3600
+                 when 1500..2000 then 4500
+                 when 2000..2500 then 5600
+                 else 'TBD'
+               end
     end
     _rate_ == 0 ? '' : "电话-#{_rate_}/小时"
   end
