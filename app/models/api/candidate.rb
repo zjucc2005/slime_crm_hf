@@ -40,12 +40,12 @@ class Api::Candidate
 
         # execute creation
         ActiveRecord::Base.transaction do
-          candidate = Candidate.expert.create!(@candidate_attr)
+          @candidate = Candidate.expert.create!(@candidate_attr)
           @work_exp_attrs.each do |exp_attr|
-            candidate.experiences.work.create!(exp_attr)
+            @candidate.experiences.work.create!(exp_attr)
           end
         end
-        { status: true, msg: '创建成功' }
+        { status: true, msg: '创建成功', candidate_id: @candidate.id }
       rescue Exception => e
         { status: false, msg: e.message }
       end

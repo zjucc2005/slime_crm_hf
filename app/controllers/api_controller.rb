@@ -7,10 +7,10 @@ class ApiController < ApplicationController
   def createExpert
     begin
       load_request_params
-      # user_channel = UserChannel.all.order(:id => :asc).first
       user_channel = UserChannel.where(name: 'HF').first       # default user_channel
       user = user_channel.users.admin.order(:id => :asc).first # default admin user
       @result = Api::Candidate.create_expert(@request_params, user.id, user_channel.id)
+      @result.merge!(url: candidate_url(id: @result[:candidate_id])) # add candidate url to result
       render :json => @result
     rescue Exception => e
       render :json => { status: false, msg: e.message }
