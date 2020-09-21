@@ -69,6 +69,7 @@
         new ClipboardJS('.clipboard', {
             text: function(){ return $('#expert_info').val(); }
         });
+        getExpertInfo();
     });
     $('#project_task_expert_id').change(function(){
         getExpertInfo();

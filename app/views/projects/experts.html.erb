@@ -91,9 +91,12 @@
                                 </div>
                             </td>
                             <td>
-                                <%= link_to new_candidate_comment_path(candidate_id: expert.id, return_to: request.url) do %>
+                                <%= link_to new_candidate_comment_path(candidate_id: expert.id, return_to: request.url), :class => 'btn btn-info btn-xs' do %>
                                     <%= t('action.add_model', model: mt(:candidate_comment)) %>
                                 <% end if can?(:new, CandidateComment) %>
+                                <%= link_to add_project_task_project_path(@project, expert_id: expert.id, return_to: request.path), :class => 'btn btn-primary btn-xs' do %>
+                                    <%= t('action.add_model', model: mt(:project_task)) %>
+                                <% end if can?(:new, ProjectTask) %>
                             </td>
                         </tr>
                         <tr>
