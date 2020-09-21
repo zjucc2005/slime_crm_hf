@@ -95,7 +95,7 @@ class Candidate < ApplicationRecord
   end
 
   def latest_work_experience
-    experiences.work.order(:started_at => :desc).first
+    experiences.work.order(:started_at => :desc, :ended_at => :desc).first
   end
 
   # new expert has at most 1 task
