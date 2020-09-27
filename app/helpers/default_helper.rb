@@ -59,8 +59,8 @@ module DefaultHelper
     end
   end
 
-  def count_badge(count)
-    content_tag :span, count, :class => 'badge badge-success' if count > 0
+  def count_badge(count, options={})
+    content_tag :span, "#{options[:prefix]}#{count}#{options[:postfix]}", :class => 'badge badge-success' if count > 0
   end
 
   def return_to(default_path)

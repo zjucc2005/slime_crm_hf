@@ -1,0 +1,87 @@
+<div class="card p-2 mb-1 d-flex flex-row justify-content-between">
+    <div>
+        <%= link_to new_call_record_path, :class => 'btn btn-primary' do %>
+            <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:call_record))}" %>
+        <% end if can? :new, CallRecord %>
+    </div>
+    <%= render :partial => 'call_records/widgets/search_modal' %>
+</div>
+
+<% if @call_records.present? %>
+    <div class="card p-2 mb-2">
+        <!--<div class="table-responsive">-->
+            <table class="table table-sm table-striped nowrap card-text">
+                <thead>
+                <tr>
+                    <th><%= check_box_tag :selectAll, nil, nil, :onclick => 'selectAll(this);' %></th>
+                    <th><%= mt(:call_record, :id) %></th>
+                    <th><%= mt(:call_record, :name) %></th>
+                    <th><%= mt(:call_record, :phone) %></th>
+                    <th><%= mt(:call_record, :company) %></th>
+                    <th><%= mt(:call_record, :title) %></th>
+                    <th><%= mt(:call_record, :number_of_calls) %></th>
+                    <th><%= mt(:call_record, :status) %></th>
+                    <th><%= mt(:call_record, :memo) %></th>
+                    <th><%= mt(:call_record, :operator) %></th>
+                    <th><%= mt(:call_record, :created_at) %></th>
+                    <th><%= mt(:call_record, :updated_at) %></th>
+                    <th class="action"><%= t(:operation) %></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @call_records.each do |call_record| %>
+                    <tr>
+                        <td><%= check_box_tag :'uids[]', call_record.id, false %></td>
+                        <td><%= content_tag :span, "# #{call_record.uid}", :class => 'text-gray' %></td>
+                        <td><%= call_record.name %></td>
+                        <td><%= call_record.phone %></td>
+                        <td><%= call_record.company %></td>
+                        <td><%= call_record.title %></td>
+                        <td><%= call_record.number_of_calls %></td>
+                        <td><%= call_record_status_badge(call_record.status) %></td>
+                        <td><%= content_tag :span, truncate(call_record.memo, length: 13), :title => call_record.memo, :class => 'text-link' %></td>
+                        <td><%= call_record.operator.try(:name_cn) %></td>
+                        <td><%= call_record.created_at.strftime('%F %T') %></td>
+                        <td><%= call_record.updated_at.strftime('%F %T') %></td>
+                        <td class="action">
+                            <div class="dropdown dropleft">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <%= fa_icon_tag('cog') %> <%= t(:operation) %>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <%= link_to after_call_call_record_path(call_record, status: 'accepted'), :method => :put, :class => 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-circle-o text-success"></i> <%= call_record_status_badge('accepted') %>
+                                    <% end %>
+                                    <%= link_to after_call_call_record_path(call_record, status: 'declined'), :method => :put, :class => 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-times text-danger"></i> <%= call_record_status_badge('declined') %>
+                                    <% end %>
+                                    <%= link_to after_call_call_record_path(call_record, status: 'missed'), :method => :put, :class => 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-exclamation-circle text-warning"></i> <%= call_record_status_badge('missed') %>
+                                    <% end %>
+                                    <%= link_to after_call_call_record_path(call_record, status: 'pending'), :method => :put, :class => 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-question-circle text-secondary"></i> <%= call_record_status_badge('pending') %>
+                                    <% end %>
+
+                                    <%= link_to edit_call_record_path(call_record), :class => 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-edit text-dark"></i> <%= t('action.edit') %>
+                                    <% end %>
+                                    <%= link_to call_record_path(call_record), :method => :delete, :class => 'dropdown-item text-smaller', :data => { :confirm => t(:sure_to_delete)} do %>
+                                        <i class="fa fa-trash text-danger"></i> <%= t('action.delete') %>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        <!--</div>-->
+    </div>
+    <%= will_paginate @call_records %>
+<% else %>
+    <div class="card p-2">
+        <div class="p-4 text-center">
+            <h5 class="text-gray mb-0"><%= t(:not_found) %></h5>
+        </div>
+    </div>
+<% end %>

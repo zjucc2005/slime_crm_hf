@@ -3,7 +3,7 @@ class ProjectCandidate < ApplicationRecord
   # ENUM
   CATEGORY = { :expert => '专家', :client => '客户' }.stringify_keys
   MARK = {
-    :decline     => '拒绝',
+    :declined    => '拒绝',
     :unsuitable  => '不合适',
     :recommended => '已推荐',
     :interviewed => '已访谈',
@@ -29,6 +29,16 @@ class ProjectCandidate < ApplicationRecord
 
   after_destroy do
     project.last_update
+  end
+
+  def update_mark_by_call_record_status(status)
+    new_mark = {
+      'pending'  => 'pending',
+      'missed'   => 'contacting',
+      'accepted' => 'recommended',
+      'declined' => 'declined'
+    }[status] || 'pending'
+    self.update(mark: new_mark)
   end
 
   private

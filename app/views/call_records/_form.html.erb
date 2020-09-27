@@ -1,0 +1,33 @@
+<%= model_error_tag(@call_record) %>
+
+<div class="row">
+    <div class="col-12 form-group">
+        <span class="badge badge-light"><%= show_creator(@call_record) %></span>
+        <span class="badge badge-light"><%= show_timestamps(@call_record) %></span>
+        <%= link_to "#{mt(:call_record, :project)}: ##{@call_record.project.uid} #{@call_record.project.name}", project_path(@call_record.project_id), :target => '_blank', :class => 'badge badge-light' if @call_record.project_id.present? %>
+        <%= link_to "#{mt(:call_record, :candidate)}: ##{@call_record.candidate.uid} #{@call_record.candidate.name}", candidate_path(@call_record.candidate_id), :target => '_blank', :class => 'badge badge-light' if @call_record.candidate_id.present? %>
+    </div>
+    <%= f.hidden_field :project_id %>
+    <%= f.hidden_field :candidate_id %>
+
+    <div class="col-3 form-group">
+        <%= f.label :name %><span class="text-red">*</span>
+        <%= f.text_field :name, :required => true, :class => 'form-control' %>
+    </div>
+    <div class="col-3 form-group">
+        <%= f.label :phone %><span class="text-red">*</span>
+        <%= f.text_field :phone, :required => true, :class => 'form-control' %>
+    </div>
+    <div class="col-3 form-group">
+        <%= f.label :company %>
+        <%= f.text_field :company, :class => 'form-control' %>
+    </div>
+    <div class="col-3 form-group">
+        <%= f.label :title %>
+        <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <div class="col-12 form-group">
+        <%= f.label :memo %>
+        <%= f.text_area :memo, :rows => 5, :class => 'form-control' %>
+    </div>
+</div>

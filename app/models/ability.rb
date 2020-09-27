@@ -60,6 +60,7 @@ class Ability
     can :manage, ProjectRequirement
     can :manage, ProjectTask
     can :manage, Finance
+    can :manage, CallRecord
 
     can :manage, LocationDatum
     can :manage, Bank
@@ -82,6 +83,7 @@ class Ability
     can :manage, ProjectRequirement
     can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel], ProjectTask
     cannot :manage, Finance
+    can :manage, CallRecord
 
     can :manage, LocationDatum
     can :manage, Bank
@@ -100,6 +102,8 @@ class Ability
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
     can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel], ProjectTask
+    cannot :manage, Finance
+    can :manage, CallRecord
 
     can :manage, LocationDatum
     can :manage, Bank

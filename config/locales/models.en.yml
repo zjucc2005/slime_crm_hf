@@ -41,6 +41,7 @@ en:
       project_task: "Project task"
       finance: "Finance"
       card_template: "Card template"
+      call_record: "Call record"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)
     attributes:
@@ -263,3 +264,17 @@ en:
         payment_way: "Payment way"
         payment_status: "Payment status"
         payment_info: "Payment Info"
+
+      call_record:
+        name: "Name"
+        company: "Company"
+        title: "Title"
+        phone: "Phone"
+        number_of_calls: "Number of calls"
+        status: "Status"
+        memo: "Memo"
+        operator: "Operator"
+        project_id: "Project ID"
+        project: "Project"
+        candidate_id: "Expert ID"
+        candidate: "Expert"

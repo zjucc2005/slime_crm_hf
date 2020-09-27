@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_03_024848) do
+ActiveRecord::Schema.define(version: 2020_09_22_025133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,25 @@ ActiveRecord::Schema.define(version: 2020_09_03_024848) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "call_records", force: :cascade do |t|
+    t.string "name"
+    t.string "company"
+    t.string "title"
+    t.string "phone"
+    t.integer "number_of_calls"
+    t.string "status"
+    t.string "memo"
+    t.bigint "created_by"
+    t.bigint "operator_id"
+    t.bigint "user_channel_id"
+    t.bigint "project_id"
+    t.bigint "candidate_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["candidate_id"], name: "index_call_records_on_candidate_id"
+    t.index ["project_id"], name: "index_call_records_on_project_id"
   end
 
   create_table "candidate_access_logs", force: :cascade do |t|

@@ -115,6 +115,10 @@ Rails.application.routes.draw do
     get :export_finance_excel,        on: :collection
   end
 
+  resources :call_records do
+    put :after_call, on: :member
+  end
+
   resources :location_data do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection

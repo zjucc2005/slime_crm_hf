@@ -70,6 +70,7 @@ zh_cn:
       project_task: "项目任务"
       finance: "财务"
       card_template: "卡片模板"
+      call_record: "通话记录"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)
     attributes:
@@ -292,3 +293,17 @@ zh_cn:
         payment_way: "支付类型"
         payment_status: "支付状态"
         payment_info: "支付信息"
+
+      call_record:
+        name: "姓名"
+        company: "公司"
+        title: "职位"
+        phone: "电话"
+        number_of_calls: "拨打次数"
+        status: "状态"
+        memo: "备注"
+        operator: "操作员"
+        project_id: "关联项目ID"
+        project: "关联项目"
+        candidate_id: "关联专家ID"
+        candidate: "关联专家"

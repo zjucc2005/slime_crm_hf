@@ -46,7 +46,8 @@
                         <th><%= mt(:candidate, :task_count) %></th>
                         <th><%= mt(:candidate, :is_available) %> <%= fa_icon_tag('caret-down') %></th>
                         <th><%= mt(:project_candidate, :mark) %> <%= fa_icon_tag('caret-down') %></th>
-                        <th><%= t(:operation) %></th>
+                        <th><%= mt(:call_record) %></th>
+                        <th class="action"><%= t(:operation) %></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -91,17 +92,31 @@
                                 </div>
                             </td>
                             <td>
-                                <%= link_to new_candidate_comment_path(candidate_id: expert.id, return_to: request.url), :class => 'btn btn-info btn-xs' do %>
-                                    <%= t('action.add_model', model: mt(:candidate_comment)) %>
-                                <% end if can?(:new, CandidateComment) %>
-                                <%= link_to add_project_task_project_path(@project, expert_id: expert.id, return_to: request.path), :class => 'btn btn-primary btn-xs' do %>
-                                    <%= t('action.add_model', model: mt(:project_task)) %>
-                                <% end if can?(:new, ProjectTask) %>
+                                <% cr_count = CallRecord.where(project_id: @project.id, candidate_id: expert.id).count %>
+                                <%= link_to "#{cr_count} 条通话记录", call_records_path(project_id: @project.id, candidate_id: expert.id) if cr_count > 0 %>
+                            </td>
+                            <td class="action">
+                                <div class="dropdown dropleft">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        <%= fa_icon_tag('cog') %> <%= t(:operation) %>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <%= link_to new_candidate_comment_path(candidate_id: expert.id, return_to: request.url), :class => 'dropdown-item text-smaller' do %>
+                                            <i class="fa fa-commenting"></i> <%= t('action.add_model', model: mt(:candidate_comment)) %>
+                                        <% end if can?(:new, CandidateComment) %>
+                                        <%= link_to add_project_task_project_path(@project, expert_id: expert.id, return_to: request.path), :class => 'dropdown-item text-smaller' do %>
+                                            <i class="fa fa-tags"></i> <%= t('action.add_model', model: mt(:project_task)) %>
+                                        <% end if can?(:new, ProjectTask) %>
+                                        <%= link_to new_call_record_path(project_id: @project.id, candidate_id: expert.id, return_to: request.path), :class => 'dropdown-item text-smaller' do %>
+                                            <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
+                                        <% end if can?(:new, CallRecord) %>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="1"></td>
-                            <td colspan="9"><%= truncate(expert.description, length: 90) %>&nbsp;</td>
+                            <td colspan="10"><%= truncate(expert.description, length: 90) %>&nbsp;</td>
                         </tr>
                     <% end %>
                     </tbody>
