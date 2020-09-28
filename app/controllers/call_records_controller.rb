@@ -27,7 +27,16 @@ class CallRecordsController < ApplicationController
 
   # GET /call_records/new
   def new
-    @call_record = CallRecord.new(project_id: params[:project_id], candidate_id: params[:candidate_id])
+    @project = Project.where(id: params[:project_id]).first
+    @candidate = Candidate.where(id: params[:candidate_id]).first
+    related_params = {}
+    related_params.merge!(project_id: @project.id) if @project
+    if @candidate
+      related_params.merge!(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone)
+      exp = @candidate.latest_work_experience
+      related_params.merge!(company: exp.org_cn, title: exp.title) if exp
+    end
+    @call_record = CallRecord.new(related_params)
   end
 
   # POST /call_records
