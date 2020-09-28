@@ -21,9 +21,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-back"><%= t('action.close') %></button>
-                <% if uid.nil? %>
-                    <%= link_to t('action.submit_and_continue_to_add'), 'javascript:void(0)', :onclick => "addExpertToProject(1, #{uid});", :class => 'btn btn-info' %>
-                <% end %>
+                <%= link_to t('action.submit_and_continue_to_add'), 'javascript:void(0)', :onclick => "addExpertToProject(1, #{uid});", :class => 'btn btn-info' %>
                 <%= link_to t('action.submit'), 'javascript:void(0)', :onclick => "addExpertToProject(0, #{uid});", :class => 'btn btn-submit' %>
             </div>
         </div>

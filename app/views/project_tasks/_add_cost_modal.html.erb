@@ -6,6 +6,7 @@
                 <button type="button" data-dismiss="modal" class="close">&times;</button>
             </div>
 
+            <%= hidden_field_tag :expert_cpt, project_task.expert.cpt %>
             <%= form_tag add_cost_project_task_path(project_task), :method => :post, :remote => true do %>
                 <div class="modal-body">
                     <div class="row">
@@ -30,6 +31,7 @@
                         <div class="col-lg-3 col-6 form-group">
                             <%= label_tag :price, mt(:project_task_cost, :price) %><span class="text-red">*</span>
                             <%= number_field_tag :price, nil, :min => 0, :step => 0.01, :required => true, :class => 'form-control' %>
+                            <%= content_tag :span, '参考值: 100 * 60', :id => 'price_tips', :class => 'phone-location' %>
                         </div>
                         <div class="col-lg-3 col-6 form-group">
                             <%= label_tag :currency, mt(:project_task_cost, :currency) %><span class="text-red">*</span>
@@ -109,6 +111,7 @@
         }else if(category.val() === 'recommend'){
             template_recommend.parent().show();
         }
+        refresh_price_tips();
     }
     // 2.支付信息模板触发, template of payment_info
     function refresh_payment_info_category(){
@@ -147,4 +150,18 @@
             form_deactivate('payment_info_username');
         }
     }
+
+    // 显示费用参考值
+    function refresh_price_tips(){
+        let category = $('#category');
+        let price_tips = $('#price_tips');
+        let charge_duration = $('#project_task_charge_duration').val();
+        let expert_cpt = $('#expert_cpt').val();
+        if(category.val() === 'expert'){
+            price_tips.html('参考值: ' + [expert_cpt, charge_duration].join(', ') + 'min');
+        } else {
+            price_tips.html('');
+        }
+    }
+
 </script>
