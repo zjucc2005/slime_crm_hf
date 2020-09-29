@@ -30,6 +30,10 @@ class CallRecord < ApplicationRecord
     end
   end
 
+  def can_add_to_candidate?
+    candidate_id.blank?
+  end
+
   private
   def setup
     self.status          ||= 'pending'

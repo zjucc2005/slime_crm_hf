@@ -97,6 +97,14 @@ class CallRecordsController < ApplicationController
     redirect_to call_records_path
   end
 
+  # GET /call_records/:id/add_to_candidate
+  def add_to_candidate
+    load_call_record
+    first_name, last_name = Candidate.name_split(@call_record.name.strip)
+    phone = @call_record.phone.strip
+    redirect_to new_candidate_path(first_name: first_name, last_name: last_name, phone: phone)
+  end
+
   private
   def call_record_params
     params.require(:call_record).permit(:name, :phone, :company, :title, :memo, :project_id, :candidate_id)

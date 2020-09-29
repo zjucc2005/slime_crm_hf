@@ -70,7 +70,12 @@ class CandidatesController < ApplicationController
 
   # GET /candidates/new
   def new
-    @candidate = Candidate.new(recommender_id: params[:recommender_id])
+    @candidate = Candidate.new(
+      last_name: params[:last_name],
+      first_name: params[:first_name],
+      phone: params[:phone],
+      recommender_id: params[:recommender_id]
+    )
   end
 
   # POST /candidates
