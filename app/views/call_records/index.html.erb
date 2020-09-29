@@ -36,9 +36,9 @@
                     <td><%= content_tag :span, "# #{call_record.uid}", :class => 'text-gray' %></td>
                     <td><%= content_tag :i, nil, :class => 'fa fa-user-circle', :title => '项目内专家' if call_record.project_id %></td>
                     <td><%= call_record.name %></td>
-                    <td><%= call_record.phone %></td>
-                    <td><%= call_record.company %></td>
-                    <td><%= call_record.title %></td>
+                    <td title="<%= call_record.phone %>"><%= truncate(call_record.phone, length: 14) %></td>
+                    <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
+                    <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
                     <td><%= call_record.number_of_calls %></td>
                     <td><%= call_record_status_badge(call_record.status) %></td>
                     <td><%= content_tag :span, truncate(call_record.memo, length: 13), :title => call_record.memo, :class => 'text-link' %></td>
