@@ -269,7 +269,7 @@ class CandidatesController < ApplicationController
       end
 
       if @errors.blank?
-        flash[:notice] = t(:operation_succeeded)
+        flash[:success] = t(:operation_succeeded)
         redirect_to candidates_path
       else
         render :import_expert

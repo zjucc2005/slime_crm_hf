@@ -3,7 +3,7 @@ module Utils
   class ExpertTemplateParser
     # 解析专家导入模板
 
-    attr_accessor :errors, :row, :created_by, :candidate_attr, :work_exp_attrs
+    attr_accessor :errors, :row, :created_by, :user_channel_id, :candidate_attr, :work_exp_attrs
 
     def initialize(row, created_by=nil, user_channel_id=nil)
       @row = row.map(&method(:cell_strip))

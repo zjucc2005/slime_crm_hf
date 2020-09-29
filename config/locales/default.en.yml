@@ -7,6 +7,7 @@ en:
   advance_payment: "Advance payment"
   available_interpolation: "Available interpolation"
   base_info: "Base info"
+  batch_import: "Batch import"
   begin: "Begin"
   browsing_history: "Browsing history"
   candidate_comment: "Comments"

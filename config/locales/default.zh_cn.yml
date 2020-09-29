@@ -7,6 +7,7 @@ zh_cn:
   advance_payment: "是否垫付"
   available_interpolation: "可用插值"
   base_info: "基本信息"
+  batch_import: "批量导入"
   begin: "开始"
   browsing_history: "浏览历史"
   candidate_comment: "专家备注"

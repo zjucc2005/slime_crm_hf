@@ -118,6 +118,8 @@ Rails.application.routes.draw do
   resources :call_records do
     put :after_call, on: :member
     get :add_to_candidate, on: :member
+
+    post :batch_import, on: :collection
   end
 
   resources :location_data do
