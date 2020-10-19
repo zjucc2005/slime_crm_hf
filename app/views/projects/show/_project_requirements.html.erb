@@ -25,7 +25,7 @@
                     <tr>
                         <td style="white-space: pre-line;"><%= requirement.content %></td>
                         <td><%= requirement.demand_number %></td>
-                        <td><%= link_to requirement.file.url do %><%= fa_icon_tag('download') %><% end if requirement.file.present? %></td>
+                        <td><%= link_to requirement.file.url, :title => requirement.file.identifier do %><%= fa_icon_tag('download') %><% end if requirement.file.present? %></td>
                         <td><%= project_requirement_status_badge(requirement.status) %></td>
                         <td><%= requirement.creator.name_cn %></td>
                         <td class="text-nowrap"><%= requirement.created_at.strftime('%F %H:%M') %></td>
