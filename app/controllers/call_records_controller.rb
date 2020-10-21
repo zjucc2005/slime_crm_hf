@@ -6,7 +6,7 @@ class CallRecordsController < ApplicationController
 
   # GET /call_records
   def index
-    query = CallRecord.all
+    query = current_user.admin? ? CallRecord.all : CallRecord.where(operator_id: current_user.id)
     query = user_channel_filter(query)
     query = query.where('created_at >= ?', params[:created_at_ge]) if params[:created_at_ge].present?
     query = query.where('created_at <= ?', params[:created_at_le]) if params[:created_at_le].present?
@@ -21,9 +21,9 @@ class CallRecordsController < ApplicationController
   end
 
   # GET /call_records/:id
-  def show
-    load_call_record
-  end
+  # def show
+  #   load_call_record
+  # end
 
   # GET /call_records/new
   def new
@@ -41,7 +41,7 @@ class CallRecordsController < ApplicationController
 
   # POST /call_records
   def create
-    @call_record = CallRecord.new(call_record_params.merge(operator_id: current_user.id))
+    @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
     if @call_record.save
       flash[:success] = t(:operation_succeeded)
       redirect_to call_records_path
@@ -59,7 +59,7 @@ class CallRecordsController < ApplicationController
   def update
     load_call_record
 
-    if @call_record.update(call_record_params.merge(operator_id: current_user.id))
+    if @call_record.update(call_record_params)
       flash[:success] = t(:operation_succeeded)
       redirect_to call_records_path
     else
@@ -79,22 +79,48 @@ class CallRecordsController < ApplicationController
     redirect_to call_records_path
   end
 
+  # GET /call_records/:id/edit_operator
+  def edit_operator
+    load_call_record
+  end
+
+  # PUT /call_records/:id/update_operator
+  def update_operator
+    load_call_record
+
+    if @call_record.update(call_record_params)
+      flash[:success] = t(:operation_succeeded)
+      redirect_to call_records_path
+    else
+      render :edit_operator
+    end
+  end
+
   # PUT /call_records/:id/after_call?status=pending
   def after_call
     load_call_record
 
     ActiveRecord::Base.transaction do
       @call_record.number_of_calls += 1
-      @call_record.status = params[:status]
-      @call_record.operator_id = current_user.id
+      if params[:status] == 'accept_and_add_to_candidate'
+        @call_record.status = 'accepted'
+      else
+        @call_record.status = params[:status]
+      end
       @call_record.save!
 
       project_candidate = @call_record.project_candidate
       project_candidate.update_mark_by_call_record_status(@call_record.status) if project_candidate  # 同步更新项目内专家标识
     end
 
-    flash[:success] = t(:operation_succeeded)
-    redirect_to call_records_path
+    if params[:status] == 'accept_and_add_to_candidate'
+      first_name, last_name = Candidate.name_split(@call_record.name.strip)
+      phone = @call_record.phone.strip
+      redirect_to new_candidate_path(first_name: first_name, last_name: last_name, phone: phone)
+    else
+      flash[:success] = t(:operation_succeeded)
+      redirect_to call_records_path
+    end
   end
 
   # GET /call_records/:id/add_to_candidate
@@ -132,11 +158,12 @@ class CallRecordsController < ApplicationController
 
   private
   def call_record_params
-    params.require(:call_record).permit(:name, :phone, :company, :title, :memo, :project_id, :candidate_id)
+    params.require(:call_record).permit(:name, :phone, :company, :title, :status, :memo, :project_id, :candidate_id, :operator_id)
   end
 
   def load_call_record
     @call_record = CallRecord.find(params[:id])
+    raise t(:not_authorized) unless @call_record.can_be_edited_by(current_user)
   end
 
 end

@@ -116,6 +116,8 @@ Rails.application.routes.draw do
   end
 
   resources :call_records do
+    get :edit_operator, on: :member
+    put :update_operator, on: :member
     put :after_call, on: :member
     get :add_to_candidate, on: :member
 

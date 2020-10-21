@@ -26,6 +26,11 @@
         <%= f.label :title %>
         <%= f.text_field :title, :class => 'form-control' %>
     </div>
+    <div class="col-3 form-group">
+        <%= f.label :status %>
+        <%= f.select :status, CallRecord::STATUS.to_a.map(&:reverse), { :include_blank => false }, :class => 'form-control select2' %>
+    </div>
+
     <div class="col-12 form-group">
         <%= f.label :memo %>
         <%= f.text_area :memo, :rows => 5, :class => 'form-control' %>

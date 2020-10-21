@@ -3,6 +3,7 @@ zh_cn:
   false: "否"
   pending: "待定"
 
+  accept_and_add_to_candidate: "接受并新建专家"
   add_to_project: "添加到项目"
   advance_payment: "是否垫付"
   available_interpolation: "可用插值"
@@ -13,6 +14,7 @@ zh_cn:
   candidate_comment: "专家备注"
   candidate_payment_info: "支付信息"
   cannot_delete: "不能删除"
+  change_operator: "变更操作员"
   charge_info: "收费信息"
   client_contact: "客户联系人"
   company_signed: "已签约"

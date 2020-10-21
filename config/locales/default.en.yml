@@ -3,6 +3,7 @@ en:
   false: "No"
   pending: "Pending"
 
+  accept_and_add_to_candidate: "Accept & Add expert"
   add_to_project: "Add to project"
   advance_payment: "Advance payment"
   available_interpolation: "Available interpolation"
@@ -13,6 +14,7 @@ en:
   candidate_comment: "Comments"
   candidate_payment_info: "Payment infos"
   cannot_delete: "Unable to delete"
+  change_operator: "Change operator"
   charge_info: "Charge info"
   client_contact: "Client contact"
   company_signed: "Signed"

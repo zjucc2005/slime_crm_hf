@@ -34,12 +34,16 @@ class CallRecord < ApplicationRecord
     candidate_id.blank?
   end
 
+  def can_be_edited_by(user)
+    user.admin? || self.operator_id == user.id
+  end
+
   private
   def setup
     self.status          ||= 'pending'
-    self.number_of_calls ||= 0
-    self.created_by      ||= self.operator_id
-    self.user_channel_id ||= self.operator.user_channel_id
+    self.number_of_calls ||= 1
+    self.operator_id     ||= self.created_by
+    self.user_channel_id ||= self.creator.user_channel_id
   end
 
 end

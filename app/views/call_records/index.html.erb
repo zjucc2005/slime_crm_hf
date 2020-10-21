@@ -35,7 +35,7 @@
                     <td><%= check_box_tag :'uids[]', call_record.id, false %></td>
                     <td><%= content_tag :span, "# #{call_record.uid}", :class => 'text-gray' %></td>
                     <td><%= content_tag :i, nil, :class => 'fa fa-user-circle', :title => '项目内专家' if call_record.project_id %></td>
-                    <td><%= call_record.name %></td>
+                    <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
                     <td title="<%= call_record.phone %>"><%= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %></td>
                     <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
                     <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
@@ -54,6 +54,9 @@
                                 <%= link_to after_call_call_record_path(call_record, status: 'accepted'), :method => :put, :class => 'dropdown-item text-smaller' do %>
                                     <i class="fa fa-circle-o text-success"></i> <%= call_record_status_badge('accepted') %>
                                 <% end %>
+                                <%= link_to after_call_call_record_path(call_record, status: 'accept_and_add_to_candidate'), :method => :put, :class => 'dropdown-item text-smaller' do %>
+                                    <i class="fa fa-circle-o text-success"></i> <%= call_record_status_badge('accept_and_add_to_candidate') %>
+                                <% end if call_record.can_add_to_candidate? %>
                                 <%= link_to after_call_call_record_path(call_record, status: 'declined'), :method => :put, :class => 'dropdown-item text-smaller' do %>
                                     <i class="fa fa-times text-danger"></i> <%= call_record_status_badge('declined') %>
                                 <% end %>
@@ -68,6 +71,9 @@
                                 <% end if call_record.can_add_to_candidate? %>
                                 <%= link_to edit_call_record_path(call_record), :class => 'dropdown-item text-smaller' do %>
                                     <i class="fa fa-edit"></i> <%= t('action.edit') %>
+                                <% end %>
+                                <%= link_to edit_operator_call_record_path(call_record), :class => 'dropdown-item text-smaller' do %>
+                                    <i class="fa fa-exchange"></i> <%= t(:change_operator) %>
                                 <% end %>
                                 <%= link_to call_record_path(call_record), :method => :delete, :class => 'dropdown-item text-smaller', :data => { :confirm => t(:sure_to_delete)} do %>
                                     <i class="fa fa-trash"></i> <%= t('action.delete') %>
