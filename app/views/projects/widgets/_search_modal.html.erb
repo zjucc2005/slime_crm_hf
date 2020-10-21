@@ -57,6 +57,14 @@
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-back"><%= t('action.close') %></button>
                         <%= submit_tag t('action.search'), :class => 'btn btn-submit' %>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                                <%= t('action.search_and_export') %>
+                            </button>
+                            <div class="dropdown-menu">
+                                <%= submit_tag 'Weekly update', :class => 'dropdown-item' %>
+                            </div>
+                        </div>
                     </div>
                 <% end %>
             </div>

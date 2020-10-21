@@ -20,6 +20,12 @@ class ProjectsController < ApplicationController
       query = query.joins(:company).where('companies.name ILIKE :company OR companies.name_abbr ILIKE :company', { company: "%#{params[:company].strip}%" })
     end
 
+    # export excel files
+    case params[:commit]
+      when 'Weekly update' then export_projects(query.order(:created_at => :desc), category='weekly_update') and return
+      else nil
+    end
+
     @projects = query.order(:updated_at => :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
@@ -399,5 +405,63 @@ class ProjectsController < ApplicationController
   # 加载客户公司
   def load_signed_company_options
     @signed_company_options = user_channel_filter(Company.signed).pluck(:name, :id)
+  end
+
+  # 导出项目信息
+  def export_projects(query, category)
+    query_limit = 1000  # export data limit
+    if query.count > query_limit
+      flash[:error] = "导出数据条目过多, 当前: #{query.count}, 最大: #{query_limit}"
+      redirect_to projects_path and return
+    end
+
+    template_path = case category
+                      when 'weekly_update' then 'public/templates/project_weekly_update_template.xlsx'
+                      else ''
+                    end
+
+    raise 'template file not found' unless File.exist?(template_path)
+    book = ::RubyXL::Parser.parse(template_path)                      # read from template file
+    sheet = book[0]
+
+    case category
+      when 'weekly_update' then set_sheet_weekly_update(sheet, query)
+      else raise("invalid category[#{category}]")
+    end
+
+    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p file_dir unless File.exist? file_dir
+    file_path = "#{file_dir}/projects_#{category}_#{current_user.id}_#{Time.now.strftime('%H%M%S')}.xlsx"
+    book.write file_path
+    send_file file_path
+  end
+
+  def set_sheet_weekly_update(sheet, query)
+    current_week = Time.now.beginning_of_week
+    row = 1
+    query.each do |project|
+      if project.created_at >= current_week
+        project_phase = 'New'
+      elsif project.updated_at < Time.now - 1.week  # 1周内未更新的项目
+        project_phase = 'Pending'
+      else
+        project_phase = 'On-going'
+      end
+      current_week_task_count = project.project_tasks.where(status: 'finished').where('started_at >= ?', current_week).count
+
+      sheet.add_cell(row, 0, project.code)                                      # 项目号/项目代码
+      sheet.add_cell(row, 1, project.name)                                      # 项目名称
+      sheet.add_cell(row, 2, project.created_at.strftime('%F'))                 # 收到项目日期/创建日期
+      sheet.add_cell(row, 3, project_phase)                                     # 项目阶段 [new/on-going/pending]
+      sheet.add_cell(row, 4, project.project_requirements.sum(:demand_number))  # 计划出Call/项目需求总人数
+      sheet.add_cell(row, 5, current_week_task_count)                           # 本周出Call / 本周完成任务数
+      sheet.add_cell(row, 6, '')                                                # 下周预计出Call
+      sheet.add_cell(row, 7, '')                                                # 备注
+      row += 1
+    end
+
+    sheet.add_cell(row, 3, '小计')
+    sheet.add_cell(row, 4, '', "SUM(E2:E#{row})")
+    sheet.add_cell(row, 5, '', "SUM(F2:F#{row})")
   end
 end
