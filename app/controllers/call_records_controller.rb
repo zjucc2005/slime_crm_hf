@@ -44,7 +44,7 @@ class CallRecordsController < ApplicationController
     @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
     if @call_record.save
       flash[:success] = t(:operation_succeeded)
-      redirect_to call_records_path
+      redirect_with_return_to call_records_path
     else
       render :new
     end

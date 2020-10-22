@@ -364,6 +364,20 @@ class CandidatesController < ApplicationController
     end
   end
 
+  # GET /candidates/loading_modal?category=newCallRecord&reference_id=1
+  def loading_modal
+    @category = params[:category]
+    if @category == 'newCallRecord'
+      @candidate = Candidate.find(params[:reference_id])
+      exp = @candidate.latest_work_experience
+      @call_record = CallRecord.new(name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), title: exp.try(:title))
+      @modal_title = t('action.new_model', :model => t('activerecord.models.call_record'))
+      @modal_body_form = 'candidates/loading_modal/new_call_record_form'
+    end
+
+    respond_to { |f| f.js }
+  end
+
   private
   def load_candidate
     @candidate = Candidate.find(params[:id])

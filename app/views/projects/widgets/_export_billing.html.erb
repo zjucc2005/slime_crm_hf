@@ -1,0 +1,14 @@
+<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <%= t(:project_billing_excel) %>
+</button>
+<div class="dropdown-menu">
+    <%= link_to '', :class => 'dropdown-item', :onclick => "exportFinanceExcel('cn');" do %>
+        中文模板
+    <% end %>
+    <%= link_to '', :class => 'dropdown-item', :onclick => "exportFinanceExcel('en');" do %>
+        英文模板
+    <% end %>
+    <%= link_to '', :class => 'dropdown-item', :onclick => "exportFinanceExcel('expert_fee')" do %>
+        专家费打款
+    <% end %>
+</div>

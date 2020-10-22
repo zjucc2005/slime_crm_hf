@@ -52,6 +52,8 @@ Rails.application.routes.draw do
 
     get :expert_info_for_clipboard, on: :member
     get :recommender_info, on: :collection
+
+    get :loading_modal, on: :collection
   end
 
   resources :candidate_payment_infos
@@ -88,6 +90,8 @@ Rails.application.routes.draw do
 
     get :experts,       on: :member
     get :project_tasks, on: :member
+
+    get :export_billing_excel, on: :member  # 导出项目出账模板
   end
 
   resources :project_requirements do

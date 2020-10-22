@@ -68,10 +68,19 @@
                     <span><%= content_tag(:i, nil, :class => 'fa fa-flag text-red') if comment.is_top? %><%= truncate(comment.content, length: 20) %></span>
                 </div>
             <% end %>
-            <div class="text-smaller">
-                <%= link_to new_candidate_comment_path(candidate_id: candidate.id, return_to: "#{request.url}#cid_#{candidate.id}") do %>
-                    <%= t('action.add_model', model: mt(:candidate_comment)) %>
-                <% end if can?(:new, CandidateComment) %>
+
+            <div class="dropdown">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                    <%= fa_icon_tag('cog') %> <%= t(:operation) %>
+                </button>
+                <div class="dropdown-menu">
+                    <%= link_to new_candidate_comment_path(candidate_id: candidate.id, return_to: "#{request.url}#cid_#{candidate.id}"), :class => 'dropdown-item text-smaller' do %>
+                        <i class="fa fa-commenting"></i> <%= t('action.add_model', model: mt(:candidate_comment)) %>
+                    <% end if can?(:new, CandidateComment) %>
+                    <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id})", :class => 'dropdown-item text-smaller' do %>
+                        <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
+                    <% end %>
+                </div>
             </div>
         </div>
     </div>

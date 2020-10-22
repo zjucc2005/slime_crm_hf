@@ -380,6 +380,11 @@ class ProjectsController < ApplicationController
     @project_tasks = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
+  # GET /projects/:id/export_billing_excel?mode=1
+  def export_billing_excel
+
+  end
+
   private
   def load_project
     @project = Project.find(params[:id])

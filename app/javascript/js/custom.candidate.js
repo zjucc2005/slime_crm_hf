@@ -83,6 +83,10 @@ window.showRecommenderName = function(obj_id){
     })
 };
 
+window.loadingModal = function(category, reference_id){
+    $.get('/candidates/loading_modal.js?category=' + category + '&reference_id=' + reference_id);
+};
+
 window.clipboard = function(element){
     selectText(element);
     document.execCommand('copy');
