@@ -15,12 +15,13 @@
         </div>
 
         <%= form_for @candidate_payment_info do |f| %>
-                <%= render :partial => 'form', :locals => { :f => f } %>
+            <%= model_error_tag(@candidate_payment_info) %>
+            <%= render :partial => 'form', :locals => { :f => f } %>
 
-                <div class="form-group mb-0">
-                    <%= f.submit t('action.submit'), :class => 'btn btn-submit' %>
-                    <%= link_to t('action.back'), 'javascript:history.go(-1);', :class => 'btn btn-back' %>
-                </div>
+            <div class="form-group mb-0">
+                <%= f.submit t('action.submit'), :class => 'btn btn-submit' %>
+                <%= link_to t('action.back'), 'javascript:history.go(-1);', :class => 'btn btn-back' %>
+            </div>
         <% end %>
     </div>
 </div>

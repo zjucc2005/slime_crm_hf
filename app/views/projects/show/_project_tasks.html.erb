@@ -19,7 +19,8 @@
                     <th><%= mt(:project_task, :interview_form) %></th>
                     <th><%= mt(:expert) %></th>
                     <th><%= mt(:project_task, :started_at) %></th>
-                    <th><%= mt(:project_task, :duration_min) %></th>
+                    <th><%= mt(:project_task, :duration) %></th>
+                    <th><%= mt(:project_task, :charge_duration) %></th>
                     <th class="action"><%= t(:operation) %></th>
                 </tr>
                 </thead>
@@ -32,6 +33,7 @@
                         <td><%= task.expert.name %></td>
                         <td><%= task.started_at.strftime('%F %H:%M') %></td>
                         <td><%= task.duration %></td>
+                        <td><%= task.charge_duration %></td>
                         <td class="action">
                             <%= link_to edit_project_task_path(task), :class => 'btn btn-dark btn-xs' do %>
                                 <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
@@ -43,7 +45,7 @@
                     </tr>
                 <% end %>
                 <tr>
-                    <td colspan="7" class="text-center">
+                    <td colspan="8" class="text-center">
                         <%= link_to '...', project_tasks_project_path(@project), :title => t(:show_all) %>
                     </td>
                 </tr>

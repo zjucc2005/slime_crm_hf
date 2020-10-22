@@ -15,6 +15,7 @@
         </div>
 
         <%= form_for @payment_info, :url => create_payment_info_candidate_path(@candidate), :method => :post do |f| %>
+            <%= model_error_tag(@payment_info) %>
             <%= render :partial => 'candidate_payment_infos/form', :locals => { :f => f } %>
 
             <div class="form-group mb-0">

@@ -31,7 +31,7 @@
                         <div class="col-lg-3 col-6 form-group">
                             <%= label_tag :price, mt(:project_task_cost, :price) %><span class="text-red">*</span>
                             <%= number_field_tag :price, nil, :min => 0, :step => 0.01, :required => true, :class => 'form-control' %>
-                            <%= content_tag :span, '参考值: 100 * 60', :id => 'price_tips', :class => 'phone-location' %>
+                            <%= content_tag :span, '', :id => 'price_tips', :class => 'phone-location' %>
                         </div>
                         <div class="col-lg-3 col-6 form-group">
                             <%= label_tag :currency, mt(:project_task_cost, :currency) %><span class="text-red">*</span>
@@ -64,6 +64,10 @@
                         <div class="col-lg-3 col-6 form-group">
                             <%= label_tag :payment_info_username, mt(:candidate_payment_info, :username) %><span class="text-red">*</span>
                             <%= text_field_tag :'payment_info[username]', nil, :required => true, :class => 'form-control' %>
+                        </div>
+                        <div class="col-lg-6 col-12 form-group">
+                            <%= label_tag :payment_info_id_number, mt(:candidate_payment_info, :id_number) %>
+                            <%= text_field_tag :'payment_info[id_number]', nil, :class => 'form-control' %>
                         </div>
                     </div>
                     <div class="row">
@@ -138,16 +142,19 @@
             form_deactivate('payment_info_sub_branch');
             form_activate('payment_info_account');
             form_activate('payment_info_username');
+            form_hide('payment_info_id_number');
         }else if(payment_info_category.value === 'unionpay'){
             form_activate('payment_info_bank');
             form_activate('payment_info_sub_branch');
             form_activate('payment_info_account');
             form_activate('payment_info_username');
+            form_show('payment_info_id_number');
         }else{
             form_deactivate('payment_info_bank');
             form_deactivate('payment_info_sub_branch');
             form_deactivate('payment_info_account');
             form_deactivate('payment_info_username');
+            form_hide('payment_info_id_number');
         }
     }
 
@@ -158,7 +165,8 @@
         let charge_duration = $('#project_task_charge_duration').val();
         let expert_cpt = $('#expert_cpt').val();
         if(category.val() === 'expert'){
-            price_tips.html('参考值: ' + [expert_cpt, charge_duration].join(', ') + 'min');
+            var refer_fee = (parseFloat(expert_cpt) * parseInt(charge_duration) / 60).toFixed(1);
+            price_tips.html('参考值: ' + [refer_fee, expert_cpt, charge_duration].join(', ') + 'min');
         } else {
             price_tips.html('');
         }
