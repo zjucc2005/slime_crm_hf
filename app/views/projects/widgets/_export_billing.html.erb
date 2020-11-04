@@ -2,13 +2,7 @@
     <%= t(:project_billing_excel) %>
 </button>
 <div class="dropdown-menu">
-    <%= link_to '', :class => 'dropdown-item', :onclick => "exportFinanceExcel('cn');" do %>
-        中文模板
-    <% end %>
-    <%= link_to '', :class => 'dropdown-item', :onclick => "exportFinanceExcel('en');" do %>
-        英文模板
-    <% end %>
-    <%= link_to '', :class => 'dropdown-item', :onclick => "exportFinanceExcel('expert_fee')" do %>
-        专家费打款
+    <%= link_to export_billing_excel_project_path(@project, mode: 'iqvia_settlement'), :class => 'dropdown-item text-smaller' do %>
+        IQVIA结算模板
     <% end %>
 </div>

@@ -1,4 +1,10 @@
 # encoding: utf-8
+require 'rubyXL/convenience_methods/cell'
+require 'rubyXL/convenience_methods/color'
+require 'rubyXL/convenience_methods/font'
+require 'rubyXL/convenience_methods/workbook'
+require 'rubyXL/convenience_methods/worksheet'
+
 class ProjectsController < ApplicationController
   load_and_authorize_resource
   before_action :authenticate_user!
@@ -382,7 +388,16 @@ class ProjectsController < ApplicationController
 
   # GET /projects/:id/export_billing_excel?mode=1
   def export_billing_excel
-
+    load_project
+    begin
+      case params[:mode]
+        when 'iqvia_settlement' then export_iqvia_settlement_template(@project)
+        else raise('params error')
+      end
+    rescue Exception => e
+      flash[:error] = e.message
+      redirect_to project_path(@project)
+    end
   end
 
   private
@@ -468,5 +483,69 @@ class ProjectsController < ApplicationController
     sheet.add_cell(row, 3, '小计')
     sheet.add_cell(row, 4, '', "SUM(E2:E#{row})")
     sheet.add_cell(row, 5, '', "SUM(F2:F#{row})")
+  end
+
+  def export_iqvia_settlement_template(project)
+    template_path = 'public/templates/iqvia_settlement_template.xlsx'
+    raise 'template file not found' unless File.exist?(template_path)
+
+    color1 = '000080' # 主色调, 普蓝
+    color2 = 'CCCCFF' # 辅色调, 浅蓝
+    bottom_text = '备注:关于本执行单的最终解释权归IQVIA。如有更新版本，以更新版为准。'
+    book = ::RubyXL::Parser.parse(template_path)                      # read from template file
+    sheet = book[0]
+
+    sheet.add_cell(3, 3, project.code) # D1
+    sheet.sheet_data[3][3].change_horizontal_alignment('left') # D1 align to left
+    # sheet.sheet_data[9][0].change_fill(color1)
+
+    row = 11  # 任务表格起始行
+    project.project_tasks.where(status: 'finished').order(:started_at => :asc).each_with_index do |task, index|
+      # 内容填充 >> code here
+      sheet.add_cell(row, 0, index + 1)  # 代理编号
+      sheet.add_cell(row, 1, '公司名称')  # 公司名称
+      sheet.add_cell(row, 2, '配额描述')  # 配额描述
+      sheet.add_cell(row, 3, '城市')  # 城市
+      sheet.add_cell(row, 4, '预计样本量')  # 预计样本量
+      sheet.add_cell(row, 5, '实际样本量')  # 实际样本量
+      sheet.add_cell(row, 6, '咨询服务费单价')  # 咨询服务费单价
+      sheet.add_cell(row, 7, '执行/招募单价')  # 执行/招募单价
+      sheet.add_cell(row, 8, '其他费用单价')  # 其他费用单价
+      sheet.add_cell(row, 9, 12)  # 预计订单折前总额
+      sheet.add_cell(row, 10, 11)  # 预计订单折后总额
+      sheet.add_cell(row, 11, 10)  # 实际结算折前总额
+      sheet.add_cell(row, 12, 9)  # 实际结算折后总额
+
+      # 格式设定
+      sheet.sheet_data[row][0].change_horizontal_alignment('center')
+      (0..12).each {|i|
+        sheet[row][i].change_border(:bottom, :thin)
+        sheet[row][i].change_border(:right, :thin)
+        sheet[row][i].change_border_color(:bottom, color1)
+        sheet[row][i].change_border_color(:right, color1)
+      }
+      (4..8).each {|i| sheet[row][i].change_fill(color2) }
+
+      row += 1
+      sheet.insert_row(row)
+    end
+
+    # sum
+    sheet.add_cell(row + 1, 9,  '', "SUM(J12:J#{row})")
+    sheet.add_cell(row + 1, 10, '', "SUM(K12:K#{row})")
+    sheet.add_cell(row + 1, 11, '', "SUM(L12:L#{row})")
+    sheet.add_cell(row + 1, 12, '', "SUM(M12:M#{row})")
+    (9..12).each {|i| sheet[row + 1][i].change_fill(color1)}  # 补背景色
+
+    # bottom cell
+    sheet.add_cell(row + 3, 0, bottom_text)
+    sheet[row + 3][0].change_horizontal_alignment('left')
+    sheet[row + 3][0].change_font_bold(true)
+
+    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p file_dir unless File.exist? file_dir
+    file_path = "#{file_dir}/project_iqvia_settlement_#{current_user.id}_#{Time.now.strftime('%H%M%S')}.xlsx"
+    book.write file_path
+    send_file file_path
   end
 end
