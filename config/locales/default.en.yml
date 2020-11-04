@@ -35,6 +35,7 @@ en:
   go_to_add: "Go to add"
   homepage: "Homepage"
   hour: "Hour(s)"
+  import_client: "Import clients"
   import_expert: "Import experts"
   import_gllue_candidates: "Import Gllue candidates"
   import_gllue_id: "Import Gllue ID"

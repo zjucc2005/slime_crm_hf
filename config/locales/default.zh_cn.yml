@@ -35,6 +35,7 @@ zh_cn:
   go_to_add: "去添加"
   homepage: "首页"
   hour: "小时"
+  import_client: "导入客户Seat"
   import_expert: "导入专家"
   import_gllue_candidates: "导入Gllue候选人"
   import_gllue_id: "导入Gllue ID"
