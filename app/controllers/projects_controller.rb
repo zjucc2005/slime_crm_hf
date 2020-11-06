@@ -488,37 +488,48 @@ class ProjectsController < ApplicationController
   def export_iqvia_settlement_template(project)
     template_path = 'public/templates/iqvia_settlement_template.xlsx'
     raise 'template file not found' unless File.exist?(template_path)
+    query = project.project_tasks.where(status: 'finished').order(:started_at => :asc)
 
     color1 = '000080' # 主色调, 普蓝
     color2 = 'CCCCFF' # 辅色调, 浅蓝
     bottom_text = '备注:关于本执行单的最终解释权归IQVIA。如有更新版本，以更新版为准。'
-    book = ::RubyXL::Parser.parse(template_path)                      # read from template file
+    book = ::RubyXL::Parser.parse(template_path)  # read from template file
     sheet = book[0]
-
-    sheet.add_cell(3, 3, project.code) # D1
-    sheet.sheet_data[3][3].change_horizontal_alignment('left') # D1 align to left
-    # sheet.sheet_data[9][0].change_fill(color1)
+    sheet.add_cell(3, 3, project.code)  # D4, 项目内部号
+    sheet.sheet_data[3][3].change_horizontal_alignment('left')  # D1 align to left
+    sheet.add_cell(4, 3, query.first.started_at.try(:strftime, '%F') )  # D5, 订单下达日期
 
     row = 11  # 任务表格起始行
-    project.project_tasks.where(status: 'finished').order(:started_at => :asc).each_with_index do |task, index|
+    query.each_with_index do |task, index|
       # 内容填充 >> code here
-      sheet.add_cell(row, 0, index + 1)  # 代理编号
-      sheet.add_cell(row, 1, '公司名称')  # 公司名称
-      sheet.add_cell(row, 2, '配额描述')  # 配额描述
-      sheet.add_cell(row, 3, '城市')  # 城市
-      sheet.add_cell(row, 4, '预计样本量')  # 预计样本量
-      sheet.add_cell(row, 5, '实际样本量')  # 实际样本量
-      sheet.add_cell(row, 6, '咨询服务费单价')  # 咨询服务费单价
-      sheet.add_cell(row, 7, '执行/招募单价')  # 执行/招募单价
-      sheet.add_cell(row, 8, '其他费用单价')  # 其他费用单价
-      sheet.add_cell(row, 9, 12)  # 预计订单折前总额
-      sheet.add_cell(row, 10, 11)  # 预计订单折后总额
-      sheet.add_cell(row, 11, 10)  # 实际结算折前总额
-      sheet.add_cell(row, 12, 9)  # 实际结算折后总额
+      exp = task.expert.latest_work_experience
+
+      sheet.add_cell(row, 0,  index + 1)                             # 代理编号
+      sheet.add_cell(row, 1,  '海鄞')                                # 公司名称
+      if exp
+        sheet.add_cell(row, 2,  "#{exp.org_cn}#{exp.title}")         # 配额描述
+      else
+        sheet.add_cell(row, 2, '')
+      end
+      sheet.add_cell(row, 3,  '全国')                                # 城市
+      sheet.add_cell(row, 4,  1)                                     # 预计样本量
+      sheet.add_cell(row, 5,  1)                                     # 实际样本量
+      sheet.add_cell(row, 6,  '')                                    # 咨询服务费单价
+      sheet.add_cell(row, 7,  (2500 * task.expert_rate).round(2) )   # 执行/招募单价
+      sheet.add_cell(row, 8,  '')                                    # 其他费用单价
+      sheet.add_cell(row, 9,  (2500 * task.expert_rate).round(2) )   # 预计订单折前总额
+      sheet.add_cell(row, 10, (2100 * task.expert_rate).round(2) )   # 预计订单折后总额
+      sheet.add_cell(row, 11, (task.actual_price / 0.84).round(2) )  # 实际结算折前总额
+      sheet.add_cell(row, 12, task.actual_price)                     # 实际结算折后总额
+      if task.memo.present?
+        sheet.add_cell(row, 13, "#{task.duration}分钟, #{task.memo}")  # 备注, 实际时长 + 备注
+      else
+        sheet.add_cell(row, 13, "#{task.duration}分钟")
+      end
 
       # 格式设定
       sheet.sheet_data[row][0].change_horizontal_alignment('center')
-      (0..12).each {|i|
+      (0..13).each {|i|
         sheet[row][i].change_border(:bottom, :thin)
         sheet[row][i].change_border(:right, :thin)
         sheet[row][i].change_border_color(:bottom, color1)
@@ -541,6 +552,10 @@ class ProjectsController < ApplicationController
     sheet.add_cell(row + 3, 0, bottom_text)
     sheet[row + 3][0].change_horizontal_alignment('left')
     sheet[row + 3][0].change_font_bold(true)
+
+    query.each do |task|
+      task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+    end
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
