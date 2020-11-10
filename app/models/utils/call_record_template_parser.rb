@@ -3,12 +3,12 @@ module Utils
   class CallRecordTemplateParser
     # 解析通话记录导入模板
 
-    attr_accessor :errors, :row, :operator_id, :call_record_attr
+    attr_accessor :errors, :row, :created_by, :call_record_attr
 
-    def initialize(row, operator_id)
+    def initialize(row, created_by)
       @row = row.map(&method(:cell_strip))
       @errors = []
-      @operator_id = operator_id
+      @created_by = created_by
       @call_record_attr = {}
       set_call_record_attr
     end
@@ -45,7 +45,7 @@ module Utils
       @errors << '姓名不能为空' if name.blank?
       @errors << '电话不能为空' if phone.blank?
       @call_record_attr = {
-        name: name, phone: phone, company: company, title: title, memo: memo, operator_id: @operator_id
+        name: name, phone: phone, company: company, title: title, memo: memo, created_by: @created_by
       }
     end
 
