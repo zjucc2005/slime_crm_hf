@@ -37,7 +37,7 @@
                             <td><%= project.code %></td>
                             <td><%= project_task_category_badge(task.category) %></td>
                             <td><%= project_task_interview_form_badge(task.interview_form) %></td>
-                            <td><%= task.expert.name %></td>
+                            <td><%= link_to task.expert.name, candidate_path(task.expert) %></td>
                             <td><%= task.started_at.strftime('%F %H:%M') %></td>
                             <td><%= task.duration %></td>
                             <td><%= task.charge_duration %></td>

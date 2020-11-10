@@ -495,9 +495,9 @@ class ProjectsController < ApplicationController
     bottom_text = '备注:关于本执行单的最终解释权归IQVIA。如有更新版本，以更新版为准。'
     book = ::RubyXL::Parser.parse(template_path)  # read from template file
     sheet = book[0]
-    sheet.add_cell(3, 3, project.code)  # D4, 项目内部号
-    sheet.sheet_data[3][3].change_horizontal_alignment('left')  # D1 align to left
-    sheet.add_cell(4, 3, query.first.started_at.try(:strftime, '%F') )  # D5, 订单下达日期
+    sheet.add_cell(3, 1, project.code)  # B4, 项目内部号
+    sheet.sheet_data[3][1].change_horizontal_alignment('left')  # B4 align to left
+    sheet.add_cell(4, 1, query.first.started_at.try(:strftime, '%F') )  # B5, 订单下达日期
 
     row = 11  # 任务表格起始行
     query.each_with_index do |task, index|
@@ -541,12 +541,18 @@ class ProjectsController < ApplicationController
       sheet.insert_row(row)
     end
 
+    # merge cells
+    sheet.merge_cells(11, 1, row - 1, 1)
+
     # sum
     sheet.add_cell(row + 1, 9,  '', "SUM(J12:J#{row})")
     sheet.add_cell(row + 1, 10, '', "SUM(K12:K#{row})")
     sheet.add_cell(row + 1, 11, '', "SUM(L12:L#{row})")
     sheet.add_cell(row + 1, 12, '', "SUM(M12:M#{row})")
-    (9..12).each {|i| sheet[row + 1][i].change_fill(color1)}  # 补背景色
+    (9..12).each {|i|
+      sheet[row + 1][i].change_fill(color1)          # 补背景色
+      sheet[row + 1][i].change_font_color('FFFFFF')  # 白色字体
+    }
 
     # bottom cell
     sheet.add_cell(row + 3, 0, bottom_text)
