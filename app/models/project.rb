@@ -21,7 +21,7 @@ class Project < ApplicationRecord
   # Validations
   validates_presence_of :name
   validates_inclusion_of :status, :in => STATUS.keys
-  validates_uniqueness_of :code, :allow_nil => true
+  validates_uniqueness_of :code, :allow_blank => true
 
   before_validation :setup, :on => :create
 

@@ -218,7 +218,7 @@ class ProjectsController < ApplicationController
       load_project
       query = @project.company.candidates
       %w[name nickname title phone email].each do |field|
-        query = query.where("#{field} LIKE ?", "%#{params[field].strip}%") if params[field].present?
+        query = query.where("#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
       end
       @clients = query.order(:created_at => :desc)
 
