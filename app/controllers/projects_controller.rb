@@ -468,15 +468,17 @@ class ProjectsController < ApplicationController
         project_phase = 'On-going'
       end
       current_week_task_count = project.project_tasks.where(status: 'finished').where('started_at >= ?', current_week).count
+      last_week_task_count = project.project_tasks.where(status: 'finished').where('started_at >= ? AND started_at < ?', current_week - 1.week, current_week).count
 
       sheet.add_cell(row, 0, project.code)                                      # 项目号/项目代码
       sheet.add_cell(row, 1, project.name)                                      # 项目名称
       sheet.add_cell(row, 2, project.created_at.strftime('%F'))                 # 收到项目日期/创建日期
       sheet.add_cell(row, 3, project_phase)                                     # 项目阶段 [new/on-going/pending]
       sheet.add_cell(row, 4, project.project_requirements.sum(:demand_number))  # 计划出Call/项目需求总人数
-      sheet.add_cell(row, 5, current_week_task_count)                           # 本周出Call / 本周完成任务数
-      sheet.add_cell(row, 6, '')                                                # 下周预计出Call
-      sheet.add_cell(row, 7, '')                                                # 备注
+      sheet.add_cell(row, 5, last_week_task_count)                              # 上周出Call / 上周完成任务
+      sheet.add_cell(row, 6, current_week_task_count)                           # 本周出Call / 本周完成任务数
+      sheet.add_cell(row, 7, '')                                                # 下周预计出Call
+      sheet.add_cell(row, 8, '')                                                # 备注
       row += 1
     end
 
