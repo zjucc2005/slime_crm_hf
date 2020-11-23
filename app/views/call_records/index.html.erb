@@ -34,7 +34,14 @@
                 <tr>
                     <td><%= check_box_tag :'uids[]', call_record.id, false %></td>
                     <td><%= content_tag :span, "# #{call_record.uid}", :class => 'text-gray' %></td>
-                    <td><%= content_tag :i, nil, :class => 'fa fa-user-circle', :title => '项目内专家' if call_record.project_id %></td>
+                    <td>
+                        <%= link_to candidate_path(call_record.candidate_id) do %>
+                            <%= content_tag :i, nil, :class => 'fa fa-user-circle', :title => '关联专家' %>
+                        <% end if call_record.candidate_id %>
+                        <%= link_to project_path(call_record.project_id) do %>
+                            <%= content_tag :i, nil, :class => 'fa fa-map', :title => '关联项目' %>
+                        <% end if call_record.project_id %>
+                    </td>
                     <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
                     <td title="<%= call_record.phone %>"><%= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %></td>
                     <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
