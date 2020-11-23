@@ -13,8 +13,8 @@ class ProjectTasksController < ApplicationController
     begin
       load_project_task
       load_active_contract
-
       check_editable # 只能编辑自己创建的任务
+      @project = @project_task.project
     rescue Exception => e
       flash[:error] = e.message
       redirect_to project_path(@project_task.project)
@@ -176,7 +176,7 @@ class ProjectTasksController < ApplicationController
   end
 
   def project_task_params
-    params.require(:project_task).permit(:interview_form, :started_at, :expert_level, :expert_rate, :duration, :charge_duration,
+    params.require(:project_task).permit(:pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :duration, :charge_duration,
                                          :actual_price, :is_shorthand, :is_recorded, :memo, :f_flag)
   end
 

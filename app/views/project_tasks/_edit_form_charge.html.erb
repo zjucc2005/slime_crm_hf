@@ -12,9 +12,15 @@
         <%= f.label :client, t(:client_contact) %><span class="text-red">*</span>
         <%= f.text_field :client_id, :value => @project_task.client.uid_name, :disabled => true, :class => 'form-control' %>
     </div>
+    <!--
+    <div class="col-lg-3 col-12 form-group">
+        <%#= f.label :pm %><span class="text-red">*</span>
+        <%#= f.text_field :pm_id, :value => @project_task.pm.uid_name, :disabled => true, :class => 'form-control' %>
+    </div>
+    -->
     <div class="col-lg-3 col-12 form-group">
         <%= f.label :pm %><span class="text-red">*</span>
-        <%= f.text_field :pm_id, :value => @project_task.pm.uid_name, :disabled => true, :class => 'form-control' %>
+        <%= f.select :pm_id, project_task_pm_options, { :include_blank => false }, :class => 'form-control select2' %>
     </div>
     <div class="col-lg-3 col-12 form-group">
         <%= f.label :interview_form %><span class="text-red">*</span>
