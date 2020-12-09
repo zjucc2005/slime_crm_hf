@@ -42,16 +42,14 @@ class CandidatesController < ApplicationController
         and_conditions << "(#{or_fields.map{|f| "coalesce(#{f},'')" }.join(' || ')} ~* '#{term_plus}')"
       end
       @hl_words.uniq!
-      query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id AND candidate_experiences.ended_at IS NULL')
+      # 是否只搜索当前公司, 默认规则 true
+      if params[:current_company] == 'false'
+        query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id')
+      else
+        query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id AND candidate_experiences.ended_at IS NULL')
+      end
       query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
       query = query.where(and_conditions.join(' AND '))
-
-      # 只搜索当前公司
-      if params[:current_company] == 'true'
-        query = query.where('candidate_experiences.ended_at' => nil)
-      elsif params[:current_company] == 'false'
-        query = query.where.not('candidate_experiences.ended_at' => nil)
-      end
       query = query.distinct  # 去重
     end
     @candidates = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
