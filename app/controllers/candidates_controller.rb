@@ -28,7 +28,7 @@ class CandidatesController < ApplicationController
       end
       and_conditions = []
       # or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_experiences.description]
-      or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_comments.content]
+      or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_comments.content]
       @terms.each do |term|
         sa = SearchAlias.where('kwlist @> ?', term.to_json).first
         if sa
