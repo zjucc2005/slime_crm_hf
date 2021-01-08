@@ -10,7 +10,7 @@
                 <div class="col-2 form-group">
                     <%= link_to new_client_company_path(@project.company, return_to: request.path), :class => 'btn btn-primary btn-form-control w-100' do %>
                         <%= fa_icon_tag('plus') %> <%= t('action.new_model', :model => t(:client_contact)) %>
-                    <% end if can?(:manage, Project) %>
+                    <% end if can?(:add_clients, Project) %>
                 </div>
                 <div class="col-2 form-group">
                     <%= text_field_tag :name, params[:name], :class => 'form-control', :placeholder => mt(:candidate, :name) %>
@@ -70,7 +70,7 @@
                 <td colspan="9" align="center">
                     <%= link_to new_client_company_path(@project.company, return_to: request.path), :class => 'btn btn-primary btn-xs' do %>
                         <%= fa_icon_tag('plus') %> <%= t('action.new_model', :model => t(:client_contact)) %>
-                    <% end if can?(:manage, Project) %>
+                    <% end if can?(:add_clients, Project) %>
                 </td>
             </tr>
             </tbody>
