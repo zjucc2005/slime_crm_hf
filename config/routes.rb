@@ -94,7 +94,7 @@ Rails.application.routes.draw do
     get :experts,       on: :member
     get :project_tasks, on: :member
 
-    get :export_billing_excel, on: :member  # 导出项目出账模板
+    post :export_billing_excel, on: :member  # 导出项目出账模板
   end
 
   resources :project_requirements do
@@ -112,6 +112,7 @@ Rails.application.routes.draw do
     delete :remove_cost, on: :member  # 删除支出信息
 
     put :cancel,         on: :member  # 取消任务
+    put :moveto,         on: :member  # 转移任务
   end
 
   resources :finance do

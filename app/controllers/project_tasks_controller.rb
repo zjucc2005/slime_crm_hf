@@ -161,6 +161,15 @@ class ProjectTasksController < ApplicationController
     redirect_to project_path(@project_task.project)
   end
 
+  # PUT /project_tasks/:id/moveto
+  def moveto
+    load_project_task
+
+    @project_task.update(project_id: params[:project_id])
+    flash[:success] = t(:operation_succeeded)
+    redirect_to project_tasks_project_path(@project_task.project)
+  end
+
   private
   def load_project_task
     @project_task = ProjectTask.find(params[:id])

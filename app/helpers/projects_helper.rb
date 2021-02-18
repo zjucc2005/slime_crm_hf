@@ -1,9 +1,13 @@
 module ProjectsHelper
 
-  def project_options
-    query = current_user.admin? ? Project.all : current_user.projects
+  def project_options(mode=:default)
+    query = case mode
+              when :all then Project.all
+              else current_user.admin? ? Project.all : current_user.projects
+
+            end
     query = user_channel_filter(query)
-    query.where(status: %w[initialized ongoing]).order(:updated_at => :desc).map{|p| [p.project_option_friendly, p.id]}
+    query.where(status: %w[ongoing]).order(:updated_at => :desc).map{|p| [p.project_option_friendly, p.id]}
   end
 
   # project status display style
@@ -58,6 +62,12 @@ module ProjectsHelper
     else
       []
     end
+  end
+
+  def project_export_billing_template_options
+    [
+      ['IQVIA结算模板', 'iqvia_settlement']
+    ]
   end
 
   def project_task_category_badge(category)

@@ -386,11 +386,11 @@ class ProjectsController < ApplicationController
     @project_tasks = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
-  # GET /projects/:id/export_billing_excel?mode=1
+  # POST /projects/:id/export_billing_excel?template=1&close_or_not=false
   def export_billing_excel
     load_project
     begin
-      case params[:mode]
+      case params[:template]
         when 'iqvia_settlement' then export_iqvia_settlement_template(@project)
         else raise('params error')
       end
@@ -562,8 +562,11 @@ class ProjectsController < ApplicationController
     sheet[row + 3][0].change_horizontal_alignment('left')
     sheet[row + 3][0].change_font_bold(true)
 
-    query.each do |task|
-      task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+    ActiveRecord::Base.transaction do
+      query.each do |task|
+        task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+      end
+      project.close! if params[:close_or_not] == 'true'  # 关闭项目选项
     end
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"

@@ -65,13 +65,18 @@
                                 <td><%= boolean_display(task.is_shorthand) %></td>
                                 <td><%= boolean_display(task.is_recorded) %></td>
                                 <td><%= project_task_status_badge(task.status) %></td>
-                                <td class="action">
-                                    <%= link_to edit_project_task_path(task), :class => 'btn btn-dark btn-xs' do %>
-                                        <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
-                                    <% end if can?(:edit, ProjectTask) && task.can_be_edited_by(current_user)  %>
-                                    <%= link_to project_task_path(task), :class => 'btn btn-primary btn-xs' do %>
-                                        <%= fa_icon_tag('file') %> <%= t('action.detail') %>
-                                    <% end if task.can_show? %>
+                                <td>
+                                    <div class="btn-group pull-right">
+                                        <%= link_to edit_project_task_path(task), :class => 'btn btn-dark btn-xs' do %>
+                                            <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
+                                        <% end if can?(:edit, ProjectTask) && task.can_be_edited_by(current_user)  %>
+                                        <%= link_to project_task_path(task), :class => 'btn btn-primary btn-xs' do %>
+                                            <%= fa_icon_tag('file') %> <%= t('action.detail') %>
+                                        <% end if task.can_show? %>
+                                        <%= content_tag :div, :class => 'btn-group' do %>
+                                            <%= render :partial => 'projects/widgets/moveto_modal', :locals => { :task => task } %>
+                                        <% end if can?(:moveto, ProjectTask) && @project.can_edit? %>
+                                    </div>
                                 </td>
                             </tr>
                         <% end %>
