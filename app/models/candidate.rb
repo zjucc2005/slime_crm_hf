@@ -122,6 +122,7 @@ class Candidate < ApplicationRecord
       when :company      then self.latest_work_experience.try(:org_cn)
       when :title        then self.latest_work_experience.try(:title)
       when :expert_level then self._c_t_expert_level
+      when :rate         then self.cpt
       when :gj_rate      then self._c_t_gj_rate_
       when :iqvia_rate   then self._c_t_iqvia_rate_
       else nil
