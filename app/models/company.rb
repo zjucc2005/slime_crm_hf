@@ -36,6 +36,10 @@ class Company < ApplicationRecord
     false  # 公司删除条件待确定
   end
 
+  def company_option_friendly
+    "#{uid} - #{name}"
+  end
+
   private
   def setup
     self.category ||= 'client'

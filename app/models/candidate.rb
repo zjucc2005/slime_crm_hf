@@ -31,6 +31,7 @@ class Candidate < ApplicationRecord
   has_many :project_tasks, :class_name => 'ProjectTask', :foreign_key => :expert_id
   has_many :candidate_access_logs, :class_name => 'CandidateAccessLog'
   has_many :recommended_experts, :class_name => 'Candidate', :foreign_key => :recommender_id
+  has_many :call_records, :class_name => 'CallRecord'
 
   # Validations
   validates_inclusion_of :category, :in => CATEGORY.keys

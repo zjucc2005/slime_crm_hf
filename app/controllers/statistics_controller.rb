@@ -96,6 +96,7 @@ class StatisticsController < ApplicationController
     @year = params[:year] || current_year                          # statistical year
     @currency = params[:currency] || 'RMB'                         # currency
     @user_channel_id = params[:user_channel_id] || current_user.user_channel_id  # user_channel_id
+    @company_id = params[:company_id]
     @x_axis = I18n.locale == :zh_cn ?
       %w[1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月] : %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]
 
@@ -109,8 +110,15 @@ class StatisticsController < ApplicationController
     expense_translation = []
     expense_others      = []
 
-    project_task_query = ProjectTask.where(status: 'finished', currency: @currency)
-    project_task_cost_query = ProjectTaskCost.joins(:project_task).where('project_tasks.status': 'finished', 'project_task_costs.currency': @currency)
+    if @company_id.present?
+      project_task_query = ProjectTask.joins(:project).
+        where('projects.company_id': @company_id, 'project_tasks.status': 'finished', 'project_tasks.currency': @currency)
+      project_task_cost_query = ProjectTaskCost.joins(:project_task).joins('LEFT JOIN projects on projects.id = project_tasks.project_id').
+        where('projects.company_id': @company_id, 'project_tasks.status': 'finished', 'project_task_costs.currency': @currency)
+    else
+      project_task_query = ProjectTask.where(status: 'finished', currency: @currency)
+      project_task_cost_query = ProjectTaskCost.joins(:project_task).where('project_tasks.status': 'finished', 'project_task_costs.currency': @currency)
+    end
     if @user_channel_id.present?
       project_task_query = project_task_query.where(user_channel_id: @user_channel_id)
       project_task_cost_query = project_task_cost_query.where(user_channel_id: @user_channel_id)
@@ -128,7 +136,7 @@ class StatisticsController < ApplicationController
       translation_fee = cost_group.select{|c| c.category == 'translation' }[0].try(:sum_price) || 0.0
       others_fee      = cost_group.select{|c| c.category == 'others' }[0].try(:sum_price)      || 0.0
 
-      income << project_task_query.where('started_at BETWEEN ? AND ?', s_time, e_time).sum(:actual_price)
+      income << project_task_query.where('project_tasks.started_at BETWEEN ? AND ?', s_time, e_time).sum(:actual_price)
       expense << expert_fee + recommend_fee + translation_fee + others_fee
       expense_expert << expert_fee
       expense_recommend << recommend_fee
