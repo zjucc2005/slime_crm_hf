@@ -93,6 +93,7 @@ Rails.application.routes.draw do
 
     get :experts,       on: :member
     get :project_tasks, on: :member
+    get :user_options,  on: :member  # 加载项目用户账号信息
 
     post :export_billing_excel, on: :member  # 导出项目出账模板
   end
@@ -100,6 +101,7 @@ Rails.application.routes.draw do
   resources :project_requirements do
     put :finish,   on: :member
     put :unfinish, on: :member
+    put :cancel,   on: :member
   end
 
   resources :project_candidates do

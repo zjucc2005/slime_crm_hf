@@ -386,6 +386,13 @@ class ProjectsController < ApplicationController
     @project_tasks = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
+  # GET /projects/:id/user_options.json
+  def user_options
+    load_project
+    users = @project.users
+    render :json => users.map{|user| [user.uid_name , user.id] }
+  end
+
   # POST /projects/:id/export_billing_excel?template=1&close_or_not=false
   def export_billing_excel
     load_project

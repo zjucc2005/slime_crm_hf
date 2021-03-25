@@ -247,6 +247,7 @@ zh_cn:
         content: "内容"
         demand_number: "需求人数"
         file: "文件"
+        operator: "经办人"
 
       project_candidate:
         mark: "项目标识"

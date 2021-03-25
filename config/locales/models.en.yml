@@ -218,6 +218,7 @@ en:
         content: "Content"
         demand_number: "Demand number"
         file: "File"
+        operator: "Operator"
 
       project_candidate:
         mark: "Project mark"

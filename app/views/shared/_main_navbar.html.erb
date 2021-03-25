@@ -27,6 +27,21 @@
                     <li class="nav-item">
                         <%= link_to mt(:project), projects_path, :class => "nav-link #{yield :nav_projects}" %>
                     </li>
+                <% end if false %>
+                <% if can? :index, Project %>
+                    <li class="nav-item dropdown">
+                        <%= link_to '#', :id => 'projects-drop', :data => { :toggle => 'dropdown' }, :class => "nav-link dropdown-toggle #{yield :nav_projects}" do %>
+                            <%= controller_name == 'project_requirements' ? mt(:project_requirement) : mt(:project) %>
+                        <% end %>
+                        <div class="dropdown-menu fa-fixed">
+                            <%= link_to projects_path, :class => 'dropdown-item' do %>
+                                <%= fa_icon_tag('map') %> <%= mt(:project) %>
+                            <% end if can?(:index, Project) %>
+                            <%= link_to project_requirements_path, :class => 'dropdown-item' do %>
+                                <%= fa_icon_tag('tasks') %> <%= mt(:project_requirement) %>
+                            <% end if can?(:index, ProjectRequirement) %>
+                        </div>
+                    </li>
                 <% end %>
                 <% if can? :index, CallRecord %>
                     <li class="nav-item">

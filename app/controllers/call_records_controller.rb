@@ -17,7 +17,7 @@ class CallRecordsController < ApplicationController
       query = query.where(field.to_sym => params[field]) if params[field].present?
     end
 
-    @call_records = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
+    @call_records = query.order(:updated_at => :desc).paginate(:page => params[:page], :per_page => 100)
   end
 
   # GET /call_records/:id
