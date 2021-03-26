@@ -102,6 +102,9 @@ Rails.application.routes.draw do
     put :finish,   on: :member
     put :unfinish, on: :member
     put :cancel,   on: :member
+
+    get :edit_operator, on: :member
+    put :update_operator, on: :member
   end
 
   resources :project_candidates do

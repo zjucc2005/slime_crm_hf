@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h5><%= fa_icon_tag('tasks') %> <%= t('action.edit_model', :model => mt(:project_requirement)) %></h5>
-        <%= link_to fa_icon_tag('close'), project_path(@project_requirement.project), :class => 'card-header-close' %>
+        <%= link_to fa_icon_tag('close'), return_to(project_requirements_path), :class => 'card-header-close' %>
     </div>
 
     <div class="card-body">
@@ -30,7 +30,7 @@
 
             <div class="form-group mb-0">
                 <%= submit_tag t('action.submit'), :class => 'btn btn-submit' %>
-                <%= link_to t('action.back'), project_path(@project_requirement.project), :class => 'btn btn-back' %>
+                <%= link_to t('action.back'), return_to(project_requirements_path), :class => 'btn btn-back' %>
             </div>
         <% end %>
     </div>
