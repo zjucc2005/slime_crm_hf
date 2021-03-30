@@ -160,10 +160,10 @@ class Candidate < ApplicationRecord
     if currency == 'RMB'
       _rate_ = case self.cpt
                  when 0 then 0
-                 when 0..1000 then 2500
-                 when 1000..1500 then 3250
-                 when 1500..2000 then 4000
-                 when 2000..2500 then 4750
+                 when 0..1000 then 2500 - self.cpt.to_i
+                 when 1000..1500 then 3250 - self.cpt.to_i
+                 when 1500..2000 then 4000 - self.cpt.to_i
+                 when 2000..2500 then 4750 - self.cpt.to_i
                  else 'TBD'
                end
     end
