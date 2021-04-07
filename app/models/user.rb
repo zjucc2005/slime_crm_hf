@@ -42,6 +42,10 @@ class User < ApplicationRecord
     %w[su admin].include? role
   end
 
+  def finance?
+    role == 'finance'
+  end
+
   def is_role?(*args)
     args.include?(role)
   end
