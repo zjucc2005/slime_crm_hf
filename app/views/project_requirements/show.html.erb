@@ -22,7 +22,8 @@
             </div>
             <div class="col-12 form-group">
                 <%= label_tag :content, mt(:project_requirement, :content) %>
-                <%= text_area_tag :content, @project_requirement.content, :rows => 5, :class => 'form-control', :readonly => true %>
+                <%= text_area_tag :content, @project_requirement.content, :rows => [5, @project_requirement.content.to_s.split("\n").length].max,
+                                  :class => 'form-control', :readonly => true %>
             </div>
             <div class="col-12 form-group">
                 <%= label_tag :demand_number, mt(:project_requirement, :demand_number) %>
