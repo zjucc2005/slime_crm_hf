@@ -41,6 +41,8 @@ class Candidate < ApplicationRecord
   validates_presence_of :name, :last_name
   validates_presence_of :cpt
 
+  mount_uploader :file, FileUploader
+
   before_validation :setup, :validates_uniqueness_of_phone, :on => [:create, :update]
 
   # Scopes

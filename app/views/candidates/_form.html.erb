@@ -86,6 +86,12 @@
         <%= f.select :data_channel, candidate_data_channel_options, { :include_blank => default_prompt },
                      :required => true, :class => 'form-control select2', :onchange => 'requireRecommenderId();' %>
     </div>
+
+    <div class="col-12 form-group">
+        <%= f.label :file %>
+        <%= link_to @candidate.file.url do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @candidate.file.present? %>
+        <%= f.file_field :file, :class => 'form-control-file' %>
+    </div>
 </div>
 
 <div class="row border-bottom mb-3">

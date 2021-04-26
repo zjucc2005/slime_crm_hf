@@ -105,6 +105,7 @@ en:
         task_count: "Task count"
         work_experiences: "Work experience"
         recommender_id: "Recommender ID"
+        file: "Attachment"
 
       candidate_experience:
         category: "Category"
