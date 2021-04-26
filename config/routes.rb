@@ -149,7 +149,8 @@ Rails.application.routes.draw do
   resources :statistics do
     get :current_month_count_infos,  on: :collection
     get :current_month_task_ranking, on: :collection
-    get :unscheduled_projects,       on: :collection
+    # get :unscheduled_projects,       on: :collection
+    get :ongoing_project_requirements, on: :collection
     get :ongoing_project_tasks,      on: :collection
 
     get :finance_summary,            on: :collection

@@ -14,7 +14,8 @@ $(document).on('turbolinks:load', function(){
     $('.select2').select2();
     $('input[type=number]').mousewheel(function(){
         disableMouseWheelScroll();  // 全局禁用 number 的滚轮
-    })
+    });
+    $('[data-toggle="popover"]').popover();
 });
 
 // select all checkbox

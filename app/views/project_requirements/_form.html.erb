@@ -6,11 +6,11 @@
         <%= f.select :project_id, project_options, { :prompt => default_prompt }, :required => true, :class => 'form-control select2' %>
     </div>
     <div class="col-12 col-md-6 form-group">
-        <%= f.label :operator, mt(:project_requirement, :operator) %><span class="text-red">*</span>
+        <%= f.label :operator %><span class="text-red">*</span>
         <%= f.select :operator_id, [], { :prompt => default_prompt }, :required => true, :class => 'form-control select2' %>
     </div>
     <div class="col-12 form-group">
-        <%= f.label :content, mt(:project_requirement, :content) %><span class="text-red">*</span>
+        <%= f.label :content %><span class="text-red">*</span>
         <%= f.text_area :content, :required => true, :rows => 5, :class => 'form-control' %>
     </div>
     <div class="col-12 form-group">

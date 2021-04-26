@@ -13,6 +13,10 @@
                     <span class="badge badge-light"><%= show_creator(@project_requirement) %></span>
                     <span class="badge badge-light"><%= show_timestamps(@project_requirement) %></span>
                 </div>
+                <div class="col-12 form-group">
+                    <%= f.label :operator %><span class="text-red">*</span>
+                    <%= f.select :operator_id, @project.users.map{|user| [user.uid_name, user.id]}, { :prompt => default_prompt }, :required => true, :class => 'form-control select2' %>
+                </div>
 
                 <div class="col-12 form-group">
                     <%= f.label :content %><span class="text-red">*</span>

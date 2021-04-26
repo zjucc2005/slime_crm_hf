@@ -15,6 +15,7 @@
                 <th><%= check_box_tag :selectAll, nil, nil, :onclick => 'selectAll(this);' %></th>
                 <th><%= mt(:project_requirement, :id) %></th>
                 <th><%= mt(:project, :name) %></th>
+                <th><%= t(:project_id) %></th>
                 <th><%= mt(:project_requirement, :content) %></th>
                 <th><%= mt(:project_requirement, :demand_number) %></th>
                 <th><%= mt(:project_requirement, :file) %></th>
@@ -31,7 +32,12 @@
                     <td><%= check_box_tag :'uids[]', instance.id, false %></td>
                     <td><%= content_tag :span, "# #{instance.uid}", :class => 'text-gray' %></td>
                     <td title="<%= instance.project.name %>"><%= link_to truncate(instance.project.name, length: 8), project_path(instance.project_id) %></td>
-                    <td><%= truncate(instance.content, length: 30) %></td>
+                    <td><%= instance.project.uid %></td>
+                    <td>
+                        <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= instance.uid %>" data-html="true" data-content="<%= instance.content.gsub("\n", '<br>') %>">
+                            <%= truncate(instance.content, length: 30) %>
+                        </a>
+                    </td>
                     <td><%= instance.demand_number %></td>
                     <td><%= link_to instance.file.url, :title => instance.file.identifier do %><%= fa_icon_tag('download') %><% end if instance.file.present? %></td>
                     <td><%= project_requirement_status_badge(instance.status) %></td>
@@ -78,3 +84,7 @@
         </div>
     </div>
 <% end %>
+
+<style>
+   .popover { max-width: 600px; }
+</style>

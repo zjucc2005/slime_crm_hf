@@ -42,7 +42,7 @@ class StatisticsController < ApplicationController
     # 最近三个月份
     current_month = Time.now.beginning_of_month
     @month_options = []
-    3.times do |i|
+    12.times do |i|
       _month_ = current_month - i.month
       @month_options << [_month_.strftime('%Y-%m'), _month_.strftime('%F')]
     end
@@ -69,11 +69,23 @@ class StatisticsController < ApplicationController
   end
 
   # GET /statistics/unscheduled_projects.js
-  def unscheduled_projects
-    query = Project.where(status: 'initialized').order(:created_at => :asc)
-    query = user_channel_filter(query)
+  # def unscheduled_projects
+  #   query = Project.where(status: 'initialized').order(:created_at => :asc)
+  #   query = user_channel_filter(query)
+  #   query = query.limit(params[:limit]) if params[:limit].present?
+  #   @projects = query
+  #
+  #   respond_to do |f|
+  #     f.js
+  #   end
+  # end
+
+  # GET /statistics/ongoing_project_requirements.js
+  def ongoing_project_requirements
+    query = ProjectRequirement.joins(:project).where('project_requirements.status': 'ongoing').order(:created_at => :asc)
+    query = user_channel_filter(query, 'projects.user_channel_id')
     query = query.limit(params[:limit]) if params[:limit].present?
-    @projects = query
+    @project_requirements = query
 
     respond_to do |f|
       f.js

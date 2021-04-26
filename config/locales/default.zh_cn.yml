@@ -126,6 +126,7 @@ zh_cn:
     finance_summary: "财务统计总览"
     finance_statistics_annual: "%{year}年财务统计"
     unscheduled_projects: "未安排访谈的项目"
+    ongoing_project_requirements: "进展中的项目需求"
     ongoing_tasks: "进展中的任务"
     ranking: "排名"
     statistical_month: "统计月份"
