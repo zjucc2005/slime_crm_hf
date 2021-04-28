@@ -9,6 +9,7 @@ zh_cn:
   available_interpolation: "可用插值"
   base_info: "基本信息"
   batch_import: "批量导入"
+  batch_update_file: "批量更新附件"
   begin: "开始"
   browsing_history: "浏览历史"
   candidate_comment: "专家备注"

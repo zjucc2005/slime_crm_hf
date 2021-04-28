@@ -376,6 +376,20 @@ class CandidatesController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # POST /candidates/batch_update_file
+  def batch_update_file
+    @files = params[:file]
+    @files.each do |file|
+      filename  = file.original_filename
+      extname   = File.extname(filename)
+      basename  = filename.split(extname)[0]
+      candidate = Candidate.where(id: basename).first
+      candidate.update!(file: file) if candidate
+    end
+    flash[:success] = t(:operation_succeeded)
+    redirect_to candidates_path
+  end
+
   private
   def load_candidate
     @candidate = Candidate.find(params[:id])

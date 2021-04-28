@@ -9,6 +9,7 @@ en:
   available_interpolation: "Available interpolation"
   base_info: "Base info"
   batch_import: "Batch import"
+  batch_update_file: "Batch update attachment"
   begin: "Begin"
   browsing_history: "Browsing history"
   candidate_comment: "Comments"

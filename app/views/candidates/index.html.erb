@@ -4,6 +4,7 @@
             <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:expert))}" %>
         <% end if can?(:new, Candidate) %>
         <%= render :partial => 'candidates/widgets/btn_import_expert' %>
+        <%= render :partial => 'candidates/widgets/batch_update_file' %>
         <%= render :partial => 'candidates/widgets/expert_card', :locals => { :uid => nil } %>
         <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => nil} %>
     </div>

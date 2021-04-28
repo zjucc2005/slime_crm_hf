@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     get :recommender_info, on: :collection
 
     get :loading_modal, on: :collection
+    post :batch_update_file, on: :collection  # 批量更新附件
   end
 
   resources :candidate_payment_infos

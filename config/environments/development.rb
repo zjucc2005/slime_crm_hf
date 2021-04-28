@@ -63,4 +63,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.i18n.default_locale = :zh_cn
+  config.log_level = :info
 end
