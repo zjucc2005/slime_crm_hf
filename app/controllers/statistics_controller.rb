@@ -82,7 +82,7 @@ class StatisticsController < ApplicationController
 
   # GET /statistics/ongoing_project_requirements.js
   def ongoing_project_requirements
-    query = ProjectRequirement.joins(:project).where('project_requirements.status': 'ongoing').order(:created_at => :asc)
+    query = ProjectRequirement.joins(:project).where('project_requirements.status': 'ongoing').order(:created_at => :desc)
     query = user_channel_filter(query, 'projects.user_channel_id')
     query = query.limit(params[:limit]) if params[:limit].present?
     @project_requirements = query
