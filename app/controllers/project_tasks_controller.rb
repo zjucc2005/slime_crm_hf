@@ -126,7 +126,7 @@ class ProjectTasksController < ApplicationController
 
     cost = @project_task.costs.where(id: params[:project_task_cost_id]).first
     cost.try(:destroy!)
-    respond_to{|f| f.js { render :add_cost } }
+    respond_to{|f| f.js }
 
   end
 
