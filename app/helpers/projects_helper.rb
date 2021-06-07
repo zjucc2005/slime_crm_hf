@@ -65,6 +65,8 @@ module ProjectsHelper
 
   def project_export_billing_template_options
     [
+      ['财务模板1', 'settlement_20210604_1'],
+      ['定性受访信息表', 'settlement_20210604_2'],
       ['IQVIA结算模板', 'iqvia_settlement']
     ]
   end
