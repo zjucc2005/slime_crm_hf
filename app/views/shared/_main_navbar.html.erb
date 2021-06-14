@@ -18,6 +18,11 @@
                         <%= link_to mt(:expert), candidates_path, :class => "nav-link #{yield :nav_candidates}" %>
                     </li>
                 <% end %>
+                <% if can? :index, Doctor %>
+                    <li class="nav-item">
+                        <%= link_to mt(:doctor), doctors_path, :class => "nav-link #{yield :nav_doctors}" %>
+                    </li>
+                <% end %>
                 <% if can? :index, Company %>
                     <li class="nav-item">
                         <%= link_to mt(:company), companies_path, :class => "nav-link #{yield :nav_companies}" %>
@@ -72,8 +77,11 @@
                             <%= fa_icon_tag('drivers-license-o') %> <%= mt(:card_template) %>
                         <% end if can?(:index, CardTemplate) %>
                         <%= link_to location_data_path, :class => 'dropdown-item' do %>
-                            <%= fa_icon_tag('location-arrow') %> <%= mt(:location_datum) %>
+                            <%= model_icon('LocationDatum') %> <%= mt(:location_datum) %>
                         <% end if can?(:index, LocationDatum) %>
+                        <%= link_to hospitals_path, :class => 'dropdown-item' do %>
+                            <%= model_icon('Hospital') %> <%= mt(:hospital) %>
+                        <% end if can?(:index, Hospital) %>
                         <%= link_to banks_path, :class => 'dropdown-item' do %>
                             <%= fa_icon_tag('bank') %> <%= mt(:bank) %>
                         <% end if can?(:index, Bank) %>

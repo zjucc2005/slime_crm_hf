@@ -60,6 +60,8 @@ Rails.application.routes.draw do
   resources :candidate_payment_infos
   resources :candidate_comments
 
+  resources :doctors
+
   resources :companies do
     get :new_contract,        on: :member
     get :new_client,          on: :member
@@ -142,6 +144,7 @@ Rails.application.routes.draw do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection
   end
+  resources :hospitals
   resources :banks
   resources :industries
   resources :search_aliases
