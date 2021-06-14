@@ -80,7 +80,7 @@ class Candidate < ApplicationRecord
   end
 
   def validates_presence_of_experiences
-    return true unless self.category == 'expert'
+    return true unless %w[expert doctor].include?(self.category)
     if self.experiences.work.count == 0
       errors.add(:work_experiences, :blank)
       false

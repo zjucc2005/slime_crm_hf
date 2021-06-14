@@ -57,9 +57,9 @@
         <div class="badge badge-info mb-3 px-4"><%= t(:base_info) %></div>
         <div class="row border-bottom mb-3">
             <div class="col-12 form-group">
-                <span class="badge badge-primary"><%#= show_candidate_category %></span>
-                <span class="badge badge-warning"><%#= show_candidate_data_source %></span>
-                <span class="badge badge-light"><%#= show_candidate_creator %></span>
+                <% @candidate = @doctor %>
+                <span class="badge badge-warning"><%= show_candidate_data_source %></span>
+                <span class="badge badge-light"><%= show_candidate_creator %></span>
                 <span class="badge badge-light"><%= show_timestamps(@doctor) %></span>
             </div>
 
@@ -108,9 +108,9 @@
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :industry) %></span>
+                    <span class="input-group-text"><%= mt(:candidate, :educate_title) %></span>
                 </div>
-                <%= content_tag :span, @doctor.industry, :class => 'form-control' %>
+                <%= content_tag :span, @doctor.title, :class => 'form-control' %>
             </div>
 
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
@@ -150,12 +150,6 @@
         </div>
 
         <div class="row border-bottom mb-3">
-            <!--<div class="col-lg-3 col-6 input-group input-group-sm input-group-align">-->
-            <!--<div class="input-group-prepend">-->
-            <!--<span class="input-group-text"><%= mt(:candidate, :is_available) %></span>-->
-            <!--</div>-->
-            <!--<%= content_tag :span, candidate_is_available_display(@doctor.is_available), :class => 'form-control' %>-->
-            <!--</div>-->
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :cpt) %></span>

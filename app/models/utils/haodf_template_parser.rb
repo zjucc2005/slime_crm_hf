@@ -11,6 +11,7 @@ module Utils
       @errors = []
       @created_by = created_by
       @user_channel_id = user_channel_id
+      @haodf_id = nil
       @candidate_attr = {}
       @work_exp_attrs = []
       @hospital_attr  = {}
@@ -23,10 +24,25 @@ module Utils
         # import code
         begin
           ActiveRecord::Base.transaction do
-            candidate = Candidate.doctor.create!(@candidate_attr)
-            @work_exp_attrs.each do |exp_attr|
-              candidate.experiences.work.create!(exp_attr)
+            candidate = Candidate.doctor.where("CAST(property->>'haodf_id' AS INTEGER) = ?", @haodf_id).first
+            if candidate
+              candidate.update!(
+                city:      @candidate_attr[:city],
+                title:     @candidate_attr[:title],
+                expertise: @candidate_attr[:expertise],
+                inquiry:   @candidate_attr[:inquiry]
+              )
+              if @work_exp_attrs.present?
+                work_exp = candidate.experiences.work.first
+                work_exp ?
+                  work_exp.update!(@work_exp_attrs[0]) :
+                  candidate.experiences.work.create!(@work_exp_attrs[0])
+              end
+            else
+              candidate = Candidate.doctor.create!(@candidate_attr)
+              candidate.experiences.work.create!(@work_exp_attrs[0]) if @work_exp_attrs.present?
             end
+
             @hospital = Hospital.where(name: @hospital_attr[:name], province: @hospital_attr[:province]).first
             @hospital ||= Hospital.create!(name: @hospital_attr[:name], province: @hospital_attr[:province], level: @hospital_attr[:level])
             @hospital.departments.find_or_create_by!(name: @hospital_attr[:department])
@@ -52,7 +68,7 @@ module Utils
     end
 
     def set_candidate_attr
-      haodf_id      = @row[0].to_i  # A, id
+      @haodf_id     = @row[0].to_i  # A, id
       province      = @row[1]       # B, province
       hospital      = @row[2]       # C, hospital
       department    = @row[3]       # D, department
@@ -74,7 +90,7 @@ module Utils
       @candidate_attr = {
         data_source: 'excel', data_channel: 'excel', created_by: @created_by, user_channel_id: @user_channel_id,
         first_name: first_name, last_name: last_name, city: province, title: edu_title, expertise: expertise,
-        inquiry: inquiry, cpt: cpt, currency: currency, property: { haodf_id: haodf_id, haodf_url: haodf_url }
+        inquiry: inquiry, cpt: cpt, currency: currency, property: { haodf_id: @haodf_id, haodf_url: haodf_url }
       }
 
       @work_exp_attrs << {

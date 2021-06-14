@@ -21,8 +21,9 @@
                             </div>
                         </div>
                         <%= link_to doctor_path(candidate), :target => '_blank' do %>
-                            <span><%= candidate.name %></span>
+                            <span><%= candidate.name %> </span>
                         <% end %>
+                        <span class="text-smaller"><%= candidate.title %></span>
                     </div>
 
                 </div>
@@ -34,7 +35,7 @@
                         <span class="mr-1"><%= candidate.city || '-' %></span>
                         <span class="text-gray mr-1">/</span>
                         <%= content_tag :span, :id => "show_phone_wrapper_#{candidate.id}", :class => 'mr-1' do %>
-                                <%= link_to '查看联系方式', show_phone_candidate_path(candidate), :remote => true %>
+                            <%= link_to '查看联系方式', show_phone_candidate_path(candidate), :remote => true %>
                         <% end %>
                     </div>
                 </div>
@@ -49,7 +50,7 @@
                     <% end %>
                 </div>
             </div>
-            <div class="col-lg-4 d-flex align-items-center flex-column text-left">
+            <div class="col-lg-4 d-flex flex-column text-left">
                 <div class="my-3 my-lg-0 text-smaller">
                     <%= truncate(candidate.expertise, length: 150) %>
                 </div>

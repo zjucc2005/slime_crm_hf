@@ -88,6 +88,7 @@ en:
         phone1: "Phone2"
         industry: "Industry"
         title: "Title"
+        educate_title: "Educate Title"
         date_of_birth: "Date of birth"
         gender: "Gender"
         description: "Description"

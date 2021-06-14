@@ -80,6 +80,7 @@ class Ability
     can :manage, CandidateComment
     can :manage, CandidatePaymentInfo
     can :manage, Doctor
+    cannot :import_haodf, Doctor
     can [:new_client], Company
     can :manage, Project
     can :manage, ProjectCandidate
@@ -101,6 +102,7 @@ class Ability
     can :manage, CandidateComment
     can :manage, CandidatePaymentInfo
     can :manage, Doctor
+    cannot :import_haodf, Doctor
     can [:new_client], Company
     can [:index, :show, :add_users, :delete_user, :add_clients, :delete_client, :add_experts, :delete_expert,
          :add_project_task, :project_tasks, :experts], Project
