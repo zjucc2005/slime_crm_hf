@@ -16,7 +16,11 @@ module ApplicationHelper
   end
 
   def fa_icon_tag(category, color='')
-    content_tag :i, nil, :class => "fa fa-#{category}", :style => "color: #{color}"
+    if color.present?
+      content_tag :i, nil, :class => "fa fa-#{category}", :style => "color: #{color}"
+    else
+      content_tag :i, nil, :class => "fa fa-#{category}"
+    end
   end
 
   def model_icon(model_name)

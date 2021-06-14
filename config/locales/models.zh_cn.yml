@@ -48,6 +48,7 @@ zh_cn:
     errors:
       messages:
         validation_failed: "验证失败: %{errors}"
+        record_invalid: "参数错误"
         # Append our own errors here
 
     # Translate model names

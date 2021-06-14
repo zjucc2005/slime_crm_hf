@@ -1,5 +1,5 @@
 # encoding: utf-8
-class Hospital < ActiveRecord::Base
+class Hospital < ApplicationRecord
   has_many :departments, :class_name => 'HospitalDepartment'
   validates_presence_of :name
 

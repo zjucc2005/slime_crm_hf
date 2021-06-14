@@ -256,8 +256,8 @@ class CandidatesController < ApplicationController
     if request.post?
       begin
         sheet = open_spreadsheet(params[:file])
-        @errors << 'excel表格里没有信息' if sheet.last_row < 2
-        @errors << 'excel不能超过10000行' if sheet.last_row > 10000
+        raise 'excel表格里没有信息' if sheet.last_row < 2
+        raise 'excel不能超过10000行' if sheet.last_row > 10000
         2.upto(sheet.last_row) do |i|
           parser = Utils::ExpertTemplateParser.new(sheet.row(i), current_user.id, current_user.user_channel_id)
           @errors << "Row #{i}: #{parser.errors.join(', ')}" unless parser.import

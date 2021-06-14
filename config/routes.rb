@@ -60,7 +60,10 @@ Rails.application.routes.draw do
   resources :candidate_payment_infos
   resources :candidate_comments
 
-  resources :doctors
+  resources :doctors do
+    get :import_haodf,  on: :collection  # show importing result
+    post :import_haodf, on: :collection  # import doctors from haodf data
+  end
 
   resources :companies do
     get :new_contract,        on: :member
