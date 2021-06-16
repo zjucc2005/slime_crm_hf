@@ -610,7 +610,7 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 9, (task.ended_at.strftime('%H:%M') rescue '' ))                    # J, 结束时间
       sheet.add_cell(row, 10, task.duration)                                                  # K, 访谈时长
       sheet.add_cell(row, 11, task.charge_duration)                                           # L, 收费时长
-      sheet.add_cell(row, 12, task.base_price)                                                # M, 访谈单价
+      sheet.add_cell(row, 12, (2500 * task.expert_rate).round(2))                             # M, 访谈单价
       sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
       sheet.add_cell(row, 14, task.actual_price)                                              # O, 折后费用
       sheet.add_cell(row, 15, task.costs.where(category: 'expert').sum(:price))               # P, 礼金费用
