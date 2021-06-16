@@ -1,0 +1,31 @@
+<div class="card">
+    <div class="card-header">
+        <h5><%= model_icon('Hospital') %> <%= mt(:hospital) %></h5>
+        <%= link_to fa_icon_tag('close'), hospitals_path, :class => 'card-header-close' %>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 d-flex flex-column flex-lg-row justify-content-between">
+                <h6>
+                    <span class="text-gray mr-3"><%= "# #{@hospital.uid}" %></span>
+                    <span><%= @hospital.name %></span>
+                </h6>
+            </div>
+
+            <div class="col-12 form-group">
+                <span class="badge badge-primary"><%= @hospital.province %></span>
+                <span class="badge badge-danger"><%= @hospital.level %></span>
+                <span class="badge badge-light"><%= show_timestamps(@hospital) %></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <div class="tag">
+                    111
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

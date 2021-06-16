@@ -20,4 +20,13 @@ class HospitalsController < ApplicationController
     @hospitals = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 50)
   end
 
+  def show
+    load_hospital
+  end
+
+  private
+  def load_hospital
+    @hospital = Hospital.find(params[:id])
+  end
+
 end

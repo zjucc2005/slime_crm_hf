@@ -7,7 +7,22 @@ class DoctorsController < ApplicationController
   def index
     set_per_page
     query = user_channel_filter(Candidate.doctor)
-    @doctors = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
+    # query code here >>
+    query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { :name => params[:name].strip }) if params[:name].present?
+    query = query.where('candidates.phone ~* :phone OR candidates.phone1 ~* :phone', { :phone => params[:phone].strip.shellescape }) if params[:phone].present?
+    query = query.where('candidates.email ~* :email OR candidates.email1 ~* :email', { :email => params[:email].strip.shellescape }) if params[:email].present?
+    query = query.where('candidates.is_available' => params[:is_available] == 'nil' ? nil : params[:is_available] ) if params[:is_available].present?
+    %w[id user_channel_id].each do |field|
+      query = query.where(field.to_sym => params[field].strip) if params[field].present?
+    end
+    %w[expertise].each do |field|
+      query = query.where("#{field} ~* ?", params[field].strip) if params[field].present?
+    end
+    %w[org_cn department title].each do |field|
+      query = query.joins(:experiences).where("candidate_experiences.#{field} ~* ?", params[field].strip) if params[field].present?
+    end
+
+    @doctors = query.distinct.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
   end
 
   # GET /doctors/:id

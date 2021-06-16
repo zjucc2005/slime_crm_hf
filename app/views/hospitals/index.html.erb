@@ -37,7 +37,7 @@
             <% @hospitals.each do |hospital| %>
                 <tr>
                     <td><%= content_tag :span, "# #{hospital.uid}", :class => 'text-gray' %></td>
-                    <td><%= hospital.name %></td>
+                    <td><%= link_to hospital.name, hospital_path(hospital) %></td>
                     <td><%= hospital.province %></td>
                     <td><%= hospital.level %></td>
                     <td><%= hospital.created_at.strftime('%F %T') %></td>

@@ -9,13 +9,12 @@ class CandidatesController < ApplicationController
     @hl_words = [] # 高亮关键词
     query = user_channel_filter(Candidate.expert)
     # query code here >>
-    query = query.where('candidates.id' => params[:id].strip) if params[:id].present?
     query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { :name => params[:name].strip }) if params[:name].present?
     query = query.where('candidates.phone ~* :phone OR candidates.phone1 ~* :phone', { :phone => params[:phone].strip.shellescape }) if params[:phone].present?
     query = query.where('candidates.email ~* :email OR candidates.email1 ~* :email', { :email => params[:email].strip.shellescape }) if params[:email].present?
     query = query.where('candidates.industry' => params[:industry].strip) if params[:industry].present?
     query = query.where('candidates.is_available' => params[:is_available] == 'nil' ? nil : params[:is_available] ) if params[:is_available].present?
-    %w[recommender_id data_channel user_channel_id].each do |field|
+    %w[id recommender_id data_channel user_channel_id].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
 
