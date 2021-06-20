@@ -10,6 +10,11 @@ class HomeController < ApplicationController
     end
   end
 
+  def css_demo
+    arr = [2,3,5]
+    arr.inject(:*)
+  end
+
   private
   def load_dashboard_of_admin
     @total_experts              = user_channel_filter(Candidate.expert).count

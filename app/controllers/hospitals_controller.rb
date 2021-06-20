@@ -22,6 +22,13 @@ class HospitalsController < ApplicationController
 
   def show
     load_hospital
+
+    @data = []
+    @hospital.departments.each do |dept|
+      count = Candidate.doctor.joins(:experiences).
+        where('candidate_experiences.org_cn = ? AND candidate_experiences.department = ?', @hospital.name, dept.name).count
+      @data << { dept: dept.name, count: count }
+    end
   end
 
   private

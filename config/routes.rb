@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   root to: 'home#index'
+  get 'css_demo', to: 'home#css_demo'
 
   resources :api, :only => [] do
     post :createExpert, on: :collection

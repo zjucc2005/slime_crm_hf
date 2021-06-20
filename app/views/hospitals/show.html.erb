@@ -21,11 +21,16 @@
         </div>
 
         <div class="row">
+            <% @data.each do |item| %>
             <div class="col-4">
-                <div class="tag">
-                    111
+                <%= link_to doctors_path(org_cn: @hospital.name, department: item[:dept]), :class => 'text-decoration-none', :target => '_blank' do %>
+                <div class="ctag">
+                    <div class="ctag-item teal f-2"><%= item[:dept] %></div>
+                    <div class="ctag-item text-bold"><%= item[:count] %></div>
                 </div>
+                <% end %>
             </div>
+            <% end %>
         </div>
     </div>
 </div>
