@@ -8,7 +8,7 @@ class CandidateExperience < ApplicationRecord
 
   # Validations
   validates_inclusion_of :category, :in => CATEGORY
-  validates_presence_of :started_at, :org_cn
+  validates_presence_of  :org_cn
 
   # Scope
   scope :work, -> { where(category: 'work') }

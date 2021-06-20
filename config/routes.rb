@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   root to: 'home#index'
+  get 'css_demo', to: 'home#css_demo'
 
   resources :api, :only => [] do
     post :createExpert, on: :collection
@@ -59,6 +60,11 @@ Rails.application.routes.draw do
 
   resources :candidate_payment_infos
   resources :candidate_comments
+
+  resources :doctors do
+    get :import_haodf,  on: :collection  # show importing result
+    post :import_haodf, on: :collection  # import doctors from haodf data
+  end
 
   resources :companies do
     get :new_contract,        on: :member
@@ -142,6 +148,7 @@ Rails.application.routes.draw do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection
   end
+  resources :hospitals
   resources :banks
   resources :industries
   resources :search_aliases

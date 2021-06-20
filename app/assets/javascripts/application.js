@@ -3,3 +3,4 @@
 //= require echart
 //= require jquery.datetimepicker.full
 //= require clipboard.min
+//= require vue

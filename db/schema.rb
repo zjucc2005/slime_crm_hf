@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_26_075348) do
+ActiveRecord::Schema.define(version: 2021_06_13_120401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,8 @@ ActiveRecord::Schema.define(version: 2021_04_26_075348) do
     t.string "data_channel"
     t.bigint "user_channel_id"
     t.string "file"
+    t.text "expertise"
+    t.integer "inquiry"
     t.index ["company_id"], name: "index_candidates_on_company_id"
     t.index ["recommender_id"], name: "index_candidates_on_recommender_id"
     t.index ["user_channel_id"], name: "index_candidates_on_user_channel_id"
@@ -174,6 +176,22 @@ ActiveRecord::Schema.define(version: 2021_04_26_075348) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "shorthand_rate", precision: 10, scale: 2
     t.index ["company_id"], name: "index_contracts_on_company_id"
+  end
+
+  create_table "hospital_departments", force: :cascade do |t|
+    t.bigint "hospital_id"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hospital_id"], name: "index_hospital_departments_on_hospital_id"
+  end
+
+  create_table "hospitals", force: :cascade do |t|
+    t.string "name"
+    t.string "province"
+    t.string "level"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "industries", force: :cascade do |t|

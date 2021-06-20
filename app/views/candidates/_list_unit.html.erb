@@ -49,7 +49,7 @@
                 <% end %>
             </div>
         </div>
-        <div class="col-lg-4 d-flex align-items-center flex-column text-left">
+        <div class="col-lg-4 d-flex flex-column text-left">
             <div class="my-3 my-lg-0 text-smaller" title="<%#= candidate.description %>">
                 <%= hl(truncate(candidate.description, length: 150), @hl_words) %>
             </div>
@@ -69,7 +69,6 @@
                     <span><%= "#{call_record.updated_at.strftime('%F %H:%M')}, #{call_record.operator.name_cn}" %></span>
                 </div>
             <% end %>
-            <div class="mb-2"></div>
             <% candidate.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).order(:is_top => :desc, :created_at => :desc).limit(2).each do |comment| %>
                 <div class="text-smaller" title="<%= comment.content %>">
                     <span class="text-gray mr-1"><%= comment.created_at.strftime('%F') %></span>

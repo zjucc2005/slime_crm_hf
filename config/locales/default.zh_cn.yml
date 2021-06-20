@@ -40,6 +40,7 @@ zh_cn:
   import_expert: "导入专家"
   import_gllue_candidates: "导入Gllue候选人"
   import_gllue_id: "导入Gllue ID"
+  import_haodf: "导入好大夫数据"
   imported_max_gllue_id: "已导入的最大Gllue ID"
   inconsistent_password: "两次输入的密码不一致"
   invalid_current_password: "原密码错误"

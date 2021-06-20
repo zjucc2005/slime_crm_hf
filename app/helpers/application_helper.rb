@@ -15,8 +15,20 @@ module ApplicationHelper
     end
   end
 
-  def fa_icon_tag(category)
-    content_tag :i, nil, :class => "fa fa-#{category}"
+  def fa_icon_tag(category, color='')
+    if color.present?
+      content_tag :i, nil, :class => "fa fa-#{category}", :style => "color: #{color}"
+    else
+      content_tag :i, nil, :class => "fa fa-#{category}"
+    end
+  end
+
+  def model_icon(model_name)
+    case model_name
+      when 'Doctor'        then fa_icon_tag('heartbeat', '#dc3545')
+      when 'Hospital'      then fa_icon_tag('heartbeat', '#dc3545')
+      when 'LocationDatum' then fa_icon_tag('location-arrow', '#007bff')
+    end
   end
 
   def model_error_tag(instance)

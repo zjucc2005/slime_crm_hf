@@ -30,9 +30,11 @@ en:
       candidate_payment_info: "Candidate payment info"
       expert: "Expert"
       client: "Client"
+      doctor: "Doctor"
       company: "Company"
       contract: "Contract"
       location_datum: "Location datum"
+      hospital: "Hospital list"
       bank: "Bank list"
       industry: "Industry list"
       search_alias: "Search alias list"
@@ -86,6 +88,7 @@ en:
         phone1: "Phone2"
         industry: "Industry"
         title: "Title"
+        educate_title: "Educate Title"
         date_of_birth: "Date of birth"
         gender: "Gender"
         description: "Description"
@@ -106,6 +109,8 @@ en:
         work_experiences: "Work experience"
         recommender_id: "Recommender ID"
         file: "Attachment"
+        inquiry: "Inquiry"
+        expertise: "Expertise"
 
       candidate_experience:
         category: "Category"
@@ -114,6 +119,7 @@ en:
         org_cn: "Company(CN)"
         org_en: "Company(EN)"
         company: "Company"
+        hospital: "Hospital"
         department: "Department"
         title: "Job title"
         description: "Description"
@@ -183,6 +189,12 @@ en:
         province: "Province"
         city: "City"
         district: "District"
+
+      hospital:
+        name: "Name"
+        province: "Province"
+        level: "Level"
+        department: "Department"
 
       bank:
         name: "Name"

@@ -48,6 +48,7 @@ zh_cn:
     errors:
       messages:
         validation_failed: "验证失败: %{errors}"
+        record_invalid: "参数错误"
         # Append our own errors here
 
     # Translate model names
@@ -59,9 +60,11 @@ zh_cn:
       candidate_payment_info: "支付信息"
       expert: "专家"
       client: "客户"
+      doctor: "医生"
       company: "公司"
       contract: "合同"
       location_datum: "行政区划数据"
+      hospital: "医院数据"
       bank: "银行数据"
       industry: "行业数据"
       search_alias: "搜索别名数据"
@@ -114,7 +117,8 @@ zh_cn:
         phone: "电话"
         phone1: "电话2"
         industry: "行业"
-        title: "职位"
+        title: "职位/职称"
+        educate_title: "教育职称"
         date_of_birth: "出生日期"
         gender: "性别"
         description: "背景说明"
@@ -135,6 +139,8 @@ zh_cn:
         work_experiences: "工作经历"
         recommender_id: "推荐人ID"
         file: "附件"
+        inquiry: "Inquiry"
+        expertise: "专长"
 
       candidate_experience:
         category: "类型"
@@ -143,8 +149,9 @@ zh_cn:
         org_cn: "公司(中文)"
         org_en: "公司(英文)"
         company: "公司"
-        department: "部门"
-        title: "职位"
+        hospital: "医院"
+        department: "部门/科室"
+        title: "职位/职称"
         description: "描述"
         duty: "职责"
         duration: "起止时间"
@@ -212,6 +219,12 @@ zh_cn:
         province: "省份"
         city: "城市"
         district: "县区"
+
+      hospital:
+        name: "名称"
+        province: "省份"
+        level: "级别"
+        department: "科室"
 
       bank:
         name: "名称"

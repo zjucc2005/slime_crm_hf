@@ -17,6 +17,10 @@ module DefaultHelper
     { 'RMB' => '¥', 'USD' => '$' }[val] || val
   end
 
+  def hospital_level_options
+    Hospital::LEVEL
+  end
+
   def bank_options
     Bank.all.order(:name).pluck(:name)
   end
