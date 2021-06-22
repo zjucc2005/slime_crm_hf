@@ -4,17 +4,18 @@
             <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:expert))}" %>
         <% end if can?(:new, Candidate) %>
         <%= render :partial => 'candidates/widgets/btn_import_expert' %>
+        <%= render :partial => 'candidates/widgets/batch_update_file' %>
         <%= render :partial => 'candidates/widgets/expert_card', :locals => { :uid => nil } %>
         <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => nil} %>
     </div>
     <div>
         <%= render :partial => 'candidates/widgets/show_history' %>
-        <%= render :partial => 'candidates/widgets/per_page_select' %>
+        <%= render :partial => 'shared/per_page_select' %>
         <%= render :partial => 'candidates/widgets/search_modal' %>
     </div>
 </div>
 
-<%= render :partial => 'candidates/loading_modal/loading_modal' %>
+<%= render :partial => 'shared/loading_modal' %>
 
 <% if @candidates.any? %>
     <%= render :partial => 'list_unit' %>

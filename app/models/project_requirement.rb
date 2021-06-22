@@ -4,12 +4,13 @@ class ProjectRequirement < ApplicationRecord
   STATUS = {
     :ongoing     => '进展中',
     :finished    => '已完成',
-    :unfinished  => '未完成',
-    # :cancelled   => '已取消'
+    # :unfinished  => '未完成',
+    :cancelled   => '已取消'
   }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by
+  belongs_to :operator, :class_name => 'User', :optional => true
   belongs_to :project, :class_name => 'Project'
 
   # Validations

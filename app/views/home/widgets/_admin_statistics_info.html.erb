@@ -33,13 +33,13 @@
     <div class="card mb-3">
         <div class="card-header">
             <h6 class="mb-0">
-                <%= t('dashboard.unscheduled_projects') %>
+                <%= t('dashboard.ongoing_project_requirements') %>
             </h6>
         </div>
         <div class="card-body p-0">
-            <div id="unscheduled_projects_wrapper"></div>
+            <div id="ongoing_project_requirements_wrapper"></div>
             <div class="text-center text-bold">
-                <%= link_to '···', projects_path, :title => t(:show_all) %>
+                <%= link_to '···', project_requirements_path(status: 'ongoing'), :title => t(:show_all) %>
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
     $(document).ready(function(){
         $.get('statistics/current_month_count_infos.js');
         $.get('statistics/current_month_task_ranking.js?limit=10&mode=1');
-        $.get('statistics/unscheduled_projects.js?limit=10');
+        $.get('statistics/ongoing_project_requirements.js?limit=10');
         $.get('statistics/ongoing_project_tasks.js?limit=10');
     });
 </script>

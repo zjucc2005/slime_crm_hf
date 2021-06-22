@@ -3,9 +3,9 @@ module CandidatesHelper
 
   def show_candidate_category
     category = case action_name
-               when 'new' then 'expert'
-               when 'edit' then @candidate.category
-               else 'unknown'
+                 when 'new' then 'expert'
+                 when 'edit' then @candidate.category
+                 else 'unknown'
                end
     Candidate::CATEGORY[category]
   end

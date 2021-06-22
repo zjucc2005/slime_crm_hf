@@ -386,12 +386,21 @@ class ProjectsController < ApplicationController
     @project_tasks = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
-  # GET /projects/:id/export_billing_excel?mode=1
+  # GET /projects/:id/user_options.json
+  def user_options
+    load_project
+    users = @project.users
+    render :json => users.map{|user| [user.uid_name , user.id] }
+  end
+
+  # POST /projects/:id/export_billing_excel?template=1&close_or_not=false
   def export_billing_excel
     load_project
     begin
-      case params[:mode]
-        when 'iqvia_settlement' then export_iqvia_settlement_template(@project)
+      case params[:template]
+        when 'settlement_20210604_1' then export_settlement_20210604_1(@project)
+        when 'settlement_20210604_2' then export_settlement_20210604_2(@project)
+        when 'iqvia_settlement'      then export_iqvia_settlement_template(@project)
         else raise('params error')
       end
     rescue Exception => e
@@ -419,7 +428,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_requirement_params
-    params.require(:project_requirement).permit(:content, :demand_number, :file)
+    params.require(:project_requirement).permit(:content, :demand_number, :file, :operator_id)
   end
 
   # 加载客户公司
@@ -562,8 +571,11 @@ class ProjectsController < ApplicationController
     sheet[row + 3][0].change_horizontal_alignment('left')
     sheet[row + 3][0].change_font_bold(true)
 
-    query.each do |task|
-      task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+    ActiveRecord::Base.transaction do
+      query.each do |task|
+        task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+      end
+      project.close! if params[:close_or_not] == 'true'  # 关闭项目选项
     end
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
@@ -572,4 +584,100 @@ class ProjectsController < ApplicationController
     book.write file_path
     send_file file_path
   end
+
+  def export_settlement_20210604_1(project)
+    template_path = 'public/templates/settlement_template_20210604_1.xlsx'
+    raise 'template file not found' unless File.exist?(template_path)
+    query = project.project_tasks.where(status: 'finished').order(:started_at => :asc)
+    raise 'project task not found' if query.count == 0
+
+    book = ::RubyXL::Parser.parse(template_path)  # read from template file
+    sheet = book[0]
+    sheet.add_cell(0, 1, query.count)  # B1, 访谈个数
+
+    query.each_with_index do |task, index|
+      row = index + 2
+      sheet.add_cell(row, 0, task.project.name)                                               # A, 项目名称
+      sheet.add_cell(row, 1, task.project.code)                                               # B, 项目号
+      sheet.add_cell(row, 2, '')                                                              # C, 访谈人
+      sheet.add_cell(row, 3, ProjectTask::INTERVIEW_FORM[task.interview_form])                # D, 访问类型
+      sheet.add_cell(row, 4, "# #{task.expert.uid}")                                          # E, 专家编号
+      sheet.add_cell(row, 5, task.expert.mr_name)                                             # F, 专家称呼
+      exp = task.expert.latest_work_experience
+      exp ? sheet.add_cell(row, 6, "#{exp.org_cn}#{exp.title}") : sheet.add_cell(row, 6, '')  # G, 专家信息
+      sheet.add_cell(row, 7, (task.started_at.strftime('%F') rescue ''))                      # H, 访谈日期
+      sheet.add_cell(row, 8, (task.started_at.strftime('%H:%M') rescue ''))                   # I, 开始时间
+      sheet.add_cell(row, 9, (task.ended_at.strftime('%H:%M') rescue '' ))                    # J, 结束时间
+      sheet.add_cell(row, 10, task.duration)                                                  # K, 访谈时长
+      sheet.add_cell(row, 11, task.charge_duration)                                           # L, 收费时长
+      sheet.add_cell(row, 12, (2500 * task.expert_rate).round(2))                             # M, 访谈单价
+      sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
+      sheet.add_cell(row, 14, task.actual_price)                                              # O, 折后费用
+      sheet.add_cell(row, 15, task.costs.where(category: 'expert').sum(:price))               # P, 礼金费用
+    end
+
+    ActiveRecord::Base.transaction do
+      query.each do |task|
+        task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+      end
+      project.close! if params[:close_or_not] == 'true'  # 关闭项目选项
+    end
+
+    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p file_dir unless File.exist? file_dir
+    file_path = "#{file_dir}/#{project.code}_财务模板1.xlsx"
+    book.write file_path
+    send_file file_path
+  end
+
+  def export_settlement_20210604_2(project)
+    template_path = 'public/templates/settlement_template_20210604_2.xlsx'
+    raise 'template file not found' unless File.exist?(template_path)
+    query = project.project_tasks.where(status: 'finished').order(:started_at => :asc)
+    raise 'project task not found' if query.count == 0
+
+    book = ::RubyXL::Parser.parse(template_path)  # read from template file
+    sheet = book[0]
+
+    query.each_with_index do |task, index|
+      row = index + 2
+      sheet.add_cell(row, 0, task.project.code)                                               # A, 内部项目号
+      sheet.add_cell(row, 1, index + 1)                                                       # B, 序号
+      sheet.add_cell(row, 2, '全国')                                                          # C, 城市
+      sheet.add_cell(row, 3, '')                                                              # D
+      sheet.add_cell(row, 4, '')                                                              # E
+      sheet.add_cell(row, 5, '')                                                              # F
+      sheet.add_cell(row, 6, 'IDI（包括面对面深访及电话深访）')                                  # G
+      sheet.add_cell(row, 7, '')                                                              # H
+      exp = task.expert.latest_work_experience
+      exp ? sheet.add_cell(row, 8, "#{exp.org_cn}#{exp.title}") : sheet.add_cell(row, 8, '')  # I, 医院
+      sheet.add_cell(row, 9, '')                                                              # J, 医院级别
+      sheet.add_cell(row, 10, '')                                                             # K, 科室
+      sheet.add_cell(row, 11, task.expert.mr_name)                                            # L, 医生姓名
+      sheet.add_cell(row, 12, '')                                                             # M, 职称
+      sheet.add_cell(row, 13, '')                                                             # N, 医生座机
+      sheet.add_cell(row, 14, '')                                                             # O, 医生手机号码
+      sheet.add_cell(row, 15, (task.started_at.strftime('%F') rescue '') )                    # P, 访问日期
+      sheet.add_cell(row, 16, (task.started_at.strftime('%H:%M') rescue ''))                  # Q, 访问时间
+      sheet.add_cell(row, 17, '')                                                             # R, 访问地点
+      sheet.add_cell(row, 18, '')                                                             # S, 礼金支付方
+      sheet.add_cell(row, 19, task.costs.where(category: 'expert').sum(:price))               # T, 礼金支付数额
+      sheet.add_cell(row, 20, '银行卡转帐（公对私）')                                           # U, 礼金支付方式
+      sheet.add_cell(row, 21, '')                                                             # V
+    end
+
+    ActiveRecord::Base.transaction do
+      query.each do |task|
+        task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
+      end
+      project.close! if params[:close_or_not] == 'true'  # 关闭项目选项
+    end
+
+    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p file_dir unless File.exist? file_dir
+    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
+    book.write file_path
+    send_file file_path
+  end
+
 end

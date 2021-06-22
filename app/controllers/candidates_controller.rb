@@ -9,13 +9,12 @@ class CandidatesController < ApplicationController
     @hl_words = [] # 高亮关键词
     query = user_channel_filter(Candidate.expert)
     # query code here >>
-    query = query.where('candidates.id' => params[:id].strip) if params[:id].present?
     query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { :name => params[:name].strip }) if params[:name].present?
     query = query.where('candidates.phone ~* :phone OR candidates.phone1 ~* :phone', { :phone => params[:phone].strip.shellescape }) if params[:phone].present?
     query = query.where('candidates.email ~* :email OR candidates.email1 ~* :email', { :email => params[:email].strip.shellescape }) if params[:email].present?
     query = query.where('candidates.industry' => params[:industry].strip) if params[:industry].present?
     query = query.where('candidates.is_available' => params[:is_available] == 'nil' ? nil : params[:is_available] ) if params[:is_available].present?
-    %w[recommender_id data_channel user_channel_id].each do |field|
+    %w[id recommender_id data_channel user_channel_id].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
 
@@ -256,8 +255,8 @@ class CandidatesController < ApplicationController
     if request.post?
       begin
         sheet = open_spreadsheet(params[:file])
-        @errors << 'excel表格里没有信息' if sheet.last_row < 2
-        @errors << 'excel不能超过10000行' if sheet.last_row > 10000
+        raise 'excel表格里没有信息' if sheet.last_row < 2
+        raise 'excel不能超过10000行' if sheet.last_row > 10000
         2.upto(sheet.last_row) do |i|
           parser = Utils::ExpertTemplateParser.new(sheet.row(i), current_user.id, current_user.user_channel_id)
           @errors << "Row #{i}: #{parser.errors.join(', ')}" unless parser.import
@@ -376,6 +375,20 @@ class CandidatesController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # POST /candidates/batch_update_file
+  def batch_update_file
+    @files = params[:file]
+    @files.each do |file|
+      filename  = file.original_filename
+      extname   = File.extname(filename)
+      basename  = filename.split(extname)[0]
+      candidate = Candidate.where(id: basename).first
+      candidate.update!(file: file) if candidate
+    end
+    flash[:success] = t(:operation_succeeded)
+    redirect_to candidates_path
+  end
+
   private
   def load_candidate
     @candidate = Candidate.find(params[:id])
@@ -390,7 +403,7 @@ class CandidatesController < ApplicationController
     params.require(:candidate).permit(:first_name, :last_name, :nickname, :city, :email, :email1, :phone, :phone1,
                                       :industry, :title, :company_id, :date_of_birth, :gender, :description,
                                       :is_available, :cpt, :currency, :recommender_id, :wechat, :cpt_face_to_face,
-                                      :data_channel)
+                                      :data_channel, :file)
   end
 
   def experience_fields

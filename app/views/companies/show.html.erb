@@ -12,6 +12,9 @@
                     <span><%= @company.name %></span>
                 </h6>
                 <div class="btn-group btn-group-sm">
+                    <%= link_to finance_summary_statistics_path(company_id: @company.id), :class => 'btn btn-default' do %>
+                        <%= fa_icon_tag('bar-chart') %> <%= '财务统计' %>
+                    <% end %>
                     <%= link_to edit_company_path(@company), :class => 'btn btn-dark' do %>
                         <%= fa_icon_tag('edit') %> <%= "#{t('action.edit_model', :model => mt(:company))}" %>
                     <% end %>

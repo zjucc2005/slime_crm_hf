@@ -18,6 +18,11 @@
                         <%= link_to mt(:expert), candidates_path, :class => "nav-link #{yield :nav_candidates}" %>
                     </li>
                 <% end %>
+                <% if can? :index, Doctor %>
+                    <li class="nav-item">
+                        <%= link_to mt(:doctor), doctors_path, :class => "nav-link #{yield :nav_doctors}" %>
+                    </li>
+                <% end %>
                 <% if can? :index, Company %>
                     <li class="nav-item">
                         <%= link_to mt(:company), companies_path, :class => "nav-link #{yield :nav_companies}" %>
@@ -26,6 +31,21 @@
                 <% if can? :index, Project %>
                     <li class="nav-item">
                         <%= link_to mt(:project), projects_path, :class => "nav-link #{yield :nav_projects}" %>
+                    </li>
+                <% end if false %>
+                <% if can? :index, Project %>
+                    <li class="nav-item dropdown">
+                        <%= link_to '#', :id => 'projects-drop', :data => { :toggle => 'dropdown' }, :class => "nav-link dropdown-toggle #{yield :nav_projects}" do %>
+                            <%= controller_name == 'project_requirements' ? mt(:project_requirement) : mt(:project) %>
+                        <% end %>
+                        <div class="dropdown-menu fa-fixed">
+                            <%= link_to projects_path, :class => 'dropdown-item' do %>
+                                <%= fa_icon_tag('map') %> <%= mt(:project) %>
+                            <% end if can?(:index, Project) %>
+                            <%= link_to project_requirements_path, :class => 'dropdown-item' do %>
+                                <%= fa_icon_tag('tasks') %> <%= mt(:project_requirement) %>
+                            <% end if can?(:index, ProjectRequirement) %>
+                        </div>
                     </li>
                 <% end %>
                 <% if can? :index, CallRecord %>
@@ -57,8 +77,11 @@
                             <%= fa_icon_tag('drivers-license-o') %> <%= mt(:card_template) %>
                         <% end if can?(:index, CardTemplate) %>
                         <%= link_to location_data_path, :class => 'dropdown-item' do %>
-                            <%= fa_icon_tag('location-arrow') %> <%= mt(:location_datum) %>
+                            <%= model_icon('LocationDatum') %> <%= mt(:location_datum) %>
                         <% end if can?(:index, LocationDatum) %>
+                        <%= link_to hospitals_path, :class => 'dropdown-item' do %>
+                            <%= model_icon('Hospital') %> <%= mt(:hospital) %>
+                        <% end if can?(:index, Hospital) %>
                         <%= link_to banks_path, :class => 'dropdown-item' do %>
                             <%= fa_icon_tag('bank') %> <%= mt(:bank) %>
                         <% end if can?(:index, Bank) %>
@@ -78,6 +101,9 @@
                         <%= link_to destroy_user_session_path, :method => :delete, :data => { :confirm => t(:sure_to_logout) }, :class => 'dropdown-item' do %>
                             <i class="fa fa-sign-out"></i> <%= t('action.quit') %>
                         <% end if signed_in? %>
+                        <%= link_to css_demo_path, :class => 'dropdown-item' do %>
+                            <i class="fa fa-cc text-danger"></i> CSS DEMO
+                        <% end if can?(:css_demo, HomeController) %>
                     </div>
                 </li>
             </ul>

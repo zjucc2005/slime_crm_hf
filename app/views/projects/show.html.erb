@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h5><%= fa_icon_tag('map') %> <%= mt(:project) %></h5>
-        <%= link_to fa_icon_tag('close'), projects_path, :class => 'card-header-close' %>
+        <%= link_to fa_icon_tag('close'), 'javascript:history.go(-1);', :class => 'card-header-close' %>
     </div>
 
     <div class="card-body">
@@ -14,7 +14,7 @@
                 <% if can?(:edit, Project) && @can_operate %>
                     <div class="btn-group btn-group-sm">
                         <div class="btn-group btn-group-sm">
-                            <%= render :partial => 'projects/widgets/export_billing', :locals => { :project => @project } %>
+                            <%= render :partial => 'projects/widgets/export_billing_modal', :locals => { :project => @project } %>
                         </div>
 
                         <%= link_to start_project_path(@project), :method => :put, :class => 'btn btn-success', :data => { :confirm => t(:sure)}  do %>

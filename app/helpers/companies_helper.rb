@@ -1,6 +1,12 @@
 # encoding: utf-8
 module CompaniesHelper
 
+  def company_options
+    user_channel_filter(Company.all).map do |company|
+      [company.company_option_friendly, company.id]
+    end
+  end
+
   # category display style
   def company_category_badge(category)
     dict = { :normal => 'secondary', :client => 'primary' }.stringify_keys

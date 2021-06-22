@@ -2,7 +2,7 @@
 class Candidate < ApplicationRecord
 
   # ENUM
-  CATEGORY = { :expert => '专家', :client => '客户' }.stringify_keys
+  CATEGORY = { :expert => '专家', :doctor => '医生', :client => '客户' }.stringify_keys
   DATA_SOURCE = { :manual => '手工录入', :excel => 'Excel导入', :plugin => '插件采集', :api => 'API创建' }.stringify_keys
   GENDER = { :male => '男', :female => '女' }.stringify_keys
   DATA_CHANNEL = {
@@ -31,6 +31,7 @@ class Candidate < ApplicationRecord
   has_many :project_tasks, :class_name => 'ProjectTask', :foreign_key => :expert_id
   has_many :candidate_access_logs, :class_name => 'CandidateAccessLog'
   has_many :recommended_experts, :class_name => 'Candidate', :foreign_key => :recommender_id
+  has_many :call_records, :class_name => 'CallRecord'
 
   # Validations
   validates_inclusion_of :category, :in => CATEGORY.keys
@@ -40,10 +41,13 @@ class Candidate < ApplicationRecord
   validates_presence_of :name, :last_name
   validates_presence_of :cpt
 
+  mount_uploader :file, FileUploader
+
   before_validation :setup, :validates_uniqueness_of_phone, :on => [:create, :update]
 
   # Scopes
   scope :expert, -> { where(category: 'expert') }
+  scope :doctor, -> { where(category: 'doctor') }
   scope :client, -> { where(category: 'client') }
 
   class << self
@@ -70,11 +74,13 @@ class Candidate < ApplicationRecord
       self.projects.count == 0  # 未参与项目
     elsif self.category == 'expert'
       self.projects.count == 0 && self.recommended_experts.count == 0  # 未参与项目 & 未推荐过其他专家
+    elsif self.category == 'doctor'
+      self.projects.count == 0
     end
   end
 
   def validates_presence_of_experiences
-    return true unless self.category == 'expert'
+    return true unless %w[expert doctor].include?(self.category)
     if self.experiences.work.count == 0
       errors.add(:work_experiences, :blank)
       false
@@ -122,6 +128,7 @@ class Candidate < ApplicationRecord
       when :company      then self.latest_work_experience.try(:org_cn)
       when :title        then self.latest_work_experience.try(:title)
       when :expert_level then self._c_t_expert_level
+      when :rate         then self.cpt.to_i
       when :gj_rate      then self._c_t_gj_rate_
       when :iqvia_rate   then self._c_t_iqvia_rate_
       else nil
@@ -158,10 +165,10 @@ class Candidate < ApplicationRecord
     if currency == 'RMB'
       _rate_ = case self.cpt
                  when 0 then 0
-                 when 0..1000 then 2500
-                 when 1000..1500 then 3250
-                 when 1500..2000 then 4000
-                 when 2000..2500 then 4750
+                 when 0..1000 then 2500 - self.cpt.to_i
+                 when 1000..1500 then 3250 - self.cpt.to_i
+                 when 1500..2000 then 4000 - self.cpt.to_i
+                 when 2000..2500 then 4750 - self.cpt.to_i
                  else 'TBD'
                end
     end

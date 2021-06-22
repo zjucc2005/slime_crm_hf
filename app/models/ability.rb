@@ -53,6 +53,7 @@ class Ability
     can :manage, Candidate
     can :manage, CandidateComment
     can :manage, CandidatePaymentInfo
+    can :manage, Doctor
     can :manage, Company
     can :manage, Contract
     can :manage, Project
@@ -63,6 +64,7 @@ class Ability
     can :manage, CallRecord
 
     can :manage, LocationDatum
+    can :manage, Hospital
     can :manage, Bank
     can :manage, Industry
     can :manage, SearchAlias
@@ -77,6 +79,8 @@ class Ability
     can :manage, Candidate
     can :manage, CandidateComment
     can :manage, CandidatePaymentInfo
+    can :manage, Doctor
+    cannot :import_haodf, Doctor
     can [:new_client], Company
     can :manage, Project
     can :manage, ProjectCandidate
@@ -86,6 +90,7 @@ class Ability
     can :manage, CallRecord
 
     can :manage, LocationDatum
+    can :manage, Hospital
     can :manage, Bank
     can :read, Industry
   end
@@ -96,6 +101,8 @@ class Ability
     can :manage, Candidate
     can :manage, CandidateComment
     can :manage, CandidatePaymentInfo
+    can :manage, Doctor
+    cannot :import_haodf, Doctor
     can [:new_client], Company
     can [:index, :show, :add_users, :delete_user, :add_clients, :delete_client, :add_experts, :delete_expert,
          :add_project_task, :project_tasks, :experts], Project
@@ -106,20 +113,24 @@ class Ability
     can :manage, CallRecord
 
     can :manage, LocationDatum
+    can :manage, Hospital
     can :manage, Bank
     can :read, Industry
   end
 
   def finance_ability
     can_edit_my_account
-    can [:read, :gen_card, :project_tasks, :comments, :payment_infos, :create_client], Candidate
+    can [:read, :destroy, :gen_card, :project_tasks, :comments, :payment_infos, :create_client, :edit_client, :update_client], Candidate
+    can :read, Doctor
     can :manage, Company
     can :manage, Contract
     can [:index, :show, :edit, :add_clients, :delete_client, :project_tasks, :experts, :export_billing_excel], Project
-    can [:show], ProjectTask
+    can :read, ProjectRequirement
+    can [:show, :moveto], ProjectTask
     can :manage, Finance
 
     can :manage, LocationDatum
+    can :read, Hospital
     can :read, Bank
     can :read, Industry
   end

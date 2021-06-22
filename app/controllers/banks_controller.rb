@@ -6,7 +6,7 @@ class BanksController < ApplicationController
   # GET /banks
   def index
     query = Bank.all
-    query = query.where('name LIKE ?', "%#{params[:name].strip}%") if params[:name].present?
+    query = query.where('name ILIKE ?', "%#{params[:name].strip}%") if params[:name].present?
     @banks = query.order(:created_at => :asc).paginate(:page => params[:page], :per_page => 50)
   end
 

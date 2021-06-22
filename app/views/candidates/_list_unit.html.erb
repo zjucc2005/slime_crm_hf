@@ -49,19 +49,27 @@
                 <% end %>
             </div>
         </div>
-        <div class="col-lg-4 d-flex align-items-center flex-column text-left">
+        <div class="col-lg-4 d-flex flex-column text-left">
             <div class="my-3 my-lg-0 text-smaller" title="<%#= candidate.description %>">
                 <%= hl(truncate(candidate.description, length: 150), @hl_words) %>
             </div>
         </div>
         <div class="col-lg-4 d-flex flex-column text-left">
-            <div class="text-smaller mb-2">
+            <div class="text-smaller">
                 <span>访谈次数： </span>
                 <span><%= normal_project_task_count(candidate) %></span>，
                 <span>最近访谈时间： </span>
                 <span><%= user_channel_filter(candidate.project_tasks.where(status: 'finished')).maximum(:started_at).strftime('%F %H:%M') rescue nil %></span>
             </div>
-            <% candidate.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).order(:is_top => :desc, :created_at => :desc).limit(3).each do |comment| %>
+            <% call_record = user_channel_filter(candidate.call_records).order(:updated_at => :desc).first %>
+            <% if call_record %>
+                <div class="text-smaller">
+                    <span>最近通话： </span>
+                    <%= call_record_status_badge(call_record.status) %>
+                    <span><%= "#{call_record.updated_at.strftime('%F %H:%M')}, #{call_record.operator.name_cn}" %></span>
+                </div>
+            <% end %>
+            <% candidate.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).order(:is_top => :desc, :created_at => :desc).limit(2).each do |comment| %>
                 <div class="text-smaller" title="<%= comment.content %>">
                     <span class="text-gray mr-1"><%= comment.created_at.strftime('%F') %></span>
                     <span>[<%= comment.creator.name_cn %>]</span>

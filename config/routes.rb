@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   root to: 'home#index'
+  get 'css_demo', to: 'home#css_demo'
 
   resources :api, :only => [] do
     post :createExpert, on: :collection
@@ -54,10 +55,16 @@ Rails.application.routes.draw do
     get :recommender_info, on: :collection
 
     get :loading_modal, on: :collection
+    post :batch_update_file, on: :collection  # 批量更新附件
   end
 
   resources :candidate_payment_infos
   resources :candidate_comments
+
+  resources :doctors do
+    get :import_haodf,  on: :collection  # show importing result
+    post :import_haodf, on: :collection  # import doctors from haodf data
+  end
 
   resources :companies do
     get :new_contract,        on: :member
@@ -93,13 +100,18 @@ Rails.application.routes.draw do
 
     get :experts,       on: :member
     get :project_tasks, on: :member
+    get :user_options,  on: :member  # 加载项目用户账号信息
 
-    get :export_billing_excel, on: :member  # 导出项目出账模板
+    post :export_billing_excel, on: :member  # 导出项目出账模板
   end
 
   resources :project_requirements do
     put :finish,   on: :member
     put :unfinish, on: :member
+    put :cancel,   on: :member
+
+    get :edit_operator, on: :member
+    put :update_operator, on: :member
   end
 
   resources :project_candidates do
@@ -112,6 +124,7 @@ Rails.application.routes.draw do
     delete :remove_cost, on: :member  # 删除支出信息
 
     put :cancel,         on: :member  # 取消任务
+    put :moveto,         on: :member  # 转移任务
   end
 
   resources :finance do
@@ -135,6 +148,7 @@ Rails.application.routes.draw do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection
   end
+  resources :hospitals
   resources :banks
   resources :industries
   resources :search_aliases
@@ -143,7 +157,8 @@ Rails.application.routes.draw do
   resources :statistics do
     get :current_month_count_infos,  on: :collection
     get :current_month_task_ranking, on: :collection
-    get :unscheduled_projects,       on: :collection
+    # get :unscheduled_projects,       on: :collection
+    get :ongoing_project_requirements, on: :collection
     get :ongoing_project_tasks,      on: :collection
 
     get :finance_summary,            on: :collection

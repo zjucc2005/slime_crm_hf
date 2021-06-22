@@ -126,7 +126,7 @@ class ProjectTasksController < ApplicationController
 
     cost = @project_task.costs.where(id: params[:project_task_cost_id]).first
     cost.try(:destroy!)
-    respond_to{|f| f.js { render :add_cost } }
+    respond_to{|f| f.js }
 
   end
 
@@ -159,6 +159,15 @@ class ProjectTasksController < ApplicationController
       flash[:error] = t(:operation_failed)
     end
     redirect_to project_path(@project_task.project)
+  end
+
+  # PUT /project_tasks/:id/moveto
+  def moveto
+    load_project_task
+
+    @project_task.update(project_id: params[:project_id])
+    flash[:success] = t(:operation_succeeded)
+    redirect_to project_tasks_project_path(@project_task.project)
   end
 
   private
