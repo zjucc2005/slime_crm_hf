@@ -52,10 +52,10 @@
             </div>
             <div class="col-lg-6 d-flex flex-column text-left">
                 <%= content_tag :div, :title => mt(:candidate, :expertise), :class => 'my-3 my-lg-0 text-smaller text-p-1 btn-light' do %>
-                    <%= truncate(candidate.expertise, length: 150) %>
+                    <%= hl(truncate(candidate.expertise, length: 150), [params[:expertise]]) %>
                 <% end if candidate.expertise.present? %>
                 <%= content_tag :div, :title => mt(:candidate, :description), :class => 'my-3 my-lg-0 text-smaller text-p-1' do %>
-                    <%= truncate(candidate.description, length: 150) %>
+                    <%= hl(truncate(candidate.description, length: 150), [params[:description]]) %>
                 <% end if candidate.description.present? %>
             </div>
             <div class="col-lg-3 d-flex flex-column text-left">

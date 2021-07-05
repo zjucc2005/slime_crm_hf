@@ -89,6 +89,7 @@ module CandidatesHelper
   def hl(text, words=[])
     return text if words.blank? || text.nil?
     words.each do |word|
+      next if word.blank?
       text = text.gsub(word, "<hl class='text-red'>#{word}</hl>")
     end
     text.html_safe
