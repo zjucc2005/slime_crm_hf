@@ -2,7 +2,7 @@
 
     <div id="cid_<%= candidate.id %>" class="card card-candidate mb-1">
         <div class="row">
-            <div class="col-lg-4 d-flex flex-column text-center text-md-left">
+            <div class="col-lg-3 d-flex flex-column text-center text-md-left">
                 <div class="d-flex flex-column flex-lg-row align-items-center mb-1">
                     <div class="candidate-checkbox">
                         <%= check_box_tag :'uids[]', candidate.id, false, :class => 'checkbox-square' %>
@@ -50,12 +50,15 @@
                     <% end %>
                 </div>
             </div>
-            <div class="col-lg-4 d-flex flex-column text-left">
-                <div class="my-3 my-lg-0 text-smaller">
-                    <%= truncate(candidate.expertise, length: 150) %>
-                </div>
+            <div class="col-lg-6 d-flex flex-column text-left">
+                <%= content_tag :div, :title => mt(:candidate, :expertise), :class => 'my-3 my-lg-0 text-smaller text-p-1 btn-light' do %>
+                    <%= hl(truncate(candidate.expertise, length: 150), [params[:expertise]]) %>
+                <% end if candidate.expertise.present? %>
+                <%= content_tag :div, :title => mt(:candidate, :description), :class => 'my-3 my-lg-0 text-smaller text-p-1' do %>
+                    <%= hl(truncate(candidate.description, length: 150), [params[:description]]) %>
+                <% end if candidate.description.present? %>
             </div>
-            <div class="col-lg-4 d-flex flex-column text-left">
+            <div class="col-lg-3 d-flex flex-column text-left">
                 <div class="text-smaller">
                     <span>访谈次数： </span>
                     <span><%= normal_project_task_count(candidate) %></span>，

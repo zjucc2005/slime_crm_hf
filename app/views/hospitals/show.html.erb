@@ -20,22 +20,38 @@
             </div>
         </div>
 
-        <div class="row">
-            <% @data.each do |item| %>
-            <div class="col-4">
-
+        <div class="row" id="v-departments">
+            <div v-for="dept in departments" :key="dept.name" class="col-4">
                 <div class="ctag">
-                    <div class="ctag-item teal f-2"><%= item[:dept] %></div>
-                    <div class="ctag-item text-bold"><%= item[:count] %></div>
+                    <div class="ctag-item teal f-2">{{ dept.name }}</div>
+                    <div class="ctag-item text-bold">{{ dept.count }}</div>
                     <div class="ctag-item f-0">
-                        <%= link_to doctors_path(org_cn: @hospital.name, department: item[:dept]), :class => 'text-decoration-none', :target => '_blank', :title => t('action.search') do %>
+                        <a :href="['/doctors?org_cn=' + hospital.name + '&department=' + dept.name]" class="text-decoration-none" target="_blank">
                             <i class="fa fa-angle-right"></i>
-                        <% end %>
+                        </a>
                     </div>
                 </div>
-
             </div>
-            <% end %>
         </div>
     </div>
 </div>
+
+<script>
+    var vm = new Vue({
+        el: '#v-departments',
+        data: {
+            hospital: { id: '<%= @hospital.id %>', name: '<%= @hospital.name %>' },
+            departments: []
+        },
+        mounted: function(){
+            this.$nextTick(function(){
+                var _this_ = this;
+                // 加载部门数据
+                $.get('/hospitals/'+ _this_.hospital.id + '/load_departments', function(data){
+                    _this_.departments = data;
+                    console.log('load departments data:ok')
+                })
+            })
+        }
+    })
+</script>

@@ -27,8 +27,20 @@ class HospitalsController < ApplicationController
     @hospital.departments.each do |dept|
       count = Candidate.doctor.joins(:experiences).
         where('candidate_experiences.org_cn = ? AND candidate_experiences.department = ?', @hospital.name, dept.name).count
-      @data << { dept: dept.name, count: count }
+      @data << { name: dept.name, count: count }
     end
+  end
+
+  # GET, format.json
+  def load_departments
+    load_hospital
+    @data = []
+    @hospital.departments.each do |dept|
+      count = Candidate.doctor.joins(:experiences).
+        where('candidate_experiences.org_cn = ? AND candidate_experiences.department = ?', @hospital.name, dept.name).count
+      @data << { name: dept.name, count: count }
+    end
+    render :json => @data.to_json
   end
 
   private

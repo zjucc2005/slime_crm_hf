@@ -31,9 +31,9 @@
         <%= f.text_field :date_of_birth, :value => @doctor.date_of_birth.try(:strftime, '%F') ,:class => 'form-control datepicker', :placeholder => 'yyyy-mm-dd' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
-        <%= f.label :phone %><span class="text-red">*</span>
+        <%= f.label :phone %>
         <div class="input-group">
-            <%= f.text_field :phone, :required => true, :class => 'form-control' %>
+            <%= f.text_field :phone, :class => 'form-control' %>
             <div class="input-group-append">
                 <span class="input-group-text d-flex fa fa-search" onclick="showPhoneLocation('candidate_phone');"></span>
             </div>
@@ -59,8 +59,8 @@
         <%= f.text_field :title, :class => 'form-control' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
-        <%= f.label :email %><span class="text-red">*</span>
-        <%= f.email_field :email, :required => true, :class => 'form-control' %>
+        <%= f.label :email %>
+        <%= f.email_field :email, :class => 'form-control' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :email1 %>

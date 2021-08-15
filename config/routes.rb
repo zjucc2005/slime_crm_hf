@@ -148,7 +148,9 @@ Rails.application.routes.draw do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection
   end
-  resources :hospitals
+  resources :hospitals do
+    get :load_departments, on: :member
+  end
   resources :banks
   resources :industries
   resources :search_aliases

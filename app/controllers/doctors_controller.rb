@@ -15,7 +15,7 @@ class DoctorsController < ApplicationController
     %w[id user_channel_id].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
-    %w[expertise].each do |field|
+    %w[expertise description].each do |field|
       query = query.where("#{field} ~* ?", params[field].strip) if params[field].present?
     end
     %w[org_cn department title].each do |field|
