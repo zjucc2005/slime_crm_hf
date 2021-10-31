@@ -111,6 +111,8 @@ en:
         file: "Attachment"
         inquiry: "Inquiry"
         expertise: "Expertise"
+        haodf_id: "haodf ID"
+        haodf_url: "haodf URL"
 
       candidate_experience:
         category: "Category"

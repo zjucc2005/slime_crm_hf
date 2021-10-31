@@ -141,6 +141,8 @@ zh_cn:
         file: "附件"
         inquiry: "Inquiry"
         expertise: "专长"
+        haodf_id: "好大夫ID"
+        haodf_url: "好大夫URL"
 
       candidate_experience:
         category: "类型"
