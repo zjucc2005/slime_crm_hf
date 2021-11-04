@@ -625,7 +625,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_财务模板1.xlsx"
+    file_path = "#{file_dir}/#{project.code}_对账单.xlsx"
     book.write file_path
     send_file file_path
   end
