@@ -26,8 +26,8 @@
                 <% experts.each do |expert| %>
                     <tr>
                         <% exp = expert.latest_work_experience %>
-                        <td><%= link_to "# #{expert.uid}", candidate_path(expert), :class => 'text-gray' %></td>
-                        <td><%= link_to expert.name, candidate_path(expert), :target => '_blank' %></td>
+                        <td><%= link_to "# #{expert.uid}", expert.category == 'doctor' ? doctor_path(expert) : candidate_path(expert), :class => 'text-gray' %></td>
+                        <td><%= link_to expert.name, expert.category == 'doctor' ? doctor_path(expert) : candidate_path(expert), :target => '_blank' %></td>
                         <td><%= exp.try(:org_cn) %></td>
                         <td><%= exp.try(:department) %></td>
                         <td><%= exp.try(:title) %></td>
