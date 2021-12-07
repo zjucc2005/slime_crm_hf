@@ -203,7 +203,11 @@ class CandidatesController < ApplicationController
     else
       @candidates = Candidate.where(id: params[:uids]).order(:created_at => :desc)
     end
-    export_expert_template(@candidates)
+    case params[:template]
+    when 'expert' then export_expert_template(@candidates)
+    when 'doctor' then export_doctor_template(@candidates)
+    else raise 'params error'
+    end
   end
 
   # POST /candidates/create_client
@@ -432,6 +436,33 @@ class CandidatesController < ApplicationController
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
     file_path = "#{file_dir}/expert_#{current_user.id}_#{Time.now.strftime('%H%M%S')}.xlsx"
+    book.write file_path
+    send_file file_path
+  end
+
+  def export_doctor_template(query)
+    template_path = 'public/templates/expert_template_20211205.xlsx'
+    raise 'template file not found' unless File.exist?(template_path)
+
+    book = ::RubyXL::Parser.parse(template_path)  # read from template file
+    sheet = book[0]
+    query.each_with_index do |expert, index|
+      row = index + 1
+      exp = expert.latest_work_experience
+      sheet.add_cell(row, 0, "##{expert.uid}")    # ID
+      sheet.add_cell(row, 1, expert.mr_name)      # B, 姓名
+      sheet.add_cell(row, 2, exp.try(:org_cn))    # C, 公司
+      sheet.add_cell(row, 3, exp.try(:title))     # D, 职位
+      sheet.add_cell(row, 4, expert.description)  # E, 简介
+      sheet.add_cell(row, 5, '')                  # F, 专家Comment
+      sheet.add_cell(row, 6, "#{expert._gj_rate_}/小时")  # G, 价格
+      sheet.add_cell(row, 7, '')                  # H, 方便时间
+      sheet.add_cell(row, 8, '')                  # I, 是否与BDA合作过以及合作时间
+      sheet.add_cell(row, 9, '')                  # J, 专家身份验证
+    end
+    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p file_dir unless File.exist? file_dir
+    file_path = "#{file_dir}/doctor_#{current_user.id}_#{Time.now.strftime('%H%M%S')}.xlsx"
     book.write file_path
     send_file file_path
   end

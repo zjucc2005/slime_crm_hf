@@ -21,6 +21,10 @@ class DoctorsController < ApplicationController
     %w[org_cn department title].each do |field|
       query = query.joins(:experiences).where("candidate_experiences.#{field} ~* ?", params[field].strip) if params[field].present?
     end
+    if params[:name_or].present?
+      name_arr = params[:name_or].split
+      query = query.where('name ~* ?', "^(#{name_arr.join('|')})$")
+    end
 
     @doctors = query.distinct.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
   end

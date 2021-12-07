@@ -127,6 +127,7 @@ class FinanceController < ApplicationController
         when 'cn' then export_project_tasks(query, 'cn')
         when 'en' then export_project_tasks(query, 'en')
         when 'expert_fee' then export_project_tasks(query, 'expert_fee')
+        when 'bda' then export_project_tasks(query, 'bda')
         else raise('params error')
       end
     rescue Exception => e
@@ -153,10 +154,11 @@ class FinanceController < ApplicationController
     end
 
     template_path = case category
-                      when 'cn' then 'public/templates/finance_template.xlsx'
-                      when 'en' then 'public/templates/finance_template.xlsx'
-                      when 'expert_fee' then 'public/templates/finance_template_expert_fee.xlsx'
-                      else ''
+                    when 'cn' then 'public/templates/finance_template.xlsx'
+                    when 'en' then 'public/templates/finance_template.xlsx'
+                    when 'expert_fee' then 'public/templates/finance_template_expert_fee.xlsx'
+                    when 'bda' then 'public/templates/finance_template_20211206.xlsx'
+                    else ''
                     end
 
     raise 'template file not found' unless File.exist?(template_path)
@@ -164,10 +166,11 @@ class FinanceController < ApplicationController
     sheet = book[0]
 
     case category
-      when 'cn' then set_sheet_cn_en(sheet, query, 'cn')
-      when 'en' then set_sheet_cn_en(sheet, query, 'en')
-      when 'expert_fee' then set_sheet_expert_fee(sheet, query)
-      else raise("invalid category[#{category}]")
+    when 'cn' then set_sheet_cn_en(sheet, query, 'cn')
+    when 'en' then set_sheet_cn_en(sheet, query, 'en')
+    when 'expert_fee' then set_sheet_expert_fee(sheet, query)
+    when 'bda' then set_sheet_bda_fee(sheet, query)
+    else raise("invalid category[#{category}]")
     end
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
@@ -267,6 +270,27 @@ class FinanceController < ApplicationController
     end
     sheet.add_cell(row, 8, sum_price)                                                          # 金额汇总
     sheet.add_cell(row, 9, (sum_price / 0.95).round(2))                                        # 金额汇总 / 0.95
+  end
+
+  def set_sheet_bda_fee(sheet, query)
+    query.order(started_at: :desc).each_with_index do |task, index|
+      row = index + 2
+      sheet.add_cell(row, 1, task.uid)                           # B, Reference Code/费用编号
+      sheet.add_cell(row, 2, task.started_at.strftime('%F'))     # C, Date/访谈日期
+      sheet.add_cell(row, 3, task.client.name)                   # D, BDA User/联系人
+      sheet.add_cell(row, 4, task.started_at.strftime('%H:%M'))  # E, Time/访谈时间
+      sheet.add_cell(row, 5, task.project.name)                  # F, Project/项目名称
+      sheet.add_cell(row, 6, task.expert.name)                   # G, Exp.Name/专家姓名
+      exp = task.expert.latest_work_experience
+      sheet.add_cell(row, 7, exp.title)                          # H, Exp.Position/专家职位
+      sheet.add_cell(row, 8, exp.org_cn)                         # I, Exp.Company/专家公司
+      sheet.add_cell(row, 9, task.interview_form)                # J, Type/访谈类型
+      sheet.add_cell(row, 10, (task.duration / 60.0).round(2))   # K, Interview Length(h)/访谈实际时长(h)
+      sheet.add_cell(row, 11, (task.charge_duration/60.0).round(2)) # L, Charge Hour(h)/收费时长(h)
+      sheet.add_cell(row, 12, task.expert_rate)                  # M, Multiple/费率倍数
+      sheet.add_cell(row, 13, task.charge_rate)                  # N, Price Per Hour/单价（含税）
+      sheet.add_cell(row, 14, task.actual_price)                 # O, Charge/费用（含税）
+    end
   end
 
 end
