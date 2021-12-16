@@ -25,6 +25,9 @@ class ProjectsController < ApplicationController
     if params[:company].present?
       query = query.joins(:company).where('companies.name ILIKE :company OR companies.name_abbr ILIKE :company', { company: "%#{params[:company].strip}%" })
     end
+    if params[:client_name].present?
+      query = query.joins(:candidates).where('candidates.category': 'client').where('candidates.name ILIKE ?', "%#{params[:client_name].strip}%").distinct
+    end
 
     # export excel files
     case params[:commit]
@@ -226,8 +229,10 @@ class ProjectsController < ApplicationController
         raise t(:not_authorized) unless @project.can_edit?
 
         ActiveRecord::Base.transaction do
-          @project.project_candidates.client.destroy_all
-          (params[:uids] || []).each do |candidate_id|
+          uids = params[:uids] || []
+          @project.project_candidates.client.where.not(candidate_id: uids).destroy_all
+          uids.each do |candidate_id|
+            next if @project.project_candidates.client.exists?(candidate_id: candidate_id)
             @project.project_candidates.client.create!(candidate_id: candidate_id)
           end
         end

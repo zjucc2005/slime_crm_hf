@@ -124,7 +124,7 @@ class Ability
     can :read, Doctor
     can :manage, Company
     can :manage, Contract
-    can [:index, :show, :edit, :add_clients, :delete_client, :project_tasks, :experts, :export_billing_excel], Project
+    can [:index, :show, :edit, :add_clients, :delete_client, :project_tasks, :experts, :export_billing_excel, :close, :reopen], Project
     can :read, ProjectRequirement
     can [:show, :moveto], ProjectTask
     can :manage, Finance
