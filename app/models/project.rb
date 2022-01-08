@@ -39,6 +39,11 @@ class Project < ApplicationRecord
         :'project_candidates.category'   => 'expert').order(:'project_candidates.created_at' => :desc)
   end
 
+  def main_client
+    pc = ProjectCandidate.client.where(mark: 'main').first || ProjectCandidate.client.order(created_at: asc).first
+    pc ? pc.candidate : nil
+  end
+
   # has_many :pm_users / :pa_users 作为 has_many :users 的补充, 依据 project_users.category
   # 和 users.pm / users.pa 有区别， 只读
   def pm_users

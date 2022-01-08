@@ -103,8 +103,8 @@ module ProjectsHelper
   end
 
   def project_candidate_mark_badge(mark)
-    dict = { :unsuitable => 'danger', :recommended => 'success', :interviewed => 'primary', :contacting => 'warning', :pending => 'secondary' }.stringify_keys
-    content_tag :span, ProjectCandidate::MARK[mark] || mark, :class => "badge badge-#{dict[mark] || 'dark' }"
+    dict = { unsuitable: 'danger', recommended: 'success', interviewed: 'primary', contacting: 'warning', pending: 'secondary', main: 'danger', normal: 'secondary' }.stringify_keys
+    content_tag :span, ProjectCandidate::MARK.merge(ProjectCandidate::CLIENT_MARK)[mark] || mark, class: "badge badge-#{dict[mark] || 'dark' }"
   end
 
 end

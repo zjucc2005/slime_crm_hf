@@ -10,6 +10,7 @@ class ProjectCandidate < ApplicationRecord
     :contacting  => '联络中',
     :pending     => '待定'
   }.stringify_keys
+  CLIENT_MARK = { main: '主联系人', normal: '联系人' }.stringify_keys
 
   # Associations
   belongs_to :project, :class_name => 'Project'
@@ -44,7 +45,10 @@ class ProjectCandidate < ApplicationRecord
   private
   def setup
     self.category ||= 'client'
-    self.mark     ||= 'pending'
+    case category
+    when 'expert' then self.mark ||= 'pending'
+    when 'client' then self.mark ||= 'normal'
+    end
   end
 
 end

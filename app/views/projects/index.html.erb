@@ -36,7 +36,7 @@
                         <td><%= content_tag :span, "# #{project.uid}", :class => 'text-gray' %></td>
                         <td><%= content_tag :span, nil, :class => 'status valid' if project.project_users.exists?(user_id: current_user.id) %></td>
                         <td><%= link_to project.name, project_path(project) %></td>
-                        <td><%= project.clients.first.name rescue '' %></td>
+                        <td><%= project.main_client.name rescue '' %></td>
                         <td><%= project.code %></td>
                         <td><%= project.company.name_abbr %></td>
                         <td><%= project.project_requirements.sum(:demand_number) rescue 'ERROR' %></td>

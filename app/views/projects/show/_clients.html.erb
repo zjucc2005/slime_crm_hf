@@ -7,12 +7,13 @@
     </div>
 
     <div class="card-body table-responsive">
-        <% if clients.any? %>
+        <% if project_clients.any? %>
             <table class="table table-sm table-striped table-hover card-text">
                 <thead>
                 <tr>
                     <th><%= mt(:candidate, :id) %></th>
                     <th><%= mt(:candidate, :name) %></th>
+                    <th><%= mt(:project_candidate, :mark) %> <i class="fa fa-caret-down"></i></th>
                     <th><%= mt(:candidate, :title) %></th>
                     <th><%= mt(:candidate, :phone) %></th>
                     <th><%= mt(:candidate, :email) %></th>
@@ -20,10 +21,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% clients.each do |client| %>
+                <% project_clients.each do |item| %>
+                    <% client = item.candidate %>
                     <tr>
                         <td><%= link_to "# #{client.uid}", edit_client_candidate_path(client, return_to: request.path), :class => 'text-gray' %></td>
                         <td><%= link_to client.name, edit_client_candidate_path(client, return_to: request.path) %></td>
+                        <td>
+                            <div class="dropdown">
+                                <a href="#" role="button" id="pcm_<%= item.id %>" data-toggle="dropdown">
+                                    <%= project_candidate_mark_badge(item.mark) %>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-header"><%= mt(:project_candidate, :mark) %></div>
+                                    <% %w[main normal].each do |mark| %>
+                                        <%= link_to update_mark_project_candidate_path(item, mark: mark), method: :put, remote: true, class: 'dropdown-item' do %>
+                                            <%= project_candidate_mark_badge(mark) %>
+                                        <% end %>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </td>
                         <td><%= client.title %></td>
                         <td><%= client.phone %><br><%= client.phone1 %></td>
                         <td><%= client.email %><br><%= client.email1 %></td>
