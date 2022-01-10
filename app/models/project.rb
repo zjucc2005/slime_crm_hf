@@ -2,10 +2,12 @@
 class Project < ApplicationRecord
   # ENUM
   STATUS = {
-      :initialized => '新项目',
-      :ongoing     => '进展中',
-      :finished    => '已结束',
-      :cancelled   => '已取消'
+      initialized: '新项目',
+      ongoing: '进展中',
+      finished: '已结束',
+      billing: '结算中',
+      billed: '已收款',
+      cancelled: '已取消'
   }.stringify_keys
 
   # Associations
@@ -76,6 +78,14 @@ class Project < ApplicationRecord
 
   def can_reopen?
     %w[finished].include?(status)
+  end
+
+  def can_billing?
+    %w[ongoing finished].include?(status)
+  end
+
+  def can_billed?
+    %w[billing].include?(status)
   end
 
   def can_add_requirement?

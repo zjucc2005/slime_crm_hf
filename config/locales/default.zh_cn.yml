@@ -67,6 +67,7 @@ zh_cn:
   select_payment_info: "选择支付信息"
   settings: "设置"
   show_all: "查看全部"
+  standard_template: "标准模板"
   statistics_info: "统计信息"
   sure: "确认吗?"
   sure_to_cancel: "确认取消吗?"

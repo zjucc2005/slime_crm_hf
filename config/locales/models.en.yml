@@ -222,6 +222,8 @@ en:
         close: "Close project"
         close_or_not: "Close project or not"
         reopen: "Reopen project"
+        billing: "Billing project"
+        billed: "Billed project"
         pm: "PM"
         pa: "PA"
         total_project_tasks: "Total tasks"

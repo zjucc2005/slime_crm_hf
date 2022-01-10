@@ -17,15 +17,21 @@
                             <%= render :partial => 'projects/widgets/export_billing_modal', :locals => { :project => @project } %>
                         </div>
 
-                        <%= link_to start_project_path(@project), :method => :put, :class => 'btn btn-success', :data => { :confirm => t(:sure)}  do %>
+                        <%= link_to start_project_path(@project), :method => :post, :class => 'btn btn-success', :data => { :confirm => t(:sure)}  do %>
                             <%= fa_icon_tag('edit') %> <%= mt(:project, :start) %>
                         <% end if can?(:start, Project) && @project.can_start? %>
-                        <%= link_to close_project_path(@project), :method => :put, :class => 'btn btn-warning', :data => { :confirm => t(:sure)}  do %>
-                            <%= fa_icon_tag('edit') %> <%= mt(:project, :close) %>
-                        <% end if can?(:close, Project) && @project.can_close? %>
-                        <%= link_to reopen_project_path(@project), :method => :put, :class => 'btn btn-warning', :data => { :confirm => t(:sure)}  do %>
-                            <%= fa_icon_tag('edit') %> <%= mt(:project, :reopen) %>
-                        <% end if can?(:reopen, Project) && @project.can_reopen? %>
+                        <%= link_to billing_project_path(@project), method: :post, class: 'btn btn-success', data: { confirm: t(:sure)}  do %>
+                            <%= fa_icon_tag('edit') %> <%= mt(:project, :billing) %>
+                        <% end if can?(:billing, Project) && @project.can_billing? %>
+                        <%= link_to billed_project_path(@project), method: :post, class: 'btn btn-success', data: { confirm: t(:sure)}  do %>
+                            <%= fa_icon_tag('edit') %> <%= mt(:project, :billed) %>
+                        <% end if can?(:billed, Project) && @project.can_billed? %>
+                        <%#= link_to close_project_path(@project), :method => :put, :class => 'btn btn-warning', :data => { :confirm => t(:sure)}  do %>
+                            <%#= fa_icon_tag('edit') %> <%#= mt(:project, :close) %>
+                        <%# end if can?(:close, Project) && @project.can_close? %>
+                        <%#= link_to reopen_project_path(@project), :method => :put, :class => 'btn btn-warning', :data => { :confirm => t(:sure)}  do %>
+                            <%#= fa_icon_tag('edit') %> <%#= mt(:project, :reopen) %>
+                        <%# end if can?(:reopen, Project) && @project.can_reopen? %>
                         <%= link_to edit_project_path(@project), :class => 'btn btn-dark' do %>
                             <%= fa_icon_tag('edit') %> <%= "#{t('action.edit_model', :model => mt(:project))}" %>
                         <% end if can?(:edit, Project) && @project.can_edit? %>

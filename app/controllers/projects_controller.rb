@@ -31,11 +31,12 @@ class ProjectsController < ApplicationController
 
     # export excel files
     case params[:commit]
-      when 'Weekly update' then export_projects(query.order(:created_at => :desc), category='weekly_update') and return
-      else nil
+    when 'Weekly update' then export_projects(query.order(created_at: :desc), category='weekly_update') and return
+    when I18n.t(:standard_template) then export_projects(query.order(created_at: :desc), category='standard') and return
+    else nil
     end
 
-    @projects = query.order(:updated_at => :desc).paginate(:page => params[:page], :per_page => 20)
+    @projects = query.order(updated_at: :desc).paginate(:page => params[:page], :per_page => 20)
   end
 
   # GET /projects/new
@@ -335,7 +336,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # PUT /project/:id/start
+  # POST /project/:id/start
   def start
     begin
       load_project
@@ -350,28 +351,58 @@ class ProjectsController < ApplicationController
   end
 
   # PUT /projects/:id/close
-  def close
+  # def close
+  #   begin
+  #     load_project
+  #     raise t(:not_authorized) unless @project.can_close?
+  #     @project.close!
+  #     flash[:success] = t(:operation_succeeded)
+  #     redirect_to project_path(@project)
+  #   rescue Exception => e
+  #     flash[:error] = e.message
+  #     redirect_to projects_path
+  #   end
+  # end
+
+  # PUT /projects/:id/reopen
+  # def reopen
+  #   begin
+  #     load_project
+  #     raise t(:not_authorized) unless @project.can_reopen?
+  #     @project.reopen!
+  #     flash[:success] = t(:operation_succeeded)
+  #     redirect_to project_path(@project)
+  #   rescue Exception => e
+  #     flash[:error] = e.message
+  #     redirect_to projects_path
+  #   end
+  # end
+
+  def billing
     begin
       load_project
-      raise t(:not_authorized) unless @project.can_close?
-      @project.close!
+      raise t(:not_authorized) unless @project.can_billing?
+      @project.status = 'billing'
+      @project.billing_at ||= Time.now
+      @project.save!
       flash[:success] = t(:operation_succeeded)
       redirect_to project_path(@project)
-    rescue Exception => e
+    rescue => e
       flash[:error] = e.message
       redirect_to projects_path
     end
   end
 
-  # PUT /projects/:id/reopen
-  def reopen
+  def billed
     begin
       load_project
-      raise t(:not_authorized) unless @project.can_reopen?
-      @project.reopen!
+      raise t(:not_authorized) unless @project.can_billed?
+      @project.status = 'billed'
+      @project.billed_at ||= Time.now
+      @project.save!
       flash[:success] = t(:operation_succeeded)
       redirect_to project_path(@project)
-    rescue Exception => e
+    rescue => e
       flash[:error] = e.message
       redirect_to projects_path
     end
@@ -450,8 +481,9 @@ class ProjectsController < ApplicationController
     end
 
     template_path = case category
-                      when 'weekly_update' then 'public/templates/project_weekly_update_template.xlsx'
-                      else ''
+                    when 'weekly_update' then 'public/templates/project_weekly_update_template.xlsx'
+                    when 'standard' then 'public/templates/project_standard_template.xlsx'
+                    else ''
                     end
 
     raise 'template file not found' unless File.exist?(template_path)
@@ -459,8 +491,9 @@ class ProjectsController < ApplicationController
     sheet = book[0]
 
     case category
-      when 'weekly_update' then set_sheet_weekly_update(sheet, query)
-      else raise("invalid category[#{category}]")
+    when 'weekly_update' then set_sheet_weekly_update(sheet, query)
+    when 'standard' then set_sheet_standard(sheet, query)
+    else raise("invalid category[#{category}]")
     end
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
@@ -499,6 +532,24 @@ class ProjectsController < ApplicationController
     sheet.add_cell(row, 3, '小计')
     sheet.add_cell(row, 4, '', "SUM(E2:E#{row})")
     sheet.add_cell(row, 5, '', "SUM(F2:F#{row})")
+  end
+
+  def set_sheet_standard(sheet, query)
+    query.each_with_index do |project, index|
+      row = index + 1
+      sheet.add_cell(row, 0, "# #{project.uid}")
+      sheet.add_cell(row, 1, project.name)
+      sheet.add_cell(row, 2, (project.main_client.name rescue ''))
+      sheet.add_cell(row, 3, project.code)
+      sheet.add_cell(row, 4, project.company.name_abbr)
+      sheet.add_cell(row, 5, (project.project_requirements.sum(:demand_number) rescue 'ERROR'))
+      sheet.add_cell(row, 6, project.total_project_tasks)
+      sheet.add_cell(row, 7, "#{project.total_charge_duration} h")
+      sheet.add_cell(row, 8, Project::STATUS[project.status] || project.status)
+      sheet.add_cell(row, 9, (project.creator.name_cn rescue 'NA'))
+      sheet.add_cell(row, 10, project.created_at.strftime('%F %T'))
+      sheet.add_cell(row, 11, project.updated_at.strftime('%F %T'))
+    end
   end
 
   def export_iqvia_settlement_template(project)

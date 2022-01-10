@@ -252,6 +252,8 @@ zh_cn:
         close: "结束项目"
         close_or_not: "是否结束项目"
         reopen: "重新打开项目"
+        billing: "结算项目"
+        billed: "确认项目已付款"
         pm: "项目经理"
         pa: "项目助理"
         total_project_tasks: "任务总数"

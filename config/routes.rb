@@ -94,9 +94,11 @@ Rails.application.routes.draw do
     delete :delete_expert, on: :member  # 删除专家
     delete :delete_client, on: :member  # 删除客户
 
-    put :start, on: :member
-    put :close, on: :member
-    put :reopen, on: :member
+    post :start, on: :member
+    # put :close, on: :member
+    # put :reopen, on: :member
+    post :billing, on: :member
+    post :billed, on: :member
 
     get :experts,       on: :member
     get :project_tasks, on: :member
