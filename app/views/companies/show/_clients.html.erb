@@ -38,10 +38,10 @@
                         <td><%= client.created_at.strftime('%F %T') %></td>
                         <td class="action">
                             <%= link_to edit_client_candidate_path(client, return_to: request.path), :class => 'btn btn-edit btn-xs' do %>
-                                <%= fa_icon_tag('edit') %> <%= t('action.edit', :model => nil) %>
+                                <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
                             <% end %>
                             <%= link_to candidate_path(client, return_to: request.path), :method => :delete, :class => 'btn btn-danger btn-xs', :data => { :confirm => t(:sure_to_delete) } do %>
-                                <%= fa_icon_tag('trash') %> <%= t('action.delete', :model => nil) %>
+                                <%= fa_icon_tag('trash') %> <%= t('action.delete') %>
                             <% end if can?(:destroy, Candidate) && client.can_delete? %>
                         </td>
                     </tr>

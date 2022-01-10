@@ -21,4 +21,10 @@ module CompaniesHelper
       content_tag :span, t(:company_not_signed), :class => 'badge badge-secondary'
     end
   end
+
+  def client_active_badge(active=true)
+    if active
+      content_tag :span, t(:client_active), class: 'badge badge-danger'
+    end
+  end
 end

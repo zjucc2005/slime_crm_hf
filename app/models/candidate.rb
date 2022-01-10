@@ -117,6 +117,11 @@ class Candidate < ApplicationRecord
     project_tasks.where(status: 'finished').count <= 1
   end
 
+  def client_active?
+    pc = project_candidates.client.order(created_at: :desc).first
+    pc ? pc.created_at > Time.now - 3.month : false
+  end
+
   # card template params setting
   def card_template_params(field)
     case field.to_sym

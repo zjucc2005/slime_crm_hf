@@ -28,6 +28,9 @@ class ProjectsController < ApplicationController
     if params[:client_name].present?
       query = query.joins(:candidates).where('candidates.category': 'client').where('candidates.name ILIKE ?', "%#{params[:client_name].strip}%").distinct
     end
+    if params[:client_id].present?
+      query = query.joins(:project_candidates).where('project_candidates.category': 'client', 'project_candidates.candidate_id': params[:client_id]).distinct
+    end
 
     # export excel files
     case params[:commit]

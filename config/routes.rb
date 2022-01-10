@@ -66,6 +66,8 @@ Rails.application.routes.draw do
     post :import_haodf, on: :collection  # import doctors from haodf data
   end
 
+  resources :clients
+
   resources :companies do
     get :new_contract,        on: :member
     get :new_client,          on: :member

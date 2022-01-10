@@ -27,6 +27,21 @@
                     <li class="nav-item">
                         <%= link_to mt(:company), companies_path, :class => "nav-link #{yield :nav_companies}" %>
                     </li>
+                <% end if false %>
+                <% if can? :index, Company %>
+                    <li class="nav-item dropdown">
+                        <%= link_to '#', :id => 'companies-drop', data: { toggle: 'dropdown' }, class: "nav-link dropdown-toggle #{yield :nav_companies}" do %>
+                            <%= controller_name == 'clients' ? mt(:candidate, :seat) : mt(:company) %>
+                        <% end %>
+                        <div class="dropdown-menu fa-fixed">
+                            <%= link_to companies_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-bank"></i> <%= mt(:company) %>
+                            <% end if can?(:index, Company) %>
+                            <%= link_to clients_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-users"></i> <%= mt(:candidate, :seat) %>
+                            <% end if can?(:index, Client) %>
+                        </div>
+                    </li>
                 <% end %>
                 <% if can? :index, Project %>
                     <li class="nav-item">

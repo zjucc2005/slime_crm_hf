@@ -63,6 +63,7 @@ module ApplicationHelper
     nav_item = :"nav_#{controller_name}"
     # special settings here >>
     nav_item = :nav_projects if controller_name == 'project_requirements'
+    nav_item = :nav_companies if controller_name == 'clients'
     # >>
     provide nav_item, 'active'
   end

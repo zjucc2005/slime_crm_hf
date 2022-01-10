@@ -1,0 +1,66 @@
+<div class="card p-2 mb-1 d-flex flex-row justify-content-between">
+    <div></div>
+    <%= render partial: 'clients/widgets/search_modal' %>
+</div>
+
+<% if @clients.any? %>
+    <div class="card p-2 mb-2">
+        <div class="table-responsive">
+            <table class="table table-sm table-striped nowrap card-text">
+                <thead>
+                <tr>
+                    <th><%= check_box_tag :selectAll, nil, nil, :onclick => 'selectAll(this);' %></th>
+                    <th><%= mt(:candidate, :id) %></th>
+                    <th><%= mt(:candidate, :name) %></th>
+                    <th><%= mt(:candidate, :nickname) %></th>
+                    <th><%= mt(:candidate, :title) %></th>
+                    <th><%= mt(:candidate, :phone) %></th>
+                    <th><%= mt(:candidate, :email) %></th>
+                    <th><%= mt(:company, :name) %></th>
+                    <th><%= t(:client_active) %></th>
+                    <th><%= mt(:candidate, :created_by) %></th>
+                    <th><%= mt(:candidate, :created_at) %></th>
+                    <th class="action"><%= t(:operation) %></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @clients.each do |client| %>
+                    <tr>
+                        <td><%= check_box_tag :'uids[]', client.id, false %></td>
+                        <td><%= content_tag :span, "# #{client.uid}", :class => 'text-gray' %></td>
+                        <td><%= client.name %></td>
+                        <td><%= client.nickname %></td>
+                        <td><%= client.title %></td>
+                        <td><%= client.phone %></td>
+                        <td><%= client.email %></td>
+                        <td><%= link_to client.company.name, company_path(client.company_id, return_to: request.url) %></td>
+                        <td><%= client_active_badge(client.client_active?) %></td>
+                        <td><%= client.creator.name_cn %></td>
+                        <td><%= client.created_at.strftime('%F %T') %></td>
+                        <td class="action">
+                            <div class="btn-group">
+                                <%= link_to projects_path(client_id: client.id), class: 'btn btn-primary btn-xs' do %>
+                                    <i class="fa fa-list"></i> <%= mt(:project) %>
+                                <% end %>
+                                <%= link_to edit_client_candidate_path(client, return_to: request.path), class: 'btn btn-edit btn-xs' do %>
+                                    <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
+                                <% end %>
+                                <%= link_to candidate_path(client, return_to: request.path), method: :delete, class: 'btn btn-danger btn-xs', data: { confirm: t(:sure_to_delete) } do %>
+                                    <%= fa_icon_tag('trash') %> <%= t('action.delete') %>
+                                <% end if can?(:destroy, Candidate) && client.can_delete? %>
+                            </div>
+                        </td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%= will_paginate @clients %>
+<% else %>
+    <div class="card p-2">
+        <div class="p-4 text-center">
+            <h5 class="text-gray mb-0"><%= t(:not_found) %></h5>
+        </div>
+    </div>
+<% end %>

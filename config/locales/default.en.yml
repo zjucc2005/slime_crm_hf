@@ -17,6 +17,7 @@ en:
   cannot_delete: "Unable to delete"
   change_operator: "Change operator"
   charge_info: "Charge info"
+  client_active: "Active"
   client_contact: "Client contact"
   company_signed: "Signed"
   company_not_signed: "Not signed"
