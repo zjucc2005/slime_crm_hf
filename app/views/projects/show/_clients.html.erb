@@ -6,7 +6,7 @@
         <% end if can?(:add_clients, Project) && @can_operate && @project.can_edit? %>
     </div>
 
-    <div class="card-body table-responsive">
+    <div class="card-body">
         <% if project_clients.any? %>
             <table class="table table-sm table-striped table-hover card-text">
                 <thead>
