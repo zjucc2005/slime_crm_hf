@@ -1,0 +1,15 @@
+<%= @client.nickname %>，您好
+
+感谢您使用海鄞咨询，以下是该专家访谈信息，供您参考：
+访谈时长：<%= @project_task.duration %>分钟
+收费时长：<%= @project_task.charge_duration %>分钟
+专家费率：专家费1000+招募费1500/小时
+访谈费用（折前）：<%= (@project_task.actual_price / 0.84).round(2) %>元
+访谈费用（折后）：<%= @project_task.actual_price %>元
+
+*如果您对访谈时长有异议，请在收到邮件后48小时内回复，超过48小时，我们默认时长确认
+如果对我们的服务有任何意见和建议，欢迎随时与我们联系；谢谢您的支持，任何项目需求，请随时发送至 project@hci-consulting.com 或与您熟悉的项目经理直接取得联系。
+
+此致
+海鄞咨询
+www.hci-consulting.com

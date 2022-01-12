@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<p><%= @client.nickname %>，您好</p>
+<p>
+    感谢您使用海鄞咨询，以下是该专家访谈信息，供您参考：<br>
+    <b>访谈时长：</b><%= @project_task.duration %>分钟<br>
+    <b>收费时长：</b><%= @project_task.charge_duration %>分钟<br>
+    <b>专家费率：</b>专家费1000+招募费1500/小时<br>
+    <b>访谈费用（折前）：</b><%= (@project_task.actual_price / 0.84).round(2) %>元<br>
+    <b>访谈费用（折后）：</b><%= @project_task.actual_price %>元<br>
+</p>
+<p><b><i>*如果您对访谈时长有异议，请在收到邮件后48小时内回复，超过48小时，我们默认时长确认</i></b></p>
+<p>如果对我们的服务有任何意见和建议，欢迎随时与我们联系；谢谢您的支持，任何项目需求，请随时发送至 project@hci-consulting.com 或与您熟悉的项目经理直接取得联系。</p>
+<p>
+    此致<br>
+    海鄞咨询<br>
+    <a href="http://www.hci-consulting.com" target="_blank">www.hci-consulting.com</a>
+</p>
+</body>
+</html>
