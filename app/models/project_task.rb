@@ -38,6 +38,12 @@ class ProjectTask < ApplicationRecord
   # Scopes
   scope :interview, -> { where( category: 'interview') }
 
+  # property fields
+  %w[interview_no recruitment_fee].each do |k|
+    define_method(:"#{k}"){ self.property[k] }
+    define_method(:"#{k}="){ |v| self.property[k] = v }
+  end
+
   def finished!
     ActiveRecord::Base.transaction do
       contract = active_contract
@@ -51,7 +57,8 @@ class ProjectTask < ApplicationRecord
     end
 
     if notice_email_sent_at.nil?
-      UserMailer.project_task_notice_email(id).deliver  # 发送通知邮件,仅1次
+      email_category = project.company.project_task_notice_email
+      UserMailer.project_task_notice_email(id, email_category).deliver  # 发送通知邮件,仅1次
       self.update!(notice_email_sent_at: Time.now)
     end
   end

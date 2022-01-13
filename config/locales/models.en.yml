@@ -160,6 +160,7 @@ en:
         compliance: "Compliance"
         compliance_file: "Compliance file"
         is_signed: "Signed"
+        project_task_notice_email: "Project task notice email"
 
       contract:
         file: "File"
@@ -275,6 +276,8 @@ en:
         charge_duration_min: "Charge duration(min)"
         pm: "PM"
         f_flag: "Follow up"
+        interview_no: "Interview No."
+        recruitment_fee: "Recruitment fee"
 
       project_task_cost:
         category: "Cost category"

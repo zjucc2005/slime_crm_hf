@@ -12,8 +12,9 @@ class UserMailer < ApplicationMailer
   end
 
   # project_task_id - ProjectTask#id
-  def project_task_notice_email(project_task_id)
+  def project_task_notice_email(project_task_id, category='A')
     @project_task = ProjectTask.find(project_task_id)
+    @category = category
     @project = @project_task.project
     @expert = @project_task.expert
     @client = @project_task.client

@@ -83,10 +83,17 @@
         <%= f.label :tax %>
         <%= f.text_field :tax, :disabled => true, :class => 'form-control' %>
     </div>
-
     <div class="col-lg-3 col-12 form-group">
         <%= f.label :is_recorded %><span class="text-red">*</span>
         <%= f.select :is_recorded, boolean_options, { :include_blank => false }, :class => 'form-control select2' %>
+    </div>
+    <div class="col-lg-3 col-12 form-group">
+        <%= f.label :interview_no %>
+        <%= f.text_field :interview_no, class: 'form-control' %>
+    </div>
+    <div class="col-lg-3 col-12 form-group">
+        <%= f.label :recruitment_fee %>
+        <%= f.number_field :recruitment_fee, class: 'form-control' %>
     </div>
     <div class="col-12 form-group">
         <%= f.label :memo %>
