@@ -42,7 +42,7 @@ class Project < ApplicationRecord
   end
 
   def main_client
-    pc = ProjectCandidate.client.where(mark: 'main').first || ProjectCandidate.client.order(created_at: asc).first
+    pc = project_candidates.client.where(mark: 'main').first || project_candidates.client.order(created_at: :asc).first
     pc ? pc.candidate : nil
   end
 
