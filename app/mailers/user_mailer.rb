@@ -5,9 +5,9 @@ class UserMailer < ApplicationMailer
     # @user = params[:user]
     # @url  = 'http://example.com/login'
     mail(
-        from: 'zjucc2005@163.com',
+        # from: 'zjucc2005@163.com',
         to: 'zjucc2005@163.com',
-        subject: 'Test mail for exchange email, do not reply'
+        subject: 'Test mail, do not reply'
     )
   end
 

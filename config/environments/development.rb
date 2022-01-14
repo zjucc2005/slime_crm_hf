@@ -40,18 +40,18 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      # domain: 'outlook.office365.com',
-      # address: 'smtp.office365.com',
-      # port: 587,
-      # authentication: :login,
-      # user_name: 'project@hci-consulting.com',
-      # password: 'Tas58094',
-      # enable_starttls_auto: true,
-      domain: '163.com',
-      address: 'smtp.163.com',
-      port: 25,
-      user_name: 'zjucc2005@163.com',
-      password: 'saichou47'
+      # domain: 'hci-consulting.com',
+      address: 'smtp.office365.com',
+      port: 587,
+      authentication: :login,
+      user_name: 'project@hci-consulting.com',
+      password: 'Tas58094',
+      enable_starttls_auto: true,
+      # domain: '163.com',
+      # address: 'smtp.163.com',
+      # port: 25,
+      # user_name: 'zjucc2005@163.com',
+      # password: 'saichou47'
   }
 
   # Print deprecation notices to the Rails logger.
