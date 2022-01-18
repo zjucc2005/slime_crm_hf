@@ -23,7 +23,7 @@ class UserMailer < ApplicationMailer
     cc_email << @project_task.creator.email
     cc_email << @project_task.pm.email
     subject  = "【hci 专家访谈】 #{@project.code}-#{@project.name}-#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@expert.name}"
-    mail(to: to_email, cc: cc_email, subject: subject, from: 'zjucc2005@163.com')
+    mail(to: to_email, cc: cc_email, subject: subject)
   end
 
 end
