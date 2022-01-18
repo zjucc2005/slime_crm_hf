@@ -38,6 +38,12 @@ class ProjectTask < ApplicationRecord
   # Scopes
   scope :interview, -> { where( category: 'interview') }
 
+  # property fields
+  %w[interview_no recruitment_fee].each do |k|
+    define_method(:"#{k}"){ self.property[k] }
+    define_method(:"#{k}="){ |v| self.property[k] = v }
+  end
+
   def finished!
     ActiveRecord::Base.transaction do
       contract = active_contract
@@ -48,6 +54,14 @@ class ProjectTask < ApplicationRecord
 
       project_candidate = ProjectCandidate.where(project_id: project_id, candidate_id: expert_id).first
       project_candidate.update!(mark: 'interviewed') if project_candidate  # 自动更新专家项目中标识为已访谈
+    end
+
+    if notice_email_sent_at.nil?
+      email_category = project.company.project_task_notice_email
+      if %w[A B].include?(email_category)
+        UserMailer.project_task_notice_email(id, email_category).deliver  # 发送通知邮件,仅1次
+        self.update!(notice_email_sent_at: Time.now)
+      end
     end
   end
 

@@ -190,6 +190,7 @@ zh_cn:
         compliance: "合规"
         compliance_file: "合规文件"
         is_signed: "是否签约"
+        project_task_notice_email: "项目任务通知邮件"
 
       contract:
         file: "文件"
@@ -305,6 +306,8 @@ zh_cn:
         charge_duration_min: "收费时长(分钟)"
         pm: "项目经理"
         f_flag: "是否跟进"
+        interview_no: "访谈编号"
+        recruitment_fee: "招募费"
 
       project_task_cost:
         category: "费用类型"

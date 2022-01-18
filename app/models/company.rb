@@ -2,6 +2,7 @@
 class Company < ApplicationRecord
   # ENUM
   CATEGORY = { :normal => '普通', :client => '客户公司' }.stringify_keys
+  PROJECT_TASK_NOTICE_EMAIL = { A: '标准模板', B: '大客户模板' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
@@ -22,6 +23,12 @@ class Company < ApplicationRecord
   scope :client, -> { where(category: 'client') }
   scope :signed, -> { joins(:contracts).where('contracts.started_at <= :now AND contracts.ended_at >= :now', { :now => Time.now }).distinct }
   scope :not_signed, -> { joins(:contracts).where('contracts.started_at > :now AND contracts.ended_at < :now', { :now => Time.now }).distinct }
+
+  # property fields
+  %w[project_task_notice_email].each do |k|
+    define_method(:"#{k}"){ self.property[k] }
+    define_method(:"#{k}="){ |v| self.property[k] = v }
+  end
 
   def is_client?
     category == 'client'
