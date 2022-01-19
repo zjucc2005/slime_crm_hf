@@ -18,10 +18,10 @@ class UserMailer < ApplicationMailer
     @project = @project_task.project
     @expert = @project_task.expert
     @client = @project_task.client
-    to_email = @project_task.client.email
-    cc_email = @project.clients.where.not(id: @project_task.client_id).pluck(:email)
-    cc_email << @project_task.creator.email
-    cc_email << @project_task.pm.email
+    to_email = [@project_task.client.email]
+    main_pc = @project.project_candidates.client.where(mark: 'main').where.not(candidate_id: @project_task.client_id).first
+    to_email << main_pc.candidate.email if main_pc
+    cc_email = [@project_task.creator.email, @project_task.pm.email]
     subject  = "【hci 专家访谈】 #{@project.code}-#{@project.name}-#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@expert.name}"
     mail(to: to_email, cc: cc_email, subject: subject)
   end
