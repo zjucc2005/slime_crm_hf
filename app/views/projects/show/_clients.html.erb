@@ -24,8 +24,8 @@
                 <% project_clients.each do |item| %>
                     <% client = item.candidate %>
                     <tr>
-                        <td><%= link_to "# #{client.uid}", edit_client_candidate_path(client, return_to: request.path), :class => 'text-gray' %></td>
-                        <td><%= link_to client.name, edit_client_candidate_path(client, return_to: request.path) %></td>
+                        <td><%= link_to "# #{client.uid}", edit_client_path(client, return_to: request.path), :class => 'text-gray' %></td>
+                        <td><%= link_to client.name, edit_client_path(client, return_to: request.path) %></td>
                         <td>
                             <div class="dropdown">
                                 <a href="#" role="button" id="pcm_<%= item.id %>" data-toggle="dropdown">

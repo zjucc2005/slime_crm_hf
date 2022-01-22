@@ -113,6 +113,8 @@ en:
         expertise: "Expertise"
         haodf_id: "haodf ID"
         haodf_url: "haodf URL"
+        linkedin: "LinkedIn"
+        job_status: "Job status"
 
       candidate_experience:
         category: "Category"

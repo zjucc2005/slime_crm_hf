@@ -1,5 +1,9 @@
 <div class="card p-2 mb-1 d-flex flex-row justify-content-between">
-    <div></div>
+    <div>
+        <%= link_to new_client_path(return_to: request.url), class: 'btn btn-primary' do %>
+            <i class="fa fa-plus"></i> <%= t('action.new_model', model: mt(:candidate, :seat)) %>
+        <% end %>
+    </div>
     <%= render partial: 'clients/widgets/search_modal' %>
 </div>
 
@@ -13,9 +17,12 @@
                     <th><%= mt(:candidate, :id) %></th>
                     <th><%= mt(:candidate, :name) %></th>
                     <th><%= mt(:candidate, :nickname) %></th>
-                    <th><%= mt(:candidate, :title) %></th>
                     <th><%= mt(:candidate, :phone) %></th>
+                    <th><%= mt(:candidate, :phone1) %></th>
                     <th><%= mt(:candidate, :email) %></th>
+                    <th><%= mt(:candidate, :linkedin) %></th>
+                    <th><%= mt(:candidate, :title) %></th>
+                    <th><%= mt(:candidate, :job_status) %></th>
                     <th><%= mt(:company, :name) %></th>
                     <th><%= t(:client_active) %></th>
                     <th><%= mt(:candidate, :created_by) %></th>
@@ -30,24 +37,33 @@
                         <td><%= content_tag :span, "# #{client.uid}", :class => 'text-gray' %></td>
                         <td><%= client.name %></td>
                         <td><%= client.nickname %></td>
-                        <td><%= client.title %></td>
                         <td><%= client.phone %></td>
+                        <td><%= client.phone1 %></td>
                         <td><%= client.email %></td>
+                        <td><%= client.linkedin %></td>
+                        <td><%= client.title %></td>
+                        <td><%= candidate_job_status_badge(client.job_status) %></td>
                         <td><%= link_to client.company.name, company_path(client.company_id, return_to: request.url) %></td>
                         <td><%= client_active_badge(client.client_active?) %></td>
                         <td><%= client.creator.name_cn %></td>
                         <td><%= client.created_at.strftime('%F %T') %></td>
                         <td class="action">
-                            <div class="btn-group">
-                                <%= link_to projects_path(client_id: client.id), class: 'btn btn-primary btn-xs' do %>
-                                    <i class="fa fa-list"></i> <%= mt(:project) %>
-                                <% end %>
-                                <%= link_to edit_client_candidate_path(client, return_to: request.path), class: 'btn btn-edit btn-xs' do %>
-                                    <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
-                                <% end %>
-                                <%= link_to candidate_path(client, return_to: request.path), method: :delete, class: 'btn btn-danger btn-xs', data: { confirm: t(:sure_to_delete) } do %>
-                                    <%= fa_icon_tag('trash') %> <%= t('action.delete') %>
-                                <% end if can?(:destroy, Candidate) && client.can_delete? %>
+                            <div class="dropdown dropleft">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-cog"></i> <%= t(:operation) %>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-header"><%= client.uid_name %></div>
+                                    <%= link_to projects_path(client_id: client.id), class: 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-list"></i> <%= mt(:project) %>
+                                    <% end %>
+                                    <%= link_to edit_client_path(client, return_to: request.url), class: 'dropdown-item text-smaller' do %>
+                                        <i class="fa fa-edit"></i> <%= t('action.edit') %>
+                                    <% end %>
+                                    <%= link_to candidate_path(client, return_to: request.url), method: :delete, class: 'dropdown-item text-smaller', data: { confirm: t(:sure_to_delete) } do %>
+                                        <i class="fa fa-trash text-danger"></i> <%= t('action.delete') %>
+                                    <% end if can?(:destroy, Candidate) && client.can_delete? %>
+                                </div>
                             </div>
                         </td>
                     </tr>

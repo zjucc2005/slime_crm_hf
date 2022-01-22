@@ -2,8 +2,6 @@ class UserMailer < ApplicationMailer
   default from: 'project@hci-consulting.com'
 
   def test_email
-    # @user = params[:user]
-    # @url  = 'http://example.com/login'
     mail(
         # from: 'zjucc2005@163.com',
         to: 'zjucc2005@163.com',

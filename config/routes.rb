@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     get :expert_template,on: :collection
 
     post :create_client, on: :collection
-    get :edit_client,    on: :member
+    # get :edit_client,    on: :member
     put :update_client,  on: :member
 
     get :import_expert,  on: :collection  # show importing result
@@ -70,7 +70,7 @@ Rails.application.routes.draw do
 
   resources :companies do
     get :new_contract,        on: :member
-    get :new_client,          on: :member
+    # get :new_client,          on: :member
 
     get :load_client_options, on: :member
 

@@ -8,6 +8,11 @@
         <span class="badge badge-light"><%= show_timestamps(@client) %></span>
     </div>
 
+    <div class="col-lg-6 col-12 form-group">
+        <%= f.label :company, mt(:company) %><span class="text-red">*</span>
+        <%= f.select :company_id, company_options, { include_blank: default_prompt }, required: true, class: 'form-control select2' %>
+    </div>
+    <div class="col-lg-6 col-12"></div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :last_name, mt(:candidate, :name) %><span class="text-red">*</span>
         <div class="form-group-range">
@@ -28,11 +33,23 @@
         <%= f.text_field :phone, :class => 'form-control' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
+        <%= f.label :phone1 %>
+        <%= f.text_field :phone1, :class => 'form-control' %>
+    </div>
+    <div class="col-lg-3 col-6 form-group">
         <%= f.label :email %><span class="text-red">*</span>
         <%= f.email_field :email, :required => true, :class => 'form-control' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
+        <%= f.label :linkedin %>
+        <%= f.text_field :linkedin, :class => 'form-control' %>
+    </div>
+    <div class="col-lg-3 col-6 form-group">
         <%= f.label :title %>
         <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <div class="col-lg-3 col-6 form-group">
+        <%= f.label :job_status %>
+        <%= f.select :job_status, Candidate::JOB_STATUS.to_a.map(&:reverse), {}, class: 'form-control select2' %>
     </div>
 </div>

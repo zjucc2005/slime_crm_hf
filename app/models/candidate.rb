@@ -16,6 +16,7 @@ class Candidate < ApplicationRecord
     :excel     => '批量导入',
     :plugin    => '插件采集'
   }.stringify_keys
+  JOB_STATUS = { on: '在职', off: '离职' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
@@ -64,7 +65,7 @@ class Candidate < ApplicationRecord
   end
 
   # property fields
-  %w[wechat cpt_face_to_face haodf_id].each do |k|
+  %w[wechat cpt_face_to_face haodf_id linkedin].each do |k|
     define_method(:"#{k}"){ self.property[k] }
     define_method(:"#{k}="){ |v| self.property[k] = v }
   end
@@ -213,6 +214,9 @@ class Candidate < ApplicationRecord
       end
       if phone1.present?
         errors.add(:phone1, :taken) if query.exists?(phone: phone1) || query.exists?(phone1: phone1)
+      end
+      if email.present?
+        errors.add(:email, :taken) if query.where('email ~* ?', email.shellescape).count > 0
       end
     else
       true
