@@ -81,10 +81,10 @@ class CompaniesController < ApplicationController
   end
 
   # GET /companies/:id/new_client
-  def new_client
-    load_company
-    @client = @company.candidates.client.new
-  end
+  # def new_client
+  #   load_company
+  #   @client = @company.candidates.client.new
+  # end
 
   # GET /companies/:id/load_client_options.js
   def load_client_options
