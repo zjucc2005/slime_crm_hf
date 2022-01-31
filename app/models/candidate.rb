@@ -36,9 +36,9 @@ class Candidate < ApplicationRecord
 
   # Validations
   validates_inclusion_of :category, :in => CATEGORY.keys
-  validates_inclusion_of :data_source, :in => DATA_SOURCE.keys
-  validates_inclusion_of :gender, :in => GENDER.keys, :allow_nil => true
-  validates_inclusion_of :currency, :in => CURRENCY.keys, :allow_nil => true
+  validates_inclusion_of :data_source, in: DATA_SOURCE.keys, allow_nil: true
+  validates_inclusion_of :gender, in: GENDER.keys, allow_nil: true
+  validates_inclusion_of :currency, in: CURRENCY.keys, allow_nil: true
   validates_presence_of :name, :last_name
   validates_presence_of :cpt
 
@@ -81,10 +81,20 @@ class Candidate < ApplicationRecord
   end
 
   def validates_presence_of_experiences
-    return true unless %w[expert doctor].include?(self.category)
-    if self.experiences.work.count == 0
-      errors.add(:work_experiences, :blank)
-      false
+    if category == 'expert'
+      if experiences.work.count.zero?
+        errors.add(:work_experiences, :blank)
+        false
+      else
+        true
+      end
+    elsif category == 'doctor'
+      if experiences.hospital.count.zero?
+        errors.add(:work_experiences, :blank)
+        false
+      else
+        true
+      end
     else
       true
     end
@@ -110,7 +120,7 @@ class Candidate < ApplicationRecord
   end
 
   def latest_work_experience
-    experiences.work.order(:started_at => :desc, :ended_at => :desc).first
+    experiences.work.order(started_at: :desc, ended_at: :desc).first
   end
 
   # new expert has at most 1 task

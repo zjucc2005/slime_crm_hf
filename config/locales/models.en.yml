@@ -75,6 +75,7 @@ en:
 
       candidate:
         category: "Category"
+        category2: "Category2"
         data_source: "Data source"
         data_channel: "Data channel"
         name: "Name"
@@ -198,6 +199,7 @@ en:
       hospital:
         name: "Name"
         province: "Province"
+        city: "City"
         level: "Level"
         department: "Department"
 

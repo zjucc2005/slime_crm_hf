@@ -27,25 +27,19 @@ module Utils
             candidate = Candidate.doctor.where("CAST(property->>'haodf_id' AS INTEGER) = ?", @haodf_id).first
             if candidate
               candidate.update!(
-                city:      @candidate_attr[:city],
-                title:     @candidate_attr[:title],
                 expertise: @candidate_attr[:expertise],
                 inquiry:   @candidate_attr[:inquiry]
               )
               if @work_exp_attrs.present?
-                work_exp = candidate.experiences.work.first
+                work_exp = candidate.experiences.hospital.first
                 work_exp ?
                   work_exp.update!(@work_exp_attrs[0]) :
-                  candidate.experiences.work.create!(@work_exp_attrs[0])
+                  candidate.experiences.hospital.create!(@work_exp_attrs[0])
               end
             else
               candidate = Candidate.doctor.create!(@candidate_attr)
-              candidate.experiences.work.create!(@work_exp_attrs[0]) if @work_exp_attrs.present?
+              candidate.experiences.hospital.create!(@work_exp_attrs[0]) if @work_exp_attrs.present?
             end
-
-            @hospital = Hospital.where(name: @hospital_attr[:name], province: @hospital_attr[:province]).first
-            @hospital ||= Hospital.create!(name: @hospital_attr[:name], province: @hospital_attr[:province], level: @hospital_attr[:level])
-            @hospital.departments.find_or_create_by!(name: @hospital_attr[:department])
           end
           true  # return
         rescue Exception => e
@@ -68,17 +62,17 @@ module Utils
     end
 
     def set_candidate_attr
-      @haodf_id     = @row[0].to_i  # A, id
-      province      = @row[1]       # B, province
-      hospital      = @row[2]       # C, hospital
-      department    = @row[3]       # D, department
-      name          = @row[4]       # E, name
-      haodf_url     = @row[5]       # F, url
-      title         = @row[6]       # G, title
-      edu_title     = @row[7]       # H, educate_title
-      expertise     = @row[8]       # I, expertise
-      inquiry       = @row[9].to_i  # J, inquiry
-      level         = @row[10]      # K, level
+      @haodf_id     = @row[0].to_i
+      province      = @row[1]
+      city          = @row[2]
+      hospital      = @row[3]
+      level         = @row[4]
+      department    = @row[5]
+      name          = @row[6]
+      haodf_url     = @row[7]
+      title         = @row[8]
+      expertise     = @row[9]
+      inquiry       = @row[10].to_i
 
       # default setting
       cpt           = 0
@@ -87,19 +81,26 @@ module Utils
       @errors << '姓名不能为空, name is required' if name.blank?
       first_name, last_name = Candidate.name_split(name)
 
-      @candidate_attr = {
-        data_source: 'excel', data_channel: 'excel', created_by: @created_by, user_channel_id: @user_channel_id,
-        first_name: first_name, last_name: last_name, city: province, title: edu_title, expertise: expertise,
-        inquiry: inquiry, cpt: cpt, currency: currency, property: { haodf_id: @haodf_id, haodf_url: haodf_url }
-      }
-
-      @work_exp_attrs << {
-        org_cn: hospital, department: department, title: title
-      }
-
+      province_obj = LocationDatum.provinces.where('name LIKE ?', "#{province}%").first
+      if LocationDatum::DIRECT_CODE.include?(province_obj.code) # 直辖市/港澳
+        city_obj = province_obj.children.first.children.where('name LIKE ?', "#{city}%").first
+      else
+        city_obj = province_obj.children.where('name LIKE ?', "#{city}%").first
+      end
+      city_name = city_obj ? city_obj.name : city  # 部分地区名,
       @hospital_attr = {
-        name: hospital, province: province, level: level, department: department
+          name: hospital, province: province_obj.name, city: city_name, level: level, department: department
       }
+      @hospital = Hospital.where(name: @hospital_attr[:name], province: @hospital_attr[:province], city: @hospital_attr[:city]).first
+      @hospital ||= Hospital.create!(name: @hospital_attr[:name], province: @hospital_attr[:province], city: @hospital_attr[:city], level: @hospital_attr[:level])
+      @department = @hospital.departments.find_or_create_by!(name: @hospital_attr[:department])
+
+      @candidate_attr = {
+          data_source: 'excel', data_channel: 'excel', category2: 'doctor', created_by: @created_by, user_channel_id: @user_channel_id,
+          first_name: first_name, last_name: last_name, expertise: expertise, city: "#{@hospital_attr[:province]} #{@hospital_attr[:city]}",
+          inquiry: inquiry, cpt: cpt, currency: currency, property: { haodf_id: @haodf_id, haodf_url: haodf_url }
+      }
+      @work_exp_attrs << { org_id: @hospital.id, dep_id: @department.id, title: title, org_cn: @hospital.name, deparment: @department.name }
     end
 
   end

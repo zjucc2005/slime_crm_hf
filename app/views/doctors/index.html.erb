@@ -3,7 +3,7 @@
         <%= link_to new_doctor_path, :class => 'btn btn-primary' do %>
             <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:doctor))}" %>
         <% end if can?(:new, Candidate) %>
-        <%= render :partial => 'doctors/widgets/btn_import_haodf' %>
+        <%#= render :partial => 'doctors/widgets/btn_import_haodf' %>
         <%= render :partial => 'candidates/widgets/expert_card', :locals => { :uid => nil } %>
         <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => nil} %>
     </div>

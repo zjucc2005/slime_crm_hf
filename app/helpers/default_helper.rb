@@ -17,6 +17,16 @@ module DefaultHelper
     { 'RMB' => '¥', 'USD' => '$' }[val] || val
   end
 
+  def hospital_options
+    Hospital.all.order(created_at: :desc).pluck(:name, :id)
+  end
+
+  def hospital_department_options(dep_id)
+    dep = HospitalDepartment.where(id: dep_id).first
+    return [] if dep.nil?
+    dep.hospital.departments.order(created_at: :desc).pluck(:name, :id)
+  end
+
   def hospital_level_options
     Hospital::LEVEL
   end

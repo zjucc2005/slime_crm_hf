@@ -52,7 +52,9 @@ class DoctorsController < ApplicationController
       if @doctor.valid?
         ActiveRecord::Base.transaction do
           @doctor.save!
-          @doctor.experiences.work.create!(work_exp_params)
+          org = Hospital.where(id: exp_params[:org_id]).first
+          dep = HospitalDepartment.where(id: exp_params[:dep_id]).first
+          @doctor.experiences.hospital.create!(exp_params.merge(org_cn: org.name, department: dep.name))
           unless @doctor.validates_presence_of_experiences
             raise t(:operation_failed)
           end
@@ -82,8 +84,11 @@ class DoctorsController < ApplicationController
 
       ActiveRecord::Base.transaction do
         @doctor.update!(doctor_params)
-        work_exp = @doctor.experiences.work.first
-        work_exp ? work_exp.update!(work_exp_params) : @doctor.experiences.work.create!(work_exp_params)
+        org = Hospital.where(id: exp_params[:org_id]).first
+        dep = HospitalDepartment.where(id: exp_params[:dep_id]).first
+        exp = @doctor.experiences.hospital.first
+        exp ? exp.update!(exp_params.merge(org_cn: org.name, department: dep.name)) :
+            @doctor.experiences.hospital.create!(exp_params.merge(org_cn: org.name, department: dep.name))
         unless @doctor.validates_presence_of_experiences
           raise t(:operation_failed)
         end
@@ -147,14 +152,13 @@ class DoctorsController < ApplicationController
   end
 
   def doctor_params
-    params.require(:candidate).permit(:first_name, :last_name, :nickname, :city, :email, :email1, :phone, :phone1,
-                                      :industry, :title, :company_id, :date_of_birth, :gender, :description,
-                                      :is_available, :cpt, :currency, :recommender_id, :wechat, :cpt_face_to_face,
-                                      :data_channel, :file, :inquiry, :expertise)
+    params.require(:candidate).permit(:first_name, :last_name, :nickname, :category2, :date_of_birth, :gender, :city,
+                                      :phone, :email, :wechat, :file, :expertise, :description,  :recommender_id,
+                                      :is_available, :cpt, :currency)
   end
 
-  def work_exp_params
-    params.require(:work_exp).permit(:org_cn, :department, :title, :description)
+  def exp_params
+    params.require(:exp).permit(:org_id, :dep_id, :title)
   end
 
 end

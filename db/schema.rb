@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_22_034941) do
+ActiveRecord::Schema.define(version: 2022_01_27_120117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,7 +71,11 @@ ActiveRecord::Schema.define(version: 2022_01_22_034941) do
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "org_id"
+    t.bigint "dep_id"
     t.index ["candidate_id"], name: "index_candidate_experiences_on_candidate_id"
+    t.index ["dep_id"], name: "index_candidate_experiences_on_dep_id"
+    t.index ["org_id"], name: "index_candidate_experiences_on_org_id"
   end
 
   create_table "candidate_payment_infos", force: :cascade do |t|
@@ -120,6 +124,7 @@ ActiveRecord::Schema.define(version: 2022_01_22_034941) do
     t.text "expertise"
     t.integer "inquiry"
     t.string "job_status"
+    t.string "category2"
     t.index ["company_id"], name: "index_candidates_on_company_id"
     t.index ["recommender_id"], name: "index_candidates_on_recommender_id"
     t.index ["user_channel_id"], name: "index_candidates_on_user_channel_id"
@@ -193,6 +198,8 @@ ActiveRecord::Schema.define(version: 2022_01_22_034941) do
     t.string "level"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "city"
+    t.string "alias"
   end
 
   create_table "industries", force: :cascade do |t|

@@ -154,6 +154,7 @@ Rails.application.routes.draw do
   end
   resources :hospitals do
     get :load_departments, on: :member
+    get :change_hospital_for_doctor_form, on: :member
   end
   resources :banks
   resources :industries

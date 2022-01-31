@@ -20,7 +20,7 @@ class LocationDatum < ApplicationRecord
   scope :cities,    -> { where(level: 2) }
   scope :districts, -> { where(level: 3) }
 
-  DIRECT_CODE = %w[11 12 31 50 81 82]  # 直辖市/港澳
+  DIRECT_CODE = %w[110000 120000 310000 500000 810000 820000]  # 直辖市/港澳
 
   class << self
     ##

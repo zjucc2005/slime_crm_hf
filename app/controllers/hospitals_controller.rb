@@ -43,6 +43,15 @@ class HospitalsController < ApplicationController
     render :json => @data.to_json
   end
 
+  # GET
+  def change_hospital_for_doctor_form
+    load_hospital
+    @city = "#{@hospital.province} #{@hospital.city}"
+    @department_options = '<option>Please select</option>' +
+        @hospital.departments.map { |dep| "<option value=\"#{dep.id}\">#{dep.name}</option>" }.join
+    respond_to { |f| f.js }
+  end
+
   private
   def load_hospital
     @hospital = Hospital.find(params[:id])

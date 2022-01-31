@@ -13,8 +13,8 @@
                         <a class="status <%= candidate_is_available_status(@doctor.is_available) %>" href="#" role="button" id="cia_<%= @doctor.id %>" data-toggle="dropdown"></a>
                         <div class="dropdown-menu">
                             <div class="dropdown-header"><%= mt(:candidate, :is_available) %></div>
-                            <%= link_to t(:true),    update_is_available_candidate_path(@doctor, is_available: true),    :method => :put, :remote => true, :class => 'dropdown-item status valid' %>
-                            <%= link_to t(:pending), update_is_available_candidate_path(@doctor, is_available: nil),     :method => :put, :remote => true, :class => 'dropdown-item status pending' %>
+                            <%= link_to t(:true),    update_is_available_candidate_path(@doctor, is_available: true),  :method => :put, :remote => true, :class => 'dropdown-item status valid' %>
+                            <%= link_to t(:pending), update_is_available_candidate_path(@doctor, is_available: nil),   :method => :put, :remote => true, :class => 'dropdown-item status pending' %>
                             <%= link_to t(:false),   update_is_available_candidate_path(@doctor, is_available: false), :method => :put, :remote => true, :class => 'dropdown-item status invalid' %>
                         </div>
                     </span>
@@ -68,94 +68,107 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :name) %></span>
                 </div>
-                <%= content_tag :span, @doctor.name, :class => 'form-control' %>
+                <%= content_tag :span, @doctor.name, class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :nickname) %></span>
                 </div>
-                <%= content_tag :span, @doctor.nickname, :class => 'form-control' %>
+                <%= content_tag :span, @doctor.nickname, class: 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :category) %></span>
+                </div>
+                <%= content_tag :span, Doctor::CATEGORY[@doctor.category2], class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :gender) %></span>
                 </div>
-                <%= content_tag :span, Candidate::GENDER[@doctor.gender], :class => 'form-control' %>
+                <%= content_tag :span, Candidate::GENDER[@doctor.gender], class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :date_of_birth) %></span>
                 </div>
-                <%= content_tag :span, @doctor.date_of_birth.try(:strftime, '%F'), :class => 'form-control' %>
+                <%= content_tag :span, @doctor.date_of_birth.try(:strftime, '%F'), class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :phone) %></span>
                 </div>
-                <%= content_tag :span, @doctor.phone, :class => 'form-control' %>
+                <%= content_tag :span, @doctor.phone, class: 'form-control' %>
             </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :phone1) %></span>
-                </div>
-                <%= content_tag :span, @doctor.phone1, :class => 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :city) %></span>
-                </div>
-                <%= content_tag :span, @doctor.city, :class => 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :educate_title) %></span>
-                </div>
-                <%= content_tag :span, @doctor.title, :class => 'form-control' %>
-            </div>
-
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :email) %></span>
                 </div>
-                <%= content_tag :span, @doctor.email, :class => 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :email1) %></span>
-                </div>
-                <%= content_tag :span, @doctor.email1, :class => 'form-control' %>
+                <%= content_tag :span, @doctor.email, class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :wechat) %></span>
                 </div>
-                <%= content_tag :span, @doctor.property['wechat'], :class => 'form-control' %>
+                <%= content_tag :span, @doctor.property['wechat'], class: 'form-control' %>
             </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+            <div class="col-lg-9 col-12 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :data_channel) %></span>
+                    <span class="input-group-text"><%= mt(:candidate, :file) %></span>
                 </div>
-                <%= content_tag :span, Candidate::DATA_CHANNEL[@doctor.data_channel] || @doctor.data_channel, :class => 'form-control' %>
+                <% if @doctor.file.present? %>
+                    <%= link_to @doctor.file.identifier, @doctor.file.url, target: '_blank', class: 'form-control' %>
+                <% else %>
+                    <%= content_tag :span, nil, class: 'form-control' %>
+                <% end %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :haodf_id) %></span>
                 </div>
-                <%= content_tag :span, @candidate.haodf_id, :class => 'form-control' %>
-            </div>
-            <div class="col-12 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :file) %></span>
-                </div>
-                <% if @doctor.file.present? %>
-                    <%= link_to @doctor.file.identifier, @doctor.file.url, :target => '_blank', :class => 'form-control' %>
-                <% else %>
-                    <%= content_tag :span, nil, :class => 'form-control' %>
+                <%= content_tag :span, class: 'form-control' do %>
+                    <% if @doctor.property['haodf_url'].present? %>
+                        <%= link_to @doctor.haodf_id, @doctor.property['haodf_url'], target: '_blank' %>
+                    <% else %>
+                        <%= @doctor.haodf_id %>
+                    <% end %>
                 <% end %>
             </div>
         </div>
 
+        <!-- 工作经历 -->
+        <div class="badge badge-info mb-3 px-4"><%= t(:work_experience) %></div>
+        <% exp = @doctor.experiences.hospital.first || @doctor.experiences.hospital.new %>
+        <% org = exp.org_instance %>
+        <% dep = exp.dep_instance %>
         <div class="row border-bottom mb-3">
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :city) %></span>
+                </div>
+                <%= content_tag :span, @doctor.city, class: 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate_experience, :hospital) %></span>
+                </div>
+                <%= content_tag :span, org.try(:name), :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate_experience, :department) %></span>
+                </div>
+                <%= content_tag :span, dep.try(:name), :class => 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate_experience, :title) %></span>
+                </div>
+                <%= content_tag :span, exp.title, :class => 'form-control' %>
+            </div>
+        </div>
+
+        <div class="row mb-3">
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :cpt) %></span>
@@ -168,26 +181,12 @@
                 </div>
                 <%= content_tag :span, currency_display(@doctor.currency), :class => 'form-control' %>
             </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :cpt_face_to_face) %></span>
-                </div>
-                <%= content_tag :span, @doctor.cpt_face_to_face, :class => 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :inquiry) %></span>
-                </div>
-                <%= content_tag :span, @doctor.inquiry, :class => 'form-control' %>
-            </div>
-
             <div class="col-12 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :expertise) %></span>
                 </div>
                 <%= text_area_tag :expertise, @doctor.expertise, :rows => 2, :disabled => true, :class => 'form-control bg-white' %>
             </div>
-
             <div class="col-12 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :description) %></span>
@@ -195,28 +194,5 @@
                 <%= text_area_tag :description, @doctor.description, :rows => 5, :disabled => true, :class => 'form-control bg-white' %>
             </div>
         </div>
-
-        <!-- 工作经历 -->
-        <div class="badge badge-info mb-3 px-4"><%= t(:work_experience) %></div>
-        <table class="table table-sm table-striped card-text">
-            <thead>
-            <tr>
-                <th><%= mt(:candidate_experience, :hospital) %></th>
-                <th><%= mt(:candidate_experience, :department) %></th>
-                <th><%= mt(:candidate_experience, :title) %></th>
-                <th><%= mt(:candidate_experience, :duty) %></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @doctor.experiences.work.order(:started_at => :desc).each do |exp| %>
-                <tr>
-                    <td><%= exp.org_cn %></td>
-                    <td><%= exp.department %></td>
-                    <td><%= exp.title %></td>
-                    <td style="white-space: pre-line;"><%= exp.description %></td>
-                </tr>
-            <% end %>
-            </tbody>
-        </table>
     </div>
 </div>

@@ -104,7 +104,8 @@ zh_cn:
         user_count: "用户数"
 
       candidate:
-        category: "候选人类型"
+        category: "类型"
+        category2: "类型2"
         data_source: "数据来源"
         data_channel: "数据渠道"
         name: "姓名"
@@ -228,6 +229,7 @@ zh_cn:
       hospital:
         name: "名称"
         province: "省份"
+        city: "城市"
         level: "级别"
         department: "科室"
 

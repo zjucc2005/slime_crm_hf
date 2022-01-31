@@ -29,6 +29,7 @@
                 <th><%= mt(:hospital, :id) %></th>
                 <th><%= mt(:hospital, :name) %></th>
                 <th><%= mt(:hospital, :province) %></th>
+                <th><%= mt(:hospital, :city) %></th>
                 <th><%= mt(:hospital, :level) %></th>
                 <th><%= mt(:hospital, :created_at) %></th>
             </tr>
@@ -39,6 +40,7 @@
                     <td><%= content_tag :span, "# #{hospital.uid}", :class => 'text-gray' %></td>
                     <td><%= link_to hospital.name, hospital_path(hospital) %></td>
                     <td><%= hospital.province %></td>
+                    <td><%= hospital.city %></td>
                     <td><%= hospital.level %></td>
                     <td><%= hospital.created_at.strftime('%F %T') %></td>
                 </tr>
