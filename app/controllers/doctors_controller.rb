@@ -18,7 +18,9 @@ class DoctorsController < ApplicationController
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
     # -- 省份/城市 --
-    if params[:ld_province_id].present?
+    if params[:city_level].present?
+      query = query.where('candidates.city ~* ?', LocationDatum::CITY_TIER[params[:city_level]].join('|'))
+    elsif params[:ld_province_id].present?
       @province = LocationDatum.where(id: params[:ld_province_id]).first
       if @province && params[:ld_city_id].present?
         @city = @province.direct_children.where(id: params[:ld_city_id]).first

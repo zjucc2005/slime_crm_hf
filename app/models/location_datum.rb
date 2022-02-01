@@ -22,6 +22,11 @@ class LocationDatum < ApplicationRecord
 
   DIRECT_CODE = %w[110000 120000 310000 500000 810000 820000]  # 直辖市/港澳
 
+  CITY_TIER = {
+      '一线': %w[北京市 上海市 深圳市 广州市],
+      '新一线': %w[成都市 杭州市 重庆市 西安市 苏州市 武汉市 南京市 天津市 郑州市 长沙市 东莞市 佛山市 宁波市 青岛市 沈阳市]
+  }.stringify_keys
+
   # 地市级行政单位
   def direct_children
     DIRECT_CODE.include?(code) ? children.first.children : children

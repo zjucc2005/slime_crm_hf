@@ -35,8 +35,8 @@
                                 <%= text_field_tag :email, params[:email], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :city_level, t(:city_level) %><span class="text-danger">Disabled</span>
-                                <%= select_tag :city_level, options_for_select([], params[:city_level]), prompt: default_prompt, disabled: true, class: 'form-control select2' %>
+                                <%= label_tag :city_level, t(:city_level) %>
+                                <%= select_tag :city_level, options_for_select(['一线', '新一线'], params[:city_level]), prompt: default_prompt, class: 'form-control select2' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :province, mt(:hospital, :province) %>
@@ -90,7 +90,15 @@
 </div>
 <script>
     $(function(){
+        $('select#city_level').change();
         $('select#ld_province_id').change();
         $('select#hospital_id').change();
     });
+    $('select#city_level').change(function(){
+        if (this.value) {
+            $('select#ld_province_id').val('').change().attr('disabled', true);
+        } else {
+            $('select#ld_province_id').attr('disabled', false);
+        }
+    })
 </script>
