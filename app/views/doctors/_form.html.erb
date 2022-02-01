@@ -62,7 +62,6 @@
     <div class="col-3 form-group">
         <%= label_tag :city, mt(:candidate, :city) %>
         <%= f.text_field :city, readonly: true, class: 'form-control' %>
-        <%#= text_field_tag :'exp[city]', "#{org.try(:province)} #{org.try(:city)}", disabled: true, class: 'form-control' %>
     </div>
     <div class="col-3 form-group">
         <%= label_tag :org_cn, mt(:candidate_experience, :hospital) %><span class="text-red">*</span>
@@ -106,7 +105,7 @@
         if(this.value){
             $.get('/hospitals/' + this.value + '/change_hospital_for_doctor_form.js');
         } else {
-            $('input#exp_city').val('');
+            $('input#candidate_city').val('');
             $('select#exp_dep_id').html('<option>Please select</option>');
         }
     })
