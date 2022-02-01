@@ -32,6 +32,20 @@ class LocationDataController < ApplicationController
     render :json => res.to_json
   end
 
+  # GET, js
+  def load_children
+    @province = LocationDatum.provinces.where(id: params[:id]).first
+    @city_options = '<option value>Please select</option>'
+    if @province
+      @cities = @province.direct_children
+      @city_options += @cities.map { |city| "<option value=\"#{city.id}\">#{city.name}</option>" }.join
+      if @cities && @cities.exists?(id: params[:ld_city_id])
+        @ld_city_id = params[:ld_city_id]
+      end
+    end
+    respond_to { |f| f.js }
+  end
+
   private
   def load_each_level
     @parent = LocationDatum.find(params[:parent_id])

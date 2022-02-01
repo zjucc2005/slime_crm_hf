@@ -200,7 +200,7 @@ en:
         name: "Name"
         province: "Province"
         city: "City"
-        level: "Level"
+        level: "Hospital level"
         department: "Department"
 
       bank:

@@ -17,6 +17,10 @@ module DefaultHelper
     { 'RMB' => '¥', 'USD' => '$' }[val] || val
   end
 
+  def province_options
+    LocationDatum.provinces.order(code: :asc).pluck(:name, :id)
+  end
+
   def hospital_options
     Hospital.all.order(created_at: :desc).pluck(:name, :id)
   end

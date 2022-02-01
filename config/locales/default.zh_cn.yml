@@ -17,6 +17,7 @@ zh_cn:
   cannot_delete: "不能删除"
   change_operator: "变更操作员"
   charge_info: "收费信息"
+  city_level: "城市等级"
   client_active: "活跃"
   client_contact: "客户联系人"
   company_signed: "已签约"

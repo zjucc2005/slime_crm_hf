@@ -42,8 +42,8 @@
                 <div class="d-flex flex-column text-left">
                     <% candidate.experiences.hospital.order(started_at: :desc).limit(1).each do |exp| %>
                         <div class="text-smaller">
-                            <span class="mr-1" title="<%= exp.org_instance.name %>"><%= truncate(exp.org_instance.name, length: 11) %></span>
-                            <span class="mr-1"><%= exp.dep_instance.name %></span>
+                            <span class="mr-1" title="<%= exp.org_cn %>"><%= truncate(exp.org_cn, length: 11) %></span>
+                            <span class="mr-1"><%= exp.department %></span>
                             <span><%= exp.title %></span>
                         </div>
                     <% end %>
@@ -51,10 +51,10 @@
             </div>
             <div class="col-lg-6 d-flex flex-column text-left">
                 <%= content_tag :div, :title => mt(:candidate, :expertise), :class => 'my-3 my-lg-0 text-smaller text-p-1 btn-light' do %>
-                    <%= hl(truncate(candidate.expertise, length: 150), [params[:expertise]]) %>
+                    <%= hl(truncate(candidate.expertise, length: 150), @hl_words) %>
                 <% end if candidate.expertise.present? %>
                 <%= content_tag :div, :title => mt(:candidate, :description), :class => 'my-3 my-lg-0 text-smaller text-p-1' do %>
-                    <%= hl(truncate(candidate.description, length: 150), [params[:description]]) %>
+                    <%= hl(truncate(candidate.description, length: 150), @hl_words) %>
                 <% end if candidate.description.present? %>
             </div>
             <div class="col-lg-3 d-flex flex-column text-left">

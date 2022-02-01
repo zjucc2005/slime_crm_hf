@@ -230,7 +230,7 @@ zh_cn:
         name: "名称"
         province: "省份"
         city: "城市"
-        level: "级别"
+        level: "医院等级"
         department: "科室"
 
       bank:

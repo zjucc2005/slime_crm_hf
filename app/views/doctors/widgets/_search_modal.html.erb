@@ -1,6 +1,6 @@
 <div id="search_wrapper" class="d-inline-block">
-    <%= button_tag :type => 'button', :class => 'btn btn-default', :data => { :toggle => 'modal', :target => '#searchModal'} do %>
-        <%= fa_icon_tag('search') %> <%= content_tag :span, t('action.search'), :class => 'd-lg-inline d-none' %>
+    <%= button_tag type: 'button', class: 'btn btn-default', data: { toggle: 'modal', target: '#searchModal'} do %>
+        <i class="fa fa-search"></i> <%= content_tag :span, t('action.search'), class: 'd-lg-inline d-none' %>
     <% end %>
 
     <div id="searchModal" class="modal fade">
@@ -11,48 +11,64 @@
                     <button type="button" data-dismiss="modal" class="close">&times;</button>
                 </div>
 
-                <%= form_tag request.path, :method => :get do %>
+                <%= form_tag request.path, method: :get do %>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-lg-6 form-group">
-                                <%= label_tag :expertise, mt(:candidate, :expertise) %>
-                                <%= text_field_tag :expertise, params[:expertise], :class => 'form-control' %>
-                            </div>
-                            <div class="col-lg-6 form-group">
-                                <%= label_tag :description, mt(:candidate, :description) %>
-                                <%= text_field_tag :description, params[:description], :class => 'form-control' %>
+                            <div class="col-lg-12 form-group">
+                                <%= label_tag :description, t(:expert_description) %>
+                                <%= text_field_tag :description, params[:description], class: 'form-control', placeholder: '关键词之间用空格隔开, 最多5个关键词' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :id, mt(:candidate, :id) %>
-                                <%= text_field_tag :id, params[:id], :class => 'form-control' %>
+                                <%= text_field_tag :id, params[:id], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :name, mt(:candidate, :name) %>
-                                <%= text_field_tag :name, params[:name], :class => 'form-control' %>
+                                <%= text_field_tag :name, params[:name], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :phone, mt(:candidate, :phone) %>
-                                <%= text_field_tag :phone, params[:phone], :class => 'form-control' %>
+                                <%= text_field_tag :phone, params[:phone], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :email, mt(:candidate, :email) %>
-                                <%= text_field_tag :email, params[:email], :class => 'form-control' %>
+                                <%= text_field_tag :email, params[:email], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :org_cn, mt(:candidate_experience, :hospital) %>
-                                <%= text_field_tag :org_cn, params[:org_cn], :class => 'form-control' %>
+                                <%= label_tag :city_level, t(:city_level) %><span class="text-danger">Disabled</span>
+                                <%= select_tag :city_level, options_for_select([], params[:city_level]), prompt: default_prompt, disabled: true, class: 'form-control select2' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :department, mt(:candidate_experience, :department) %>
-                                <%= text_field_tag :department, params[:department], :class => 'form-control' %>
+                                <%= label_tag :province, mt(:hospital, :province) %>
+                                <%= select_tag :ld_province_id, options_for_select(province_options, params[:ld_province_id]),
+                                               onchange: "loadChildrenForProvince(this.value, #{params[:ld_city_id]})",
+                                               prompt: default_prompt, class: 'form-control select2' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :title, mt(:candidate_experience, :title) %>
-                                <%= text_field_tag :title, params[:title], :class => 'form-control' %>
+                                <%= label_tag :city, mt(:hospital, :city) %>
+                                <%= select_tag :ld_city_id, options_for_select([], params[:ld_city_id]), prompt: default_prompt, class: 'form-control select2' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :is_available, mt(:candidate, :is_available) %>
-                                <%= select_tag :is_available, options_for_select(candidate_is_available_search_options, params[:is_available]), :prompt => default_prompt, :class => 'form-control select2' %>
+                                <%= select_tag :is_available, options_for_select(candidate_is_available_search_options, params[:is_available]), prompt: default_prompt, class: 'form-control select2' %>
+                            </div>
+                            <div class="col-lg-3 col-6 form-group">
+                                <%= label_tag :hospital_level, mt(:hospital, :level) %>
+                                <%= select_tag :hospital_level, options_for_select(hospital_level_options, params[:hospital_level]), prompt: default_prompt, class: 'form-control select2' %>
+                            </div>
+                            <div class="col-lg-3 col-6 form-group">
+                                <%= label_tag :hospital, mt(:candidate_experience, :hospital) %>
+                                <%= select_tag :hospital_id, options_for_select(hospital_options, params[:hospital_id]),
+                                               onchange: "loadChildrenForHospital(this.value, #{params[:hospital_department_id]})",
+                                               prompt: default_prompt, class: 'form-control select2' %>
+                            </div>
+                            <div class="col-lg-3 col-6 form-group">
+                                <%= label_tag :department, mt(:candidate_experience, :department) %>
+                                <%= select_tag :hospital_department_id, options_for_select([], params[:hospital_department_id]), prompt: default_prompt, class: 'form-control select2' %>
+                            </div>
+                            <div class="col-lg-3 col-6 form-group">
+                                <%= label_tag :title, mt(:candidate_experience, :title) %>
+                                <%= text_field_tag :title, params[:title], class: 'form-control' %>
                             </div>
                             <div class="col-12 form-group">
                                 <%= label_tag :name, mt(:candidate, :name) %>(Multiple, 空格隔开)
@@ -65,10 +81,16 @@
                     <%= hidden_field_tag :project_id, params[:project_id] %>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-back"><%= t('action.close') %></button>
-                        <%= submit_tag t('action.submit'), :class => 'btn btn-submit' %>
+                        <%= submit_tag t('action.submit'), class: 'btn btn-submit' %>
                     </div>
                 <% end %>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(function(){
+        $('select#ld_province_id').change();
+        $('select#hospital_id').change();
+    });
+</script>

@@ -6,24 +6,70 @@ class DoctorsController < ApplicationController
   # GET /doctors
   def index
     set_per_page
+    @hl_words = [] # 高亮关键词
     query = user_channel_filter(Candidate.doctor)
     # query code here >>
-    query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { :name => params[:name].strip }) if params[:name].present?
-    query = query.where('candidates.phone ~* :phone OR candidates.phone1 ~* :phone', { :phone => params[:phone].strip.shellescape }) if params[:phone].present?
-    query = query.where('candidates.email ~* :email OR candidates.email1 ~* :email', { :email => params[:email].strip.shellescape }) if params[:email].present?
+    query = query.joins(:experiences).where('candidate_experiences.category': 'hospital')
+    query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { name: params[:name].strip }) if params[:name].present?
+    query = query.where('candidates.phone ILIKE ?', "%#{params[:phone].strip}%") if params[:phone].present?
+    query = query.where('candidates.email ILIKE ?', "%#{params[:email].strip}%") if params[:email].present?
     query = query.where('candidates.is_available' => params[:is_available] == 'nil' ? nil : params[:is_available] ) if params[:is_available].present?
     %w[id user_channel_id].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
-    %w[expertise description].each do |field|
-      query = query.where("#{field} ~* ?", params[field].strip) if params[field].present?
+    # -- 省份/城市 --
+    if params[:ld_province_id].present?
+      @province = LocationDatum.where(id: params[:ld_province_id]).first
+      if @province && params[:ld_city_id].present?
+        @city = @province.direct_children.where(id: params[:ld_city_id]).first
+      end
     end
-    %w[org_cn department title].each do |field|
-      query = query.joins(:experiences).where("candidate_experiences.#{field} ~* ?", params[field].strip) if params[field].present?
+    if @province && @city
+      query = query.where('candidates.city': "#{@province.name} #{@city.name}")
+    elsif @province
+      query = query.where('candidates.city ILIKE ?', "#{@province.name} %")
     end
+    # -- 医院/科室 --
+    query = query.where('candidate_experiences.org_id': params[:hospital_id]) if params[:hospital_id].present?
+    query = query.where('candidate_experiences.dep_id': params[:hospital_department_id]) if params[:hospital_department_id].present?
+    query = query.where('candidate_experiences.title ILIKE ?', "%#{params[:title].strip}%") if params[:title].present?
+    if params[:hospital_level].present?
+      hospital_level = case params[:hospital_level].strip
+              when '三级' then %w[三级 三甲 三乙 三丙]
+              when '二级' then %w[二级 二甲 二乙 二丙]
+              when '一级' then %w[一级 一甲 一乙 一丙]
+              else params[:hospital_level].strip
+              end
+      query = query.joins('LEFT JOIN hospitals on hospitals.id = candidate_experiences.org_id').where('hospitals.level': hospital_level)
+    end
+
     if params[:name_or].present?
       name_arr = params[:name_or].split
       query = query.where('name ~* ?', "^(#{name_arr.join('|')})$")
+    end
+
+    if params[:description].present?
+      @terms = params[:description].split
+      if @terms.length > 5
+        flash[:error] = t(:keywords_at_most, limit: 5)
+        redirect_to doctors_path and return
+      end
+
+      and_conditions = []
+      or_fields = %w[candidates.description candidates.expertise candidate_experiences.org_cn candidate_experiences.department candidate_experiences.title]
+      @terms.each do |term|
+        sa = SearchAlias.where('kwlist @> ?', term.to_json).first
+        if sa
+          term_plus = sa.kwlist.join('|')
+          @hl_words += sa.kwlist
+        else
+          term_plus = term
+          @hl_words << term
+        end
+        and_conditions << "(#{or_fields.map{|f| "coalesce(#{f},'')" }.join(' || ')} ~* '#{term_plus}')"
+      end
+      @hl_words.uniq!
+      query = query.where(and_conditions.join(' AND '))
     end
 
     @doctors = query.distinct.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)

@@ -88,6 +88,22 @@ window.loadingModal = function(category, reference_id){
     $.get('/candidates/loading_modal.js?category=' + category + '&reference_id=' + reference_id);
 };
 
+window.loadChildrenForProvince = function(ld_province_id, ld_city_id){
+    if(ld_province_id){
+        $.get('/location_data/' + ld_province_id + '/load_children.js?ld_city_id=' + ld_city_id || '');
+    } else {
+        $('select#ld_city_id').html('<option value>Please select</option>');
+    }
+};
+
+window.loadChildrenForHospital = function(hospital_id, hospital_department_id) {
+    if(hospital_id){
+        $.get('/hospitals/' + hospital_id + '/load_children.js?hospital_department_id=' + hospital_department_id || '');
+    } else {
+        $('select#hospital_department_id').html('<option value>Please select</option>');
+    }
+};
+
 window.clipboard = function(element){
     selectText(element);
     document.execCommand('copy');

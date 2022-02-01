@@ -22,6 +22,11 @@ class LocationDatum < ApplicationRecord
 
   DIRECT_CODE = %w[110000 120000 310000 500000 810000 820000]  # 直辖市/港澳
 
+  # 地市级行政单位
+  def direct_children
+    DIRECT_CODE.include?(code) ? children.first.children : children
+  end
+
   class << self
     ##
     # import china location data

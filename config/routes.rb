@@ -151,10 +151,12 @@ Rails.application.routes.draw do
   resources :location_data do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection
+    get :load_children, on: :member
   end
   resources :hospitals do
     get :load_departments, on: :member
     get :change_hospital_for_doctor_form, on: :member
+    get :load_children, on: :member
   end
   resources :banks
   resources :industries

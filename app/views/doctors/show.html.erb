@@ -139,8 +139,6 @@
         <!-- 工作经历 -->
         <div class="badge badge-info mb-3 px-4"><%= t(:work_experience) %></div>
         <% exp = @doctor.experiences.hospital.first || @doctor.experiences.hospital.new %>
-        <% org = exp.org_instance %>
-        <% dep = exp.dep_instance %>
         <div class="row border-bottom mb-3">
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
@@ -152,13 +150,13 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate_experience, :hospital) %></span>
                 </div>
-                <%= content_tag :span, org.try(:name), :class => 'form-control' %>
+                <%= content_tag :span, exp.org_cn, :class => 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate_experience, :department) %></span>
                 </div>
-                <%= content_tag :span, dep.try(:name), :class => 'form-control' %>
+                <%= content_tag :span, exp.department, :class => 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
