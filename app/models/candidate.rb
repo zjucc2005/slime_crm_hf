@@ -116,11 +116,11 @@ class Candidate < ApplicationRecord
   end
 
   def work_experiences
-    experiences.work  # 定义属性
+    experiences.where(category: %w[work hospital])  # 定义属性
   end
 
   def latest_work_experience
-    experiences.work.order(started_at: :desc, ended_at: :desc).first
+    experiences.where(category: %w[work hospital]).order(started_at: :desc, ended_at: :desc).first
   end
 
   # new expert has at most 1 task

@@ -22,13 +22,13 @@ module DefaultHelper
   end
 
   def hospital_options
-    Hospital.all.order(created_at: :desc).pluck(:name, :id)
+    Hospital.all.order(created_at: :asc).pluck(:name, :id)
   end
 
   def hospital_department_options(dep_id)
     dep = HospitalDepartment.where(id: dep_id).first
     return [] if dep.nil?
-    dep.hospital.departments.order(created_at: :desc).pluck(:name, :id)
+    dep.hospital.departments.order(created_at: :asc).pluck(:name, :id)
   end
 
   def hospital_level_options

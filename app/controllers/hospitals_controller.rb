@@ -5,9 +5,17 @@ class HospitalsController < ApplicationController
 
   def index
     query = Hospital.all
-    %w[name province].each do |field|
+    %w[name].each do |field|
       query = query.where("#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
     end
+    if params[:ld_province_id].present?
+      @province = LocationDatum.where(id: params[:ld_province_id]).first
+      if @province && params[:ld_city_id].present?
+        @city = @province.direct_children.where(id: params[:ld_city_id]).first
+      end
+    end
+    query = query.where(province: @province.name) if @province
+    query = query.where(city: @city.name) if @city
     if params[:level].present?
       level = case params[:level].strip
                 when '三级' then %w[三级 三甲 三乙 三丙]

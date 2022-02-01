@@ -24,7 +24,7 @@ module Utils
         # import code
         begin
           ActiveRecord::Base.transaction do
-            candidate = Candidate.doctor.where("CAST(property->>'haodf_id' AS INTEGER) = ?", @haodf_id).first
+            candidate = Candidate.doctor.where("CAST(property->>'haodf_id' AS BIGINT) = ?", @haodf_id).first
             if candidate
               candidate.update!(
                 expertise: @candidate_attr[:expertise],
@@ -100,7 +100,7 @@ module Utils
           first_name: first_name, last_name: last_name, expertise: expertise, city: "#{@hospital_attr[:province]} #{@hospital_attr[:city]}",
           inquiry: inquiry, cpt: cpt, currency: currency, property: { haodf_id: @haodf_id, haodf_url: haodf_url }
       }
-      @work_exp_attrs << { org_id: @hospital.id, dep_id: @department.id, title: title, org_cn: @hospital.name, deparment: @department.name }
+      @work_exp_attrs << { org_id: @hospital.id, dep_id: @department.id, title: title, org_cn: @hospital.name, department: @department.name }
     end
 
   end
