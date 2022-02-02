@@ -32,10 +32,9 @@ class HospitalsController < ApplicationController
     load_hospital
 
     @data = []
-    @hospital.departments.each do |dept|
-      count = Candidate.doctor.joins(:experiences).
-        where('candidate_experiences.org_cn = ? AND candidate_experiences.department = ?', @hospital.name, dept.name).count
-      @data << { name: dept.name, count: count }
+    @hospital.departments.each do |dep|
+      count = Candidate.doctor.joins(:experiences).where('candidate_experiences.org_id': @hospital.id, 'candidate_experiences.dep_id': dep.id).count
+      @data << { id: dep.id, name: dep.name, count: count }
     end
   end
 
@@ -43,10 +42,9 @@ class HospitalsController < ApplicationController
   def load_departments
     load_hospital
     @data = []
-    @hospital.departments.each do |dept|
-      count = Candidate.doctor.joins(:experiences).
-        where('candidate_experiences.org_cn = ? AND candidate_experiences.department = ?', @hospital.name, dept.name).count
-      @data << { name: dept.name, count: count }
+    @hospital.departments.each do |dep|
+      count = Candidate.doctor.joins(:experiences).where('candidate_experiences.org_id': @hospital.id, 'candidate_experiences.dep_id': dep.id).count
+      @data << { id: dep.id, name: dep.name, count: count }
     end
     render :json => @data.to_json
   end
@@ -57,6 +55,12 @@ class HospitalsController < ApplicationController
     @city = "#{@hospital.province} #{@hospital.city}"
     @department_options = '<option>Please select</option>' +
         @hospital.departments.map { |dep| "<option value=\"#{dep.id}\">#{dep.name}</option>" }.join
+    respond_to { |f| f.js }
+  end
+
+  def load_hospital_options
+    @hospital_options = '<option value>Please select</option>'
+    @hospital_options += Hospital.all.order(created_at: :asc).map { |hos| "<option value=\"#{hos.id}\">#{hos.name}</option>" }.join
     respond_to { |f| f.js }
   end
 
