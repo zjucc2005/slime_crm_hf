@@ -91,6 +91,7 @@ class DoctorsController < ApplicationController
   # GET /doctors/new
   def new
     @doctor = Candidate.doctor.new
+    @exp = @doctor.experiences.hospital.new
   end
 
   # POST /doctors
@@ -123,6 +124,10 @@ class DoctorsController < ApplicationController
   # GET /doctors/:id/edit
   def edit
     load_doctor
+    @exp = @doctor.experiences.hospital.first || @doctor.experiences.hospital.new
+    if @exp
+      @current_hospital_options = [[@exp.org_cn, @exp.org_id]]
+    end
   end
 
   # PATCH /doctors/:id

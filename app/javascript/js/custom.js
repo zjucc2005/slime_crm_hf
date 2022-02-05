@@ -16,6 +16,41 @@ $(document).on('turbolinks:load', function(){
         disableMouseWheelScroll();  // 全局禁用 number 的滚轮
     });
     $('[data-toggle="popover"]').popover();
+    $('select.select2-province-options').select2({
+        ajax: {
+            url: '/location_data/province_options.json',
+            dataType: 'json',
+            type: 'get',
+            delay: 250,
+            data: function (params) {
+                return { name: params.term };
+            },
+            processResults: function (data) {
+                var options = [ { id: '', text: 'Please select' } ];
+                $(data).each(function(i, o){ options.push({ id: o.id, text: o.name }) });
+                return { results: options };
+            },
+            cache: true
+        }
+    });
+    $('select.select2-hospital-options').select2({
+        ajax: {
+            url: '/hospitals/hospital_options.json',
+            dataType: 'json',
+            type: 'get',
+            delay: 250,
+            data: function (params) {
+                return { name: params.term };
+            },
+            processResults: function (data) {
+                var options = [ { id: '', text: 'Please select' } ];
+                $(data).each(function(i, o){ options.push({ id: o.id, text: o.name }) });
+                return { results: options };
+                // return { results: $(data).map(function(i,o) { return { id: o.id, text: o.name } }) };
+            },
+            cache: true
+        }
+    })
 });
 
 // select all checkbox

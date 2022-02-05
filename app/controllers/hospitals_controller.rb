@@ -58,10 +58,18 @@ class HospitalsController < ApplicationController
     respond_to { |f| f.js }
   end
 
-  def load_hospital_options
-    @hospital_options = '<option value>Please select</option>'
-    @hospital_options += Hospital.all.order(created_at: :asc).map { |hos| "<option value=\"#{hos.id}\">#{hos.name}</option>" }.join
-    respond_to { |f| f.js }
+  # def load_hospital_options
+  #   @hospital_options = '<option value>Please select</option>'
+  #   @hospital_options += Hospital.all.order(created_at: :asc).map { |hos| "<option value=\"#{hos.id}\">#{hos.name}</option>" }.join
+  #   respond_to { |f| f.js }
+  # end
+
+  # GET, json
+  def hospital_options
+    query = Hospital.all
+    query = query.where('name ILIKE ?', "%#{params[:name].strip}%") if params[:name].present?
+    @data = query.order(id: :asc).limit(100).map { |item| { id: item.id, name: item.name } }
+    render json: @data.to_json
   end
 
   # GET, js

@@ -96,9 +96,9 @@ window.loadChildrenForProvince = function(ld_province_id, ld_city_id){
     }
 };
 
-window.loadHospitalOptions = function(hospital_id) {
-    $.get('/hospitals/load_hospital_options.js?hospital_id=' + (hospital_id || ''));
-};
+// window.loadHospitalOptions = function(hospital_id) {
+//     $.get('/hospitals/load_hospital_options.js?hospital_id=' + (hospital_id || ''));
+// };
 
 window.loadChildrenForHospital = function(hospital_id, hospital_department_id) {
     if(hospital_id){

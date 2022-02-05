@@ -46,6 +46,14 @@ class LocationDataController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # GET, json
+  def province_options
+    query = LocationDatum.provinces
+    query = query.where('name ILIKE ?', "%#{params[:name].strip}%") if params[:name].present?
+    @data = query.order(code: :asc).map { |item| { id: item.id, name: item.name } }
+    render json: @data.to_json
+  end
+
   private
   def load_each_level
     @parent = LocationDatum.find(params[:parent_id])

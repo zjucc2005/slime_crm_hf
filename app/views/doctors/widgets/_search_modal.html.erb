@@ -40,9 +40,9 @@
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :province, mt(:hospital, :province) %>
-                                <%= select_tag :ld_province_id, options_for_select(province_options, params[:ld_province_id]),
+                                <%= select_tag :ld_province_id, options_for_select([], params[:ld_province_id]),
                                                onchange: "loadChildrenForProvince(this.value, #{params[:ld_city_id]})",
-                                               prompt: default_prompt, class: 'form-control select2' %>
+                                               prompt: default_prompt, class: 'form-control select2-province-options' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :city, mt(:hospital, :city) %>
@@ -60,7 +60,7 @@
                                 <%= label_tag :hospital, mt(:candidate_experience, :hospital) %>
                                 <%= select_tag :hospital_id, options_for_select([], params[:hospital_id]),
                                                onchange: "loadChildrenForHospital(this.value, #{params[:hospital_department_id]})",
-                                               prompt: default_prompt, class: 'form-control select2' %>
+                                               prompt: default_prompt, class: 'form-control select2-hospital-options' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :department, mt(:candidate_experience, :department) %>
@@ -90,16 +90,15 @@
 </div>
 <script>
     $(function(){
-        loadHospitalOptions(<%= params[:hospital_id] %>);
-        $('select#city_level').change();
-        $('select#ld_province_id').change();
-        $('select#hospital_id').change();
-    });
-    $('select#city_level').change(function(){
-        if (this.value) {
-            $('select#ld_province_id').val('').change().attr('disabled', true);
-        } else {
-            $('select#ld_province_id').attr('disabled', false);
-        }
+<!--        loadHospitalOptions(<%#= params[:hospital_id] %>);-->
+        $('select#city_level').change(function(){
+            if (this.value) {
+                $('select#ld_province_id').val('').change().attr('disabled', true);
+            } else {
+                $('select#ld_province_id').attr('disabled', false);
+            }
+        });
+        // $('select#ld_province_id').change();
+        // $('select#hospital_id').change();
     });
 </script>

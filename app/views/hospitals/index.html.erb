@@ -11,9 +11,9 @@
                 </div>
                 <div class="col-3 form-group">
                     <%= label_tag :province, mt(:hospital, :province) %>
-                    <%= select_tag :ld_province_id, options_for_select(province_options, params[:ld_province_id]),
+                    <%= select_tag :ld_province_id, options_for_select([], params[:ld_province_id]),
                                    onchange: "loadChildrenForProvince(this.value, #{params[:ld_city_id]})",
-                                   prompt: default_prompt, class: 'form-control select2' %>
+                                   prompt: default_prompt, class: 'form-control select2-province-options' %>
                 </div>
                 <div class="col-3 form-group">
                     <%= label_tag :city, mt(:hospital, :city) %>
@@ -59,9 +59,3 @@
         <%= will_paginate @hospitals %>
     </div>
 </div>
-
-<script>
-    $(function(){
-        $('select#ld_province_id').change();
-    })
-</script>
