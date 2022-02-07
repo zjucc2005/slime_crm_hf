@@ -9,7 +9,7 @@ class DoctorsController < ApplicationController
     @hl_words = [] # 高亮关键词
     query = user_channel_filter(Candidate.doctor)
     # query code here >>
-    query = query.joins(:experiences).where('candidate_experiences.category': 'hospital')
+    # query = query.joins(:experiences).where('candidate_experiences.category': 'hospital')
     query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { name: params[:name].strip }) if params[:name].present?
     query = query.where('candidates.phone ILIKE ?', "%#{params[:phone].strip}%") if params[:phone].present?
     query = query.where('candidates.email ILIKE ?', "%#{params[:email].strip}%") if params[:email].present?
@@ -19,7 +19,7 @@ class DoctorsController < ApplicationController
     end
     # -- 省份/城市 --
     if params[:city_level].present?
-      query = query.where('candidates.city ~* ?', LocationDatum::CITY_TIER[params[:city_level]].join('|'))
+      query = query.joins(:experiences).where('candidates.city ~* ?', LocationDatum::CITY_TIER[params[:city_level]].join('|'))
     elsif params[:ld_province_id].present?
       @province = LocationDatum.where(id: params[:ld_province_id]).first
       if @province && params[:ld_city_id].present?
@@ -27,14 +27,14 @@ class DoctorsController < ApplicationController
       end
     end
     if @province && @city
-      query = query.where('candidates.city': "#{@province.name} #{@city.name}")
+      query = query.joins(:experiences).where('candidates.city': "#{@province.name} #{@city.name}")
     elsif @province
-      query = query.where('candidates.city ILIKE ?', "#{@province.name} %")
+      query = query.joins(:experiences).where('candidates.city ILIKE ?', "#{@province.name} %")
     end
     # -- 医院/科室 --
-    query = query.where('candidate_experiences.org_id': params[:hospital_id]) if params[:hospital_id].present?
-    query = query.where('candidate_experiences.dep_id': params[:hospital_department_id]) if params[:hospital_department_id].present?
-    query = query.where('candidate_experiences.title ILIKE ?', "%#{params[:title].strip}%") if params[:title].present?
+    query = query.joins(:experiences).where('candidate_experiences.org_id': params[:hospital_id]) if params[:hospital_id].present?
+    query = query.joins(:experiences).where('candidate_experiences.dep_id': params[:hospital_department_id]) if params[:hospital_department_id].present?
+    query = query.joins(:experiences).where('candidate_experiences.title ILIKE ?', "%#{params[:title].strip}%") if params[:title].present?
     if params[:hospital_level].present?
       hospital_level = case params[:hospital_level].strip
               when '三级' then %w[三级 三甲 三乙 三丙]
@@ -42,7 +42,7 @@ class DoctorsController < ApplicationController
               when '一级' then %w[一级 一甲 一乙 一丙]
               else params[:hospital_level].strip
               end
-      query = query.joins('LEFT JOIN hospitals on hospitals.id = candidate_experiences.org_id').where('hospitals.level': hospital_level)
+      query = query.joins(:experiences).joins('LEFT JOIN hospitals on hospitals.id = candidate_experiences.org_id').where('hospitals.level': hospital_level)
     end
 
     if params[:name_or].present?
@@ -71,7 +71,7 @@ class DoctorsController < ApplicationController
         and_conditions << "(#{or_fields.map{|f| "coalesce(#{f},'')" }.join(' || ')} ~* '#{term_plus}')"
       end
       @hl_words.uniq!
-      query = query.where(and_conditions.join(' AND '))
+      query = query.joins(:experiences).where(and_conditions.join(' AND '))
     end
 
     @doctors = query.distinct.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
