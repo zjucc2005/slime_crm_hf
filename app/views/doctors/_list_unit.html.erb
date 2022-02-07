@@ -41,6 +41,7 @@
                 <div class="d-flex flex-column text-left">
                     <% candidate.experiences.hospital.order(started_at: :desc).limit(1).each do |exp| %>
                         <div class="text-smaller">
+                            <span class="badge badge-danger"><%= exp.org_en %></span>
                             <span class="mr-1" title="<%= exp.org_cn %>"><%= truncate(exp.org_cn, length: 11) %></span>
                             <span class="mr-1"><%= exp.department %></span>
                             <span><%= exp.title %></span>
