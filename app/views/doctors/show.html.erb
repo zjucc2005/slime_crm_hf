@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h5><%= model_icon('Doctor') %> <%= mt(:doctor) %></h5>
-        <%#= link_to fa_icon_tag('close'), 'javascript:history.go(-1);', :class => 'card-header-close' %>
+        <%#= link_to fa_icon_tag('close'), 'javascript:history.go(-1);', class: 'card-header-close' %>
     </div>
 
     <div class="card-body">
@@ -13,9 +13,9 @@
                         <a class="status <%= candidate_is_available_status(@doctor.is_available) %>" href="#" role="button" id="cia_<%= @doctor.id %>" data-toggle="dropdown"></a>
                         <div class="dropdown-menu">
                             <div class="dropdown-header"><%= mt(:candidate, :is_available) %></div>
-                            <%= link_to t(:true),    update_is_available_candidate_path(@doctor, is_available: true),  :method => :put, :remote => true, :class => 'dropdown-item status valid' %>
-                            <%= link_to t(:pending), update_is_available_candidate_path(@doctor, is_available: nil),   :method => :put, :remote => true, :class => 'dropdown-item status pending' %>
-                            <%= link_to t(:false),   update_is_available_candidate_path(@doctor, is_available: false), :method => :put, :remote => true, :class => 'dropdown-item status invalid' %>
+                            <%= link_to t(:true),    update_is_available_candidate_path(@doctor, is_available: true),  :method => :put, :remote => true, class: 'dropdown-item status valid' %>
+                            <%= link_to t(:pending), update_is_available_candidate_path(@doctor, is_available: nil),   :method => :put, :remote => true, class: 'dropdown-item status pending' %>
+                            <%= link_to t(:false),   update_is_available_candidate_path(@doctor, is_available: false), :method => :put, :remote => true, class: 'dropdown-item status invalid' %>
                         </div>
                     </span>
                     <span><%= @doctor.last_name %> <%= @doctor.first_name %></span>
@@ -31,22 +31,22 @@
                     <div class="btn-group btn-group-sm">
                         <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => @doctor.id } %>
                     </div>
-                    <%= link_to comments_candidate_path(@doctor), :class => 'btn btn-default' do %>
+                    <%= link_to comments_candidate_path(@doctor), class: 'btn btn-default' do %>
                         <%= fa_icon_tag('commenting') %> <%= t(:candidate_comment) %>
                         <%= count_badge(@doctor.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).count) %>
                     <% end if can?(:comments, Candidate) %>
-                    <%= link_to project_tasks_candidate_path(@doctor), :class => 'btn btn-default' do %>
+                    <%= link_to project_tasks_candidate_path(@doctor), class: 'btn btn-default' do %>
                         <%= fa_icon_tag('tags') %> <%= mt(:candidate, :interview_task) %>
                         <%= count_badge(normal_project_task_count(@doctor)) %>
                     <% end if can?(:project_tasks, Candidate) %>
-                    <%= link_to payment_infos_candidate_path(@doctor), :class => 'btn btn-default' do %>
+                    <%= link_to payment_infos_candidate_path(@doctor), class: 'btn btn-default' do %>
                         <%= fa_icon_tag('cny') %> <%= t(:candidate_payment_info) %>
                         <%= count_badge(@doctor.payment_infos.count) %>
                     <% end if can?(:payment_infos, Candidate) %>
-                    <%= link_to edit_doctor_path(@doctor), :class => 'btn btn-dark' do %>
+                    <%= link_to edit_doctor_path(@doctor), class: 'btn btn-dark' do %>
                         <%= fa_icon_tag('edit') %> <%= t('action.edit_model', :model => mt(:doctor)) %>
                     <% end if can?(:edit, Candidate) %>
-                    <%= link_to doctor_path(@doctor), :method => :delete, :class => 'btn btn-danger', :data => { :confirm => t(:sure_to_delete) } do %>
+                    <%= link_to doctor_path(@doctor), :method => :delete, class: 'btn btn-danger', :data => { :confirm => t(:sure_to_delete) } do %>
                         <%= fa_icon_tag('trash') %> <%= t('action.delete_model', :model => mt(:doctor)) %>
                     <% end if can?(:destroy, Candidate) && @doctor.can_delete? %>
                 </div>
@@ -102,6 +102,12 @@
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :phone1) %></span>
+                </div>
+                <%= content_tag :span, @doctor.phone1, class: 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :email) %></span>
                 </div>
                 <%= content_tag :span, @doctor.email, class: 'form-control' %>
@@ -111,16 +117,6 @@
                     <span class="input-group-text"><%= mt(:candidate, :wechat) %></span>
                 </div>
                 <%= content_tag :span, @doctor.property['wechat'], class: 'form-control' %>
-            </div>
-            <div class="col-lg-9 col-12 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><%= mt(:candidate, :file) %></span>
-                </div>
-                <% if @doctor.file.present? %>
-                    <%= link_to @doctor.file.identifier, @doctor.file.url, target: '_blank', class: 'form-control' %>
-                <% else %>
-                    <%= content_tag :span, nil, class: 'form-control' %>
-                <% end %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
@@ -132,6 +128,16 @@
                     <% else %>
                         <%= @doctor.haodf_id %>
                     <% end %>
+                <% end %>
+            </div>
+            <div class="col-lg-12 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :file) %></span>
+                </div>
+                <% if @doctor.file.present? %>
+                    <%= link_to @doctor.file.identifier, @doctor.file.url, target: '_blank', class: 'form-control' %>
+                <% else %>
+                    <%= content_tag :span, nil, class: 'form-control' %>
                 <% end %>
             </div>
         </div>
@@ -150,19 +156,22 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate_experience, :hospital) %></span>
                 </div>
-                <%= content_tag :span, exp.org_cn, :class => 'form-control' %>
+                <%= content_tag :span, class: 'form-control' do %>
+                    <span class="badge badge-danger"><%= exp.org_en %></span>
+                    <%= exp.org_cn %>
+                <% end %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate_experience, :department) %></span>
                 </div>
-                <%= content_tag :span, exp.department, :class => 'form-control' %>
+                <%= content_tag :span, exp.department, class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate_experience, :title) %></span>
                 </div>
-                <%= content_tag :span, exp.title, :class => 'form-control' %>
+                <%= content_tag :span, exp.title, class: 'form-control' %>
             </div>
         </div>
 
@@ -171,25 +180,25 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :cpt) %></span>
                 </div>
-                <%= content_tag :span, @doctor.cpt, :class => 'form-control' %>
+                <%= content_tag :span, @doctor.cpt, class: 'form-control' %>
             </div>
             <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :currency) %></span>
                 </div>
-                <%= content_tag :span, currency_display(@doctor.currency), :class => 'form-control' %>
+                <%= content_tag :span, currency_display(@doctor.currency), class: 'form-control' %>
             </div>
             <div class="col-12 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :expertise) %></span>
                 </div>
-                <%= text_area_tag :expertise, @doctor.expertise, :rows => 2, :disabled => true, :class => 'form-control bg-white' %>
+                <%= text_area_tag :expertise, @doctor.expertise, rows: 2, disabled: true, class: 'form-control bg-white' %>
             </div>
             <div class="col-12 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :description) %></span>
                 </div>
-                <%= text_area_tag :description, @doctor.description, :rows => 5, :disabled => true, :class => 'form-control bg-white' %>
+                <%= text_area_tag :description, @doctor.description, rows: 5, disabled: true, class: 'form-control bg-white' %>
             </div>
         </div>
     </div>

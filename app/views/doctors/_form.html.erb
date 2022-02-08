@@ -36,9 +36,11 @@
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :phone %>
-        <div class="input-group">
-            <%= f.text_field :phone, class: 'form-control' %>
-        </div>
+        <%= f.text_field :phone, class: 'form-control' %>
+    </div>
+    <div class="col-lg-3 col-6 form-group">
+        <%= f.label :phone1 %>
+        <%= f.text_field :phone1, class: 'form-control' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :email %>
@@ -48,7 +50,7 @@
         <%= f.label :wechat %>
         <%= f.text_field :wechat, class: 'form-control' %>
     </div>
-    <div class="col-12 form-group">
+    <div class="col-lg-9 col-12 form-group">
         <%= f.label :file %>
         <%= link_to @doctor.file.url do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @doctor.file.present? %>
         <%= f.file_field :file, class: 'form-control-file' %>

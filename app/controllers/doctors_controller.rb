@@ -125,22 +125,20 @@ class DoctorsController < ApplicationController
   def edit
     load_doctor
     @exp = @doctor.experiences.hospital.first || @doctor.experiences.hospital.new
-    if @exp
-      @current_hospital_options = [[@exp.org_cn, @exp.org_id]]
-    end
+    @current_hospital_options = [[@exp.org_cn, @exp.org_id]] if @exp
   end
 
   # PATCH /doctors/:id
   def update
     begin
       load_doctor
+      @exp = @doctor.experiences.hospital.first
 
       ActiveRecord::Base.transaction do
         @doctor.update!(doctor_params)
         org = Hospital.where(id: exp_params[:org_id]).first
         dep = HospitalDepartment.where(id: exp_params[:dep_id]).first
-        exp = @doctor.experiences.hospital.first
-        exp ? exp.update!(exp_params.merge(org_cn: org.name, department: dep.name)) :
+        @exp ? @exp.update!(exp_params.merge(org_cn: org.name, department: dep.name)) :
             @doctor.experiences.hospital.create!(exp_params.merge(org_cn: org.name, org_en: org.level, department: dep.name))
         unless @doctor.validates_presence_of_experiences
           raise t(:operation_failed)
@@ -151,6 +149,8 @@ class DoctorsController < ApplicationController
       redirect_to doctor_path(@doctor)
     rescue Exception => e
       flash[:error] = e.message
+      @exp ||= @doctor.experiences.hospital.new
+      @current_hospital_options = [[@exp.org_cn, @exp.org_id]] if @exp
       render :edit
     end
   end
@@ -206,7 +206,7 @@ class DoctorsController < ApplicationController
 
   def doctor_params
     params.require(:candidate).permit(:first_name, :last_name, :nickname, :category2, :date_of_birth, :gender, :city,
-                                      :phone, :email, :wechat, :file, :expertise, :description,  :recommender_id,
+                                      :phone, :phone1, :email, :wechat, :file, :expertise, :description, :recommender_id,
                                       :is_available, :cpt, :currency)
   end
 
