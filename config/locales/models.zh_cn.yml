@@ -157,6 +157,7 @@ zh_cn:
         hospital: "医院"
         department: "部门/科室"
         title: "职位/职称"
+        title1: "职位/职称2"
         description: "描述"
         duty: "职责"
         duration: "起止时间"

@@ -130,6 +130,12 @@
                     <% end %>
                 <% end %>
             </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :inquiry) %></span>
+                </div>
+                <%= content_tag :span, @doctor.inquiry, class: 'form-control' %>
+            </div>
             <div class="col-lg-12 input-group input-group-sm input-group-align">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :file) %></span>
@@ -172,6 +178,12 @@
                     <span class="input-group-text"><%= mt(:candidate_experience, :title) %></span>
                 </div>
                 <%= content_tag :span, exp.title, class: 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate_experience, :title1) %></span>
+                </div>
+                <%= content_tag :span, exp.title1, class: 'form-control' %>
             </div>
         </div>
 

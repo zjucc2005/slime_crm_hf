@@ -211,7 +211,7 @@ class DoctorsController < ApplicationController
   end
 
   def exp_params
-    params.require(:exp).permit(:org_id, :dep_id, :title)
+    params.require(:exp).permit(:org_id, :dep_id, :title, :title1)
   end
 
 end

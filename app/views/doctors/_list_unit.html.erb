@@ -45,6 +45,7 @@
                             <span class="mr-1" title="<%= exp.org_cn %>"><%= truncate(exp.org_cn, length: 11) %></span>
                             <span class="mr-1"><%= exp.department %></span>
                             <span><%= exp.title %></span>
+                            <span class="badge badge-dark"><%= exp.title1 %></span>
                         </div>
                     <% end %>
                 </div>
@@ -91,6 +92,9 @@
                         <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id})", :class => 'dropdown-item text-smaller' do %>
                                 <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
                         <% end %>
+                        <%= link_to edit_doctor_path(candidate), target: '_blank', class: 'dropdown-item text-smaller' do %>
+                            <i class="fa fa-edit"></i> <%= t('action.edit_model', model: mt(:doctor)) %>
+                        <% end if can?(:edit, Candidate) %>
                     </div>
                 </div>
             </div>

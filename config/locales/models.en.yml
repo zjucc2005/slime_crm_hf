@@ -127,6 +127,7 @@ en:
         hospital: "Hospital"
         department: "Department"
         title: "Job title"
+        title1: "Job Title2"
         description: "Description"
         duty: "Duty"
         duration: "Duration"

@@ -73,7 +73,11 @@
     </div>
     <div class="col-3 form-group">
         <%= label_tag :title, mt(:candidate_experience, :title) %>
-        <%= text_field_tag :'exp[title]', @exp.try(:title), :class => 'form-control' %>
+        <%= text_field_tag :'exp[title]', @exp.title, class: 'form-control' %>
+    </div>
+    <div class="col-3 form-group">
+        <%= label_tag :title, mt(:candidate_experience, :title1) %>
+        <%= text_field_tag :'exp[title1]', @exp.title1, class: 'form-control' %>
     </div>
 </div>
 
