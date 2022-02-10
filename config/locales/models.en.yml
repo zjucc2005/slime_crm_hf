@@ -127,7 +127,8 @@ en:
         hospital: "Hospital"
         department: "Department"
         title: "Job title"
-        title1: "Job Title2"
+        title1: "Job title2"
+        title_hospital: "Hospital title"
         description: "Description"
         duty: "Duty"
         duration: "Duration"
@@ -199,6 +200,7 @@ en:
 
       hospital:
         name: "Name"
+        kwlist: "Alias"
         province: "Province"
         city: "City"
         level: "Hospital level"

@@ -2,8 +2,7 @@
 class SearchAlias < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :name
-
-  before_validation :setup, :on => [:create, :update]
+  before_validation :setup, on: [:create, :update]
 
   MAX_KWLIST_LENGTH = 5
 
@@ -11,7 +10,7 @@ class SearchAlias < ApplicationRecord
   def setup
     self.name = name.try(:strip)
     if self.kwlist.is_a? String
-      self.kwlist = self.kwlist.split(',')
+      self.kwlist = self.kwlist.split(',').map(&:strip)
       if self.kwlist.length > MAX_KWLIST_LENGTH
         errors.add(:kwlist, :less_than_or_equal_to, :count => MAX_KWLIST_LENGTH)
       end

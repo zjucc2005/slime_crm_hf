@@ -1,0 +1,8 @@
+<%= model_error_tag(@hospital) %>
+<%= hidden_field_tag :return_to, params[:return_to] %>
+<div class="row">
+    <div class="col-12 form-group">
+        <%= f.label :kwlist %><span class="text-red">*</span><span class="text-red">(别名之间用半角 , 隔开)</span>
+        <%= f.text_field :kwlist, value: @hospital.kwlist.join(','), class: 'form-control' %>
+    </div>
+</div>

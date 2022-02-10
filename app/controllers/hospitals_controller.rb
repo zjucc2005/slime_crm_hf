@@ -5,9 +5,10 @@ class HospitalsController < ApplicationController
 
   def index
     query = Hospital.all
-    %w[name].each do |field|
-      query = query.where("#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
+    if params[:name].present?
+      query = query.where("name ILIKE ? OR kwlist @> ?", "%#{params[:name].strip}%", params[:name].strip.to_json)
     end
+
     if params[:ld_province_id].present?
       @province = LocationDatum.where(id: params[:ld_province_id]).first
       if @province && params[:ld_city_id].present?
@@ -35,6 +36,21 @@ class HospitalsController < ApplicationController
     @hospital.departments.each do |dep|
       count = Candidate.doctor.joins(:experiences).where('candidate_experiences.org_id': @hospital.id, 'candidate_experiences.dep_id': dep.id).count
       @data << { id: dep.id, name: dep.name, count: count }
+    end
+  end
+
+  def edit
+    load_hospital
+  end
+
+  def update
+    load_hospital
+
+    if @hospital.update(hospital_params)
+      flash[:success] = t(:operation_succeeded)
+      redirect_with_return_to(hospital_path)
+    else
+      render :edit
     end
   end
 
@@ -67,7 +83,7 @@ class HospitalsController < ApplicationController
   # GET, json
   def hospital_options
     query = Hospital.all
-    query = query.where('name ILIKE ?', "%#{params[:name].strip}%") if params[:name].present?
+    query = query.where('name ILIKE ? OR kwlist @> ?', "%#{params[:name].strip}%", params[:name].strip.to_json) if params[:name].present?
     @data = query.order(id: :asc).limit(100).map { |item| { id: item.id, name: item.name } }
     render json: @data.to_json
   end
@@ -87,6 +103,10 @@ class HospitalsController < ApplicationController
   private
   def load_hospital
     @hospital = Hospital.find(params[:id])
+  end
+
+  def hospital_params
+    params.require(:hospital).permit(:name, :kwlist)
   end
 
 end

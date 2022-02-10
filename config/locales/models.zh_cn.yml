@@ -158,6 +158,7 @@ zh_cn:
         department: "部门/科室"
         title: "职位/职称"
         title1: "职位/职称2"
+        title_hospital: "院内职务"
         description: "描述"
         duty: "职责"
         duration: "起止时间"
@@ -229,6 +230,7 @@ zh_cn:
 
       hospital:
         name: "名称"
+        kwlist: "别名"
         province: "省份"
         city: "城市"
         level: "医院等级"

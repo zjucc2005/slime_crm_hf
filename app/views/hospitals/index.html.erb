@@ -37,21 +37,29 @@
             <tr>
                 <th><%= mt(:hospital, :id) %></th>
                 <th><%= mt(:hospital, :name) %></th>
+                <th><%= mt(:hospital, :kwlist) %></th>
                 <th><%= mt(:hospital, :province) %></th>
                 <th><%= mt(:hospital, :city) %></th>
                 <th><%= mt(:hospital, :level) %></th>
                 <th><%= mt(:hospital, :created_at) %></th>
+                <th class="action"><%= t(:operation) %></th>
             </tr>
             </thead>
             <tbody>
             <% @hospitals.each do |hospital| %>
                 <tr>
-                    <td><%= content_tag :span, "# #{hospital.uid}", :class => 'text-gray' %></td>
+                    <td><%= content_tag :span, "# #{hospital.uid}", class: 'text-gray' %></td>
                     <td><%= link_to hospital.name, hospital_path(hospital) %></td>
+                    <td><%= hospital.kwlist.join(',') rescue nil %></td>
                     <td><%= hospital.province %></td>
                     <td><%= hospital.city %></td>
                     <td><%= hospital.level %></td>
                     <td><%= hospital.created_at.strftime('%F %T') %></td>
+                    <td class="action">
+                        <%= link_to edit_hospital_path(hospital, return_to: request.url), class: 'btn btn-edit btn-xs' do %>
+                            <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
+                        <% end if can?(:edit, Hospital) %>
+                    </td>
                 </tr>
             <% end %>
             </tbody>
