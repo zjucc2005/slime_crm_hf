@@ -142,6 +142,8 @@ class Candidate < ApplicationRecord
     when :phone        then self.phone
     when :description  then self.description
     when :company      then self.latest_work_experience.try(:org_cn)
+    when :department   then latest_work_experience.try(:department)
+    when :hospital_level then experiences.hospital.first.try(:org_en)
     when :title        then self.latest_work_experience.try(:title)
     when :title2       then latest_work_experience.try(:title1)
     when :expert_level then self._c_t_expert_level
