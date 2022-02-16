@@ -155,6 +155,9 @@ Rails.application.routes.draw do
     get :province_options, on: :collection
   end
   resources :hospitals do
+    post :create_department, on: :member
+    post :delete_department, on: :member
+
     get :load_departments, on: :member
     get :change_hospital_for_doctor_form, on: :member
     # get :load_hospital_options, on: :collection

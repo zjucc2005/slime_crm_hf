@@ -236,6 +236,9 @@ zh_cn:
         level: "医院等级"
         department: "科室"
 
+      hospital_department:
+        name: "科室名称"
+
       bank:
         name: "名称"
 

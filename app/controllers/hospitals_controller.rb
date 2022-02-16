@@ -54,6 +54,31 @@ class HospitalsController < ApplicationController
     end
   end
 
+  def create_department
+    load_hospital
+    @department = @hospital.departments.new(name: params[:name].strip)
+    if @department.save
+      flash[:success] = t(:operation_succeeded)
+      redirect_to hospital_path(@hospital)
+    else
+      flash[:error] = @department.errors.full_messages[0]
+      redirect_to hospital_path(@hospital)
+    end
+  end
+
+  def delete_department
+    load_hospital
+    @department = @hospital.departments.where(id: params[:hospital_department_id]).first
+    if @department && @department.can_delete?
+      @department.destroy!
+      flash[:success] = t(:operation_succeeded)
+      redirect_to hospital_path(@hospital)
+    else
+      flash[:error] = t(:not_authorized)
+      redirect_to hospital_path(@hospital)
+    end
+  end
+
   # GET, format.json
   def load_departments
     load_hospital

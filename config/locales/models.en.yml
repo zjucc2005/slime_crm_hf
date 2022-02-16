@@ -206,6 +206,9 @@ en:
         level: "Hospital level"
         department: "Department"
 
+      hospital_department:
+        name: "Name"
+
       bank:
         name: "Name"
 

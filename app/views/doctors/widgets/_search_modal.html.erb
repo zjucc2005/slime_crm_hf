@@ -90,7 +90,6 @@
 </div>
 <script>
     $(function(){
-<!--        loadHospitalOptions(<%#= params[:hospital_id] %>);-->
         $('select#city_level').change(function(){
             if (this.value) {
                 $('select#ld_province_id').val('').change().attr('disabled', true);
@@ -98,7 +97,5 @@
                 $('select#ld_province_id').attr('disabled', false);
             }
         });
-        // $('select#ld_province_id').change();
-        // $('select#hospital_id').change();
     });
 </script>
