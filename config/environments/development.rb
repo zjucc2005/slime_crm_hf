@@ -46,6 +46,7 @@ Rails.application.configure do
       user_name: Settings.office365.user_name,
       password: Settings.office365.password,
       enable_starttls_auto: true,
+
   }
 
   # Print deprecation notices to the Rails logger.

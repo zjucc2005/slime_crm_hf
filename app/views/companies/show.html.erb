@@ -83,7 +83,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:company, :project_task_notice_email) %></span>
                 </div>
-                <%= content_tag :span, Company::PROJECT_TASK_NOTICE_EMAIL[@company.project_task_notice_email], :class => 'form-control' %>
+                <%= content_tag :span, ProjectTask::NOTICE_EMAIL[@company.project_task_notice_email], :class => 'form-control' %>
             </div>
 
             <div class="col-12 input-group input-group-sm input-group-align">

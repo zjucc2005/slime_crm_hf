@@ -288,6 +288,7 @@ en:
         f_flag: "Follow up"
         interview_no: "Interview No."
         recruitment_fee: "Recruitment fee"
+        notice_email: "Notice email"
 
       project_task_cost:
         category: "Cost category"

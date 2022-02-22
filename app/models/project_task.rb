@@ -13,6 +13,7 @@ class ProjectTask < ApplicationRecord
     :others         => '其他'
   }.stringify_keys
   EXPERT_LEVEL = { :standard => 'Standard', :premium  => 'Premium' }.stringify_keys
+  NOTICE_EMAIL = { A: '标准模板', B: '大客户模板' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
@@ -39,7 +40,7 @@ class ProjectTask < ApplicationRecord
   scope :interview, -> { where( category: 'interview') }
 
   # property fields
-  %w[interview_no recruitment_fee].each do |k|
+  %w[interview_no recruitment_fee notice_email].each do |k|
     define_method(:"#{k}"){ self.property[k] }
     define_method(:"#{k}="){ |v| self.property[k] = v }
   end
@@ -56,12 +57,9 @@ class ProjectTask < ApplicationRecord
       project_candidate.update!(mark: 'interviewed') if project_candidate  # 自动更新专家项目中标识为已访谈
     end
 
-    if notice_email_sent_at.nil?
-      email_category = project.company.project_task_notice_email
-      if %w[A B].include?(email_category)
-        UserMailer.project_task_notice_email(id, email_category).deliver  # 发送通知邮件,仅1次
-        self.update!(notice_email_sent_at: Time.now)
-      end
+    if notice_email_sent_at.nil? && %w[A B].include?(notice_email)
+      UserMailer.project_task_notice_email(id, notice_email).deliver  # 发送通知邮件,仅1次
+      self.update!(notice_email_sent_at: Time.now)
     end
   end
 

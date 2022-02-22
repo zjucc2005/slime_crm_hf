@@ -95,6 +95,10 @@
         <%= f.label :recruitment_fee %>
         <%= f.number_field :recruitment_fee, class: 'form-control' %>
     </div>
+    <div class="col-lg-3 col-12 form-group">
+        <%= f.label :notice_email %><%= submit_tag t('action.preview'), class: 'btn btn-link btn-xs' %>
+        <%= f.select :notice_email, ProjectTask::NOTICE_EMAIL.to_a.map(&:reverse), { include_blank: default_prompt }, class: 'form-control select2' %>
+    </div>
     <div class="col-12 form-group">
         <%= f.label :memo %>
         <%= f.text_field :memo, :class => 'form-control' %>

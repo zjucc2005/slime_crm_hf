@@ -5,7 +5,7 @@
     </div>
 
     <div class="card-body">
-        <%= form_for @project_task do |f| %>
+        <%= form_for @project_task, remote: true do |f| %>
             <%= model_error_tag(@project_task) %>
 
             <div class="form-group">

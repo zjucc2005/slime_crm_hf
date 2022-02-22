@@ -102,6 +102,7 @@ zh_cn:
     logout: "注销"
     new: "新建"
     new_model: "新建%{model}"
+    preview: "预览"
     quit: "退出"
     remove: "移除"
     save: "保存"

@@ -2,7 +2,6 @@
 class Company < ApplicationRecord
   # ENUM
   CATEGORY = { :normal => '普通', :client => '客户公司' }.stringify_keys
-  PROJECT_TASK_NOTICE_EMAIL = { A: '标准模板', B: '大客户模板' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true

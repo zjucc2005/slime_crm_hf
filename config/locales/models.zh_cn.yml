@@ -318,6 +318,7 @@ zh_cn:
         f_flag: "是否跟进"
         interview_no: "访谈编号"
         recruitment_fee: "招募费"
+        notice_email: "通知邮件"
 
       project_task_cost:
         category: "费用类型"

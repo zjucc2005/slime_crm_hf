@@ -15,6 +15,7 @@ class ProjectTasksController < ApplicationController
       load_active_contract
       check_editable # 只能编辑自己创建的任务
       @project = @project_task.project
+      @project_task.notice_email ||= @project.company.project_task_notice_email
     rescue Exception => e
       flash[:error] = e.message
       redirect_to project_path(@project_task.project)
@@ -25,13 +26,16 @@ class ProjectTasksController < ApplicationController
   def update
     begin
       load_project_task
-
       if @project_task.update(project_task_params)
-        if params[:commit] == t('action.submit_and_confirm')
-          @project_task.finished!
+        if params[:commit] == t('action.preview')
+          respond_to { |f| f.js }
+        else
+          if params[:commit] == t('action.submit_and_confirm')
+            @project_task.finished!
+          end
+          flash[:success] = t(:operation_succeeded)
+          redirect_to project_path(@project_task.project)
         end
-        flash[:success] = t(:operation_succeeded)
-        redirect_to project_path(@project_task.project)
       else
         render :edit
       end
@@ -186,7 +190,7 @@ class ProjectTasksController < ApplicationController
 
   def project_task_params
     params.require(:project_task).permit(:pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :duration, :charge_duration,
-                                         :actual_price, :is_shorthand, :is_recorded, :memo, :f_flag, :interview_no, :recruitment_fee)
+                                         :actual_price, :is_shorthand, :is_recorded, :memo, :f_flag, :interview_no, :recruitment_fee, :notice_email)
   end
 
 end
