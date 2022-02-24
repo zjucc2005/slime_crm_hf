@@ -22,6 +22,7 @@
                     <th><%= mt(:candidate, :email) %></th>
                     <th><%= mt(:candidate, :created_by) %></th>
                     <th><%= mt(:candidate, :created_at) %></th>
+                    <th><%= mt(:candidate, :job_status) %></th>
                     <th class="action"><%= t(:operation) %></th>
                 </tr>
                 </thead>
@@ -36,6 +37,7 @@
                         <td><%= client.email %></td>
                         <td><%= client.creator.name_cn %></td>
                         <td><%= client.created_at.strftime('%F %T') %></td>
+                        <td><%= candidate_job_status_badge(client.job_status) %></td>
                         <td class="action">
                             <%= link_to edit_client_path(client, return_to: request.url), :class => 'btn btn-edit btn-xs' do %>
                                 <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
