@@ -19,5 +19,6 @@ module Slime
 
     config.time_zone = 'Beijing'
     config.active_record.default_timezone = :local
+    config.action_mailer.show_previews = true
   end
 end
