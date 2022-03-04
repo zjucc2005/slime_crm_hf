@@ -319,6 +319,7 @@ zh_cn:
         interview_no: "访谈编号"
         recruitment_fee: "招募费"
         notice_email: "通知邮件"
+        expert_alias: "专家化名"
 
       project_task_cost:
         category: "费用类型"

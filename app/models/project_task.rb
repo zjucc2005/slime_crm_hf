@@ -40,7 +40,7 @@ class ProjectTask < ApplicationRecord
   scope :interview, -> { where( category: 'interview') }
 
   # property fields
-  %w[interview_no recruitment_fee notice_email].each do |k|
+  %w[interview_no recruitment_fee notice_email expert_alias].each do |k|
     define_method(:"#{k}"){ self.property[k] }
     define_method(:"#{k}="){ |v| self.property[k] = v }
   end
@@ -103,6 +103,15 @@ class ProjectTask < ApplicationRecord
   def expert_cost_friendly
     cost = costs.expert.first
     cost ? cost.price : nil
+  end
+
+  # 用户外部展示的专家名称
+  def expert_name_for_external
+    if expert_alias.present?
+      expert_alias
+    else
+      expert.category == 'doctor' ? expert.name : expert.mr_name
+    end
   end
 
   private
