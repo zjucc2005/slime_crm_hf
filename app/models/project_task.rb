@@ -124,6 +124,21 @@ class ProjectTask < ApplicationRecord
     end
   end
 
+  # 计算iqvia招募费
+  # 优先取填写的招募费, 未填写则根据倍率计算
+  def recruitment_fee_for_iqvia
+    if recruitment_fee.present?
+      recruitment_fee.to_f
+    else
+      if expert_rate >= 1 && (expert_rate.to_d - 1) % 0.3 == 0  # 倍率满足 1 + 0.3n (n >= 0)
+        n = ((expert_rate.to_d - 1) / 0.3).to_i
+        1500 + 250 * n #  return
+      else
+        nil
+      end
+    end
+  end
+
   private
   def setup
     self.status         ||= 'ongoing'   # init
