@@ -13,7 +13,7 @@ class ProjectTask < ApplicationRecord
     :others         => '其他'
   }.stringify_keys
   EXPERT_LEVEL = { :standard => 'Standard', :premium  => 'Premium' }.stringify_keys
-  NOTICE_EMAIL = { A: '标准模板', B: '大客户模板' }.stringify_keys
+  NOTICE_EMAIL = { A: '标准模板', B: 'iqvia模板' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
@@ -111,6 +111,16 @@ class ProjectTask < ApplicationRecord
       expert_alias
     else
       expert.category == 'doctor' ? expert.name : expert.mr_name
+    end
+  end
+
+  # format: 2022-01-01（周六）12:00
+  def started_at_fwt
+    begin
+      wday = %w[周日 周一 周二 周三 周四 周五 周六][started_at.wday]
+      started_at.strftime("%F（#{wday}）%H:%M")
+    rescue
+      nil
     end
   end
 

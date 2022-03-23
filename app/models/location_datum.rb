@@ -72,21 +72,6 @@ class LocationDatum < ApplicationRecord
 
     # mobile location api
     def mobile_location(num)
-      # url = "https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_name=guishudi&query=#{num}"
-      # res = Utils::Api.get(url)
-      # if res.code == '200'
-      #   data = JSON.parse Encoding::Converter.new('gbk','utf-8').convert(res.body)
-      #   if data['data'].present?
-      #     type = data['data'][0]['type']
-      #     city = "#{data['data'][0]['prov']}#{data['data'][0]['city']}"
-      #     [city, type]
-      #   else
-      #     []
-      #   end
-      # else
-      #   []
-      # end
-
       url = "https://tool.bitefu.net/shouji/?mobile=#{num}"
       res = Utils::Api.get(url)
       if res.code == '200'
@@ -97,6 +82,8 @@ class LocationDatum < ApplicationRecord
       else
         []
       end
+
+
     end
   end
 

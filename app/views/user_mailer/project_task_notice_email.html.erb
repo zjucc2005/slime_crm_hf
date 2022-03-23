@@ -9,8 +9,10 @@
     <p>您好</p>
     <p>
         感谢您使用海鄞咨询，以下是该专家访谈信息，供您参考：<br>
+        <b>访谈日期：</b><%= @project_task.started_at_fwt %><br>
         <b>访谈时长：</b><%= @project_task.duration %>分钟<br>
         <b>收费时长：</b><%= @project_task.charge_duration %>分钟<br>
+        <b>专家信息：</b><%= "#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@project_task.expert_name_for_external}" %><br>
         <b>专家费率：</b>专家费<%= @expert.cpt %>+招募费<%= @project_task.recruitment_fee %>/小时<br>
         <b>访谈费用（折前）：</b><%= (actual_price / 0.84).round(2) %>元<br>
         <b>访谈费用（折后）：</b><%= actual_price %>元<br>

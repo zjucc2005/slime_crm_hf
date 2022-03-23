@@ -463,7 +463,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_task_params
-    params.require(:project_task).permit(:category, :expert_id, :client_id, :pm_id, :interview_form, :started_at, :expert_level, :expert_rate)
+    params.require(:project_task).permit(:category, :expert_id, :client_id, :pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :expert_alias)
   end
 
   def project_requirement_params
@@ -661,7 +661,7 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 2, '')                                                              # C, 访谈人
       sheet.add_cell(row, 3, ProjectTask::INTERVIEW_FORM[task.interview_form])                # D, 访问类型
       sheet.add_cell(row, 4, "# #{task.expert.uid}")                                          # E, 专家编号
-      sheet.add_cell(row, 5, task.expert.mr_name)                                             # F, 专家称呼
+      sheet.add_cell(row, 5, task.expert_name_for_external)                                   # F, 专家称呼
       exp = task.expert.latest_work_experience
       exp ? sheet.add_cell(row, 6, "#{exp.org_cn}#{exp.title}") : sheet.add_cell(row, 6, '')  # G, 专家信息
       sheet.add_cell(row, 7, (task.started_at.strftime('%F') rescue ''))                      # H, 访谈日期

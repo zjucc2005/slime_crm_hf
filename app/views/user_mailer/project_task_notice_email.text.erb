@@ -3,8 +3,10 @@
 您好
 
 感谢您使用海鄞咨询，以下是该专家访谈信息，供您参考：
+访谈日期：<%= @project_task.started_at_fwt %>
 访谈时长：<%= @project_task.duration %>分钟
 收费时长：<%= @project_task.charge_duration %>分钟
+专家信息：<%= "#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@project_task.expert_name_for_external}" %>
 专家费率：专家费<%= @expert.cpt %>+招募费<%= @project_task.recruitment_fee %>/小时
 访谈费用（折前）：<%= (actual_price / 0.84).round(2) %>元
 访谈费用（折后）：<%= actual_price %>元
