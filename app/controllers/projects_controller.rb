@@ -673,6 +673,7 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
       sheet.add_cell(row, 14, task.actual_price)                                              # O, 折后费用
       sheet.add_cell(row, 15, task.costs.where(category: 'expert').sum(:price))               # P, 礼金费用
+      sheet.add_cell(row, 16, '银行卡转账（公对私）')                                             # Q, 礼金支付方式
     end
 
     ActiveRecord::Base.transaction do
