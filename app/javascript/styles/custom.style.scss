@@ -232,7 +232,7 @@ input[type=checkbox].checkbox-square {
 /* form */
 .form-group {
   label {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   input.form-control-lg {
@@ -279,6 +279,10 @@ input[type=checkbox].checkbox-square {
         border-right: 1px solid #fff !important;
         color: #646464;
       }
+    }
+    .btn {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 

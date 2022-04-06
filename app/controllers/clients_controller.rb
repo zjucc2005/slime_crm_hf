@@ -22,17 +22,65 @@ class ClientsController < ApplicationController
 
   def new
     @client = Candidate.client.new(company_id: params[:company_id])
+    @exps = []
+    3.times { @exps << @client.experiences.education.new }
+  end
+
+  def create
+    begin
+      ActiveRecord::Base.transaction do
+        @client = Candidate.client.create!(
+            candidate_params.merge({created_by: current_user.id, user_channel_id: current_user.user_channel_id, cpt: 0})
+        )
+        3.times do |i|
+          @client.experiences.education.create!(org_cn: params[:exps][i.to_s][:org_cn])
+        end
+      end
+      flash[:success] = t(:operation_succeeded)
+      redirect_with_return_to clients_path
+    rescue Exception => e
+      flash[:error] = e.message
+      redirect_to root_path
+    end
   end
 
   def edit
     load_client
-    @company = @client.company
+    @exps = @client.experiences.education.order(:created_at)
+  end
+
+  def update
+    begin
+      load_client
+
+      ActiveRecord::Base.transaction do
+        @client.update!(candidate_params)
+        3.times do |i|
+          edu_exp = @client.experiences.education.order(:created_at)[i]
+          edu_exp ? edu_exp.update!(org_cn: params[:exps][i.to_s][:org_cn]) :
+              @client.experiences.education.create!(org_cn: params[:exps][i.to_s][:org_cn])
+        end
+      end
+      flash[:success] = t(:operation_succeeded)
+      redirect_with_return_to edit_client_path(@client)
+    rescue Exception => e
+      flash.now[:error] = e.message
+      @exps = @client.experiences.education.order(:created_at)
+      render :edit
+    end
   end
 
   private
 
   def load_client
     @client = Candidate.find(params[:id])
+  end
+
+  def candidate_params
+    params.require(:candidate).permit(:company_id, :gender, :job_status, :contact_status,
+                                      :first_name, :last_name, :nickname, :title, :department, :city, :address,
+                                      :email, :email1, :phone, :phone1, :wechat, :linkedin,
+                                      :employer0, :employer1, :employer2)
   end
 
 end

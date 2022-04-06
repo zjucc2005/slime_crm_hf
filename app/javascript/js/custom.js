@@ -8,10 +8,10 @@ $(document).on('turbolinks:load', function(){
     setTimeout("$('.alert').css('display','none')",5000);
     $('.datetimepicker').datetimePicker();
     $('.datepicker').datePicker();
-    if($('.select2-container').length){
+    if($('select.select2').next('.select2-container').length){
         $('.select2-container').remove();  // turbolinks:reload + select2 重复加载bug修复
     }
-    $('.select2').select2();
+    $('select.select2').select2();
     $('input[type=number]').mousewheel(function(){
         disableMouseWheelScroll();  // 全局禁用 number 的滚轮
     });
@@ -51,7 +51,22 @@ $(document).on('turbolinks:load', function(){
             cache: true
         }
     })
+    $('select.select2-gender-with-icon').select2({
+        templateResult: genderFormat,
+        templateSelection: genderFormat
+    })
 });
+
+function genderFormat(state){
+    if (!state.id) { return state.text; }
+    var $state = $('<span>' + state.text + '</span>');
+    if(state.id === 'male') {
+        $state = $('<span><i class="fa fa-male text-primary mr-2"></i>' + state.text + '</span>');
+    } else if ( state.id === 'female') {
+        $state = $('<span><i class="fa fa-female text-danger mr-2"></i>' + state.text + '</span>');
+    }
+    return $state;
+}
 
 // select all checkbox
 window.selectAll = function(ele, name){

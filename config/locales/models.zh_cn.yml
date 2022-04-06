@@ -118,7 +118,7 @@ zh_cn:
         phone: "电话"
         phone1: "电话2"
         industry: "行业"
-        title: "职位/职称"
+        title: "职位"
         educate_title: "教育职称"
         date_of_birth: "出生日期"
         gender: "性别"
@@ -145,7 +145,19 @@ zh_cn:
         haodf_id: "好大夫ID"
         haodf_url: "好大夫URL"
         linkedin: "LinkedIn"
+        contact_status: "联系状态"
         job_status: "在职状态"
+        department: "部门"
+        address: "地址"
+
+      client:
+        email: "邮箱"
+        email1: "预测邮箱"
+        employer0: "前任雇主 1"
+        employer1: "前任雇主 2"
+        employer2: "前任雇主 3"
+        phone: "手机"
+        phone1: "座机"
 
       candidate_experience:
         category: "类型"
@@ -163,6 +175,9 @@ zh_cn:
         duty: "职责"
         duration: "起止时间"
         current_company: "目前公司"
+        bachelor: "本科"
+        master: "硕士"
+        doctor: "博士"
 
       candidate_payment_info:
         category: "类型"

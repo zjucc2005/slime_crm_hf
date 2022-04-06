@@ -26,7 +26,7 @@
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :gender %>
-        <%= f.select :gender, Candidate::GENDER.to_a.map(&:reverse), { :include_blank => false }, :class => 'form-control select2' %>
+        <%= f.select :gender, Candidate::GENDER.to_a.map(&:reverse), { :include_blank => false }, :class => 'form-control select2-gender-with-icon' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :date_of_birth %>

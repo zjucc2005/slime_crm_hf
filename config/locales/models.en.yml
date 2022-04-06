@@ -115,7 +115,19 @@ en:
         haodf_id: "haodf ID"
         haodf_url: "haodf URL"
         linkedin: "LinkedIn"
+        contact_status: "Contact status"
         job_status: "Job status"
+        department: "Department"
+        address: "Address"
+
+      client:
+        email: "Email"
+        email1: "Email2"
+        employer0: "Ex-employer 1"
+        employer1: "Ex-employer 2"
+        employer2: "Ex-employer 3"
+        phone: "Mobile"
+        phone1: "Telephone"
 
       candidate_experience:
         category: "Category"
@@ -133,6 +145,9 @@ en:
         duty: "Duty"
         duration: "Duration"
         current_company: "Current company"
+        bachelor: "Bachelor"
+        master: "Master"
+        doctor: "Doctor"
 
       candidate_payment_info:
         category: "Category"

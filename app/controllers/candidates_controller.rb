@@ -211,23 +211,23 @@ class CandidatesController < ApplicationController
   end
 
   # POST /candidates/create_client
-  def create_client
-    begin
-      @company = Company.find(params[:candidate][:company_id])
-      @client = @company.candidates.client.new(
-          candidate_params.merge({created_by: current_user.id, user_channel_id: current_user.user_channel_id, cpt: 0})
-      )
-      if @client.save
-        flash[:success] = t(:operation_succeeded)
-        redirect_with_return_to company_path(@company)
-      else
-        render 'companies/new_client'
-      end
-    rescue Exception => e
-      flash[:error] = e.message
-      redirect_to root_path
-    end
-  end
+  # def create_client
+  #   begin
+  #     @company = Company.find(params[:candidate][:company_id])
+  #     @client = @company.candidates.client.new(
+  #         candidate_params.merge({created_by: current_user.id, user_channel_id: current_user.user_channel_id, cpt: 0})
+  #     )
+  #     if @client.save
+  #       flash[:success] = t(:operation_succeeded)
+  #       redirect_with_return_to company_path(@company)
+  #     else
+  #       render 'companies/new_client'
+  #     end
+  #   rescue Exception => e
+  #     flash[:error] = e.message
+  #     redirect_to root_path
+  #   end
+  # end
 
   # GET /candidates/:id/edit_client
   # def edit_client
@@ -236,22 +236,22 @@ class CandidatesController < ApplicationController
   # end
 
   # PUT /candidates/:id/update_client
-  def update_client
-    begin
-      load_client
-      @company = @client.company
-
-      if @client.update(candidate_params)
-        flash[:success] = t(:operation_succeeded)
-        redirect_with_return_to company_path(@company)
-      else
-        render :edit_client
-      end
-    rescue Exception => e
-      flash.now[:error] = e.message
-      render :edit_client
-    end
-  end
+  # def update_client
+  #   begin
+  #     load_client
+  #     @company = @client.company
+  #
+  #     if @client.update(candidate_params)
+  #       flash[:success] = t(:operation_succeeded)
+  #       redirect_with_return_to company_path(@company)
+  #     else
+  #       render :edit_client
+  #     end
+  #   rescue Exception => e
+  #     flash.now[:error] = e.message
+  #     render :edit_client
+  #   end
+  # end
 
   # POST /candidates/import_expert
   def import_expert
