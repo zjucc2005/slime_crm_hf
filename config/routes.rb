@@ -66,7 +66,10 @@ Rails.application.routes.draw do
     post :import_haodf, on: :collection  # import doctors from haodf data
   end
 
-  resources :clients
+  resources :clients do
+    get :import_client, on: :collection
+    post :import_client, on: :collection
+  end
 
   resources :companies do
     get :new_contract,        on: :member
@@ -74,8 +77,8 @@ Rails.application.routes.draw do
 
     get :load_client_options, on: :member
 
-    get :import_client,       on: :member  # show importing result
-    post :import_client,      on: :member  # import clients with excel
+    # get :import_client,       on: :member  # show importing result
+    # post :import_client,      on: :member  # import clients with excel
   end
 
   resources :contracts

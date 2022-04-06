@@ -3,6 +3,7 @@
         <%= link_to new_client_path(return_to: request.url), class: 'btn btn-primary' do %>
             <i class="fa fa-plus"></i> <%= t('action.new_model', model: mt(:candidate, :seat)) %>
         <% end %>
+        <%= render partial: 'clients/widgets/btn_import_client' %>
     </div>
     <%= render partial: 'clients/widgets/search_modal' %>
 </div>
@@ -13,7 +14,7 @@
             <table class="table table-sm table-striped nowrap card-text">
                 <thead>
                 <tr>
-                    <th><%= check_box_tag :selectAll, nil, nil, :onclick => 'selectAll(this);' %></th>
+                    <th><%= check_box_tag :selectAll, nil, nil, onclick: 'selectAll(this);' %></th>
                     <th><%= mt(:candidate, :id) %></th>
                     <th><%= mt(:candidate, :name) %></th>
                     <th><%= mt(:candidate, :nickname) %></th>

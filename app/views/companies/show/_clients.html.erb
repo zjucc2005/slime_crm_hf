@@ -2,9 +2,8 @@
     <div class="card-header">
         <h5><%= fa_icon_tag('users') %> <%= mt(:candidate, :seat) %></h5>
         <div>
-        <%= render :partial => 'companies/widgets/btn_import_client' %>
-        <%= link_to new_client_path(company_id: @company.id, return_to: request.path), :class => 'btn btn-primary btn-xs' do %>
-            <%= fa_icon_tag('plus') %> <%= "#{t('action.new', :model => mt(:candidate, :seat))}" %>
+        <%= link_to new_client_path(company_id: @company.id, return_to: request.path), class: 'btn btn-primary btn-xs' do %>
+            <%= fa_icon_tag('plus') %> <%= "#{t('action.new', model: mt(:candidate, :seat))}" %>
         <% end %>
         </div>
     </div>
@@ -29,7 +28,7 @@
                 <tbody>
                 <% clients.each do |client| %>
                     <tr>
-                        <td><%= content_tag :span, "# #{client.uid}", :class => 'text-gray' %></td>
+                        <td><%= content_tag :span, "# #{client.uid}", class:'text-gray' %></td>
                         <td><%= client.name %></td>
                         <td><%= client.nickname %></td>
                         <td><%= client.title %></td>
@@ -39,10 +38,10 @@
                         <td><%= client.created_at.strftime('%F %T') %></td>
                         <td><%= candidate_job_status_badge(client.job_status) %></td>
                         <td class="action">
-                            <%= link_to edit_client_path(client, return_to: request.url), :class => 'btn btn-edit btn-xs' do %>
+                            <%= link_to edit_client_path(client, return_to: request.url), class:'btn btn-edit btn-xs' do %>
                                 <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
                             <% end %>
-                            <%= link_to candidate_path(client, return_to: request.url), :method => :delete, :class => 'btn btn-danger btn-xs', :data => { :confirm => t(:sure_to_delete) } do %>
+                            <%= link_to candidate_path(client, return_to: request.url), method: :delete, class:'btn btn-danger btn-xs', data: { confirm: t(:sure_to_delete) } do %>
                                 <%= fa_icon_tag('trash') %> <%= t('action.delete') %>
                             <% end if can?(:destroy, Candidate) && client.can_delete? %>
                         </td>
