@@ -102,7 +102,7 @@ class Candidate < ApplicationRecord
 
   # English name form - Mr./Miss sb.
   def mr_name
-    _mr_   = gender == 'female' ? 'Miss' : 'Mr.'
+    _mr_   = gender == 'female' ? 'Ms.' : 'Mr.'
     _name_ = last_name
     if /\p{Han}+/.match(last_name)
       _name_ = Pinyin.t(last_name).capitalize rescue last_name
