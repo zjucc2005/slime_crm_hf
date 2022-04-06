@@ -19,16 +19,17 @@
                                 <%= text_field_tag :name, params[:name], class: 'form-control', placeholder: '姓名/昵称' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :title, mt(:candidate, :title) %>
-                                <%= text_field_tag :title, params[:title], class: 'form-control' %>
-                            </div>
-                            <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :phone, mt(:candidate, :phone) %>
                                 <%= text_field_tag :phone, params[:phone], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :email, mt(:candidate, :email) %>
-                                <%= text_field_tag :email, params[:email], class: 'form-control' %>
+                                <%= label_tag :title, mt(:candidate, :title) %>
+                                <%= text_field_tag :title, params[:title], class: 'form-control' %>
+                            </div>
+                            <div class="col-lg-3 col-6 form-group">
+                                <%= label_tag :job_status, mt(:candidate, :job_status) %>
+                                <%= select_tag :job_status, options_for_select(Candidate::JOB_STATUS.to_a.map(&:reverse), params[:job_status]),
+                                               prompt: default_prompt, class: 'from-control select2' %>
                             </div>
                             <div class="col-lg-6 col-12 form-group">
                                 <%= label_tag :id, mt(:company) %>
@@ -36,9 +37,8 @@
                                                prompt: default_prompt, class: 'form-control select2' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
-                                <%= label_tag :job_status, mt(:candidate, :job_status) %>
-                                <%= select_tag :job_status, options_for_select(Candidate::JOB_STATUS.to_a.map(&:reverse), params[:job_status]),
-                                               prompt: default_prompt, class: 'from-control select2' %>
+                                <%= label_tag :edu_exp, t(:education_info) %>
+                                <%= text_field_tag :edu_exp, params[:edu_exp], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :client_active, t(:client_active) %>

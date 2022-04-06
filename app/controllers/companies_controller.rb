@@ -98,32 +98,6 @@ class CompaniesController < ApplicationController
     respond_to { |f| f.js }
   end
 
-  # POST /companies/:id/import_client
-  # def import_client
-  #   load_company
-  #   @errors = []
-  #   if request.post?
-  #     begin
-  #       sheet = open_spreadsheet(params[:file])
-  #       raise 'excel表格里没有信息' if sheet.last_row < 2
-  #       raise 'excel不能超过1000行' if sheet.last_row > 1000
-  #       2.upto(sheet.last_row) do |i|
-  #         parser = Utils::ClientTemplateParser.new(sheet.row(i), @company, current_user.id, current_user.user_channel_id)
-  #         @errors << "Row #{i}: #{parser.errors.join(', ')}" unless parser.import
-  #       end
-  #     rescue Exception => e
-  #       @errors << e.message
-  #     end
-  #
-  #     if @errors.blank?
-  #       flash[:success] = t(:operation_succeeded)
-  #       redirect_to company_path(@company)
-  #     else
-  #       render :import_client
-  #     end
-  #   end
-  # end
-
   private
   def load_company
     @company = Company.find(params[:id])

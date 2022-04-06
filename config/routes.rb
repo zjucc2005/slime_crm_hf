@@ -76,9 +76,6 @@ Rails.application.routes.draw do
     # get :new_client,          on: :member
 
     get :load_client_options, on: :member
-
-    # get :import_client,       on: :member  # show importing result
-    # post :import_client,      on: :member  # import clients with excel
   end
 
   resources :contracts

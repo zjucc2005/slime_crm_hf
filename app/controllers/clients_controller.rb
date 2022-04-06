@@ -8,7 +8,7 @@ class ClientsController < ApplicationController
     query = user_channel_filter(Candidate.client)
     query = query.where('candidates.name ~* :name OR candidates.nickname ~* :name', { name: params[:name].strip }) if params[:name].present?
     query = query.where('candidates.phone ~* :phone OR candidates.phone1 ~* :phone', { :phone => params[:phone].strip.shellescape }) if params[:phone].present?
-    %w[title email].each do |field|
+    %w[title].each do |field|
       query = query.where("candidates.#{field} ~* ?", params[field].strip.shellescape) if params[field].present?
     end
     %w[company_id job_status].each do |field|
@@ -16,6 +16,9 @@ class ClientsController < ApplicationController
     end
     if params[:client_active] == 'true'
       query = query.joins(:project_candidates).where('project_candidates.category': 'client').where('project_candidates.created_at > ?', Time.now - 3.months).distinct
+    end
+    if params[:edu_exp].present?
+      query = query.joins(:experiences).where('candidate_experiences.org_cn ILIKE ?', "%#{params[:edu_exp].strip}%").distinct
     end
     @clients = query.order(created_at: :desc).paginate(page: params[:page], per_page: 20)
   end
