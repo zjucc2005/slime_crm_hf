@@ -107,6 +107,8 @@ Rails.application.routes.draw do
     get :user_options,  on: :member  # 加载项目用户账号信息
 
     post :export_billing_excel, on: :member  # 导出项目出账模板
+
+    get :work_board, on: :collection
   end
 
   resources :project_requirements do

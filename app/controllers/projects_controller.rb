@@ -448,6 +448,11 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def work_board
+    query = user_channel_filter(Project.all)
+    @projects = query.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+  end
+
   private
   def load_project
     @project = Project.find(params[:id])

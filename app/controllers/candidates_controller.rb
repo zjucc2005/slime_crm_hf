@@ -175,9 +175,9 @@ class CandidatesController < ApplicationController
   def show_phone
     begin
       load_candidate
-      @response = { :status => 'succ' }
+      @response = { status: 'succ' }
     rescue Exception => e
-      @response = { :status => 'fail', :reason => e.message }
+      @response = { status: 'fail', reason: e.message }
     end
     respond_to{|f| f.js }
   end

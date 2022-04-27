@@ -28,7 +28,7 @@
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :gender %>
-        <%= f.select :gender, Candidate::GENDER.to_a.map(&:reverse), { :include_blank => false }, class: 'form-control select2' %>
+        <%= f.select :gender, Candidate::GENDER.to_a.map(&:reverse), { include_blank: false }, class: 'form-control select2-gender-with-icon' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :date_of_birth %>
@@ -84,7 +84,7 @@
 <div class="row border-bottom mb-3">
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :is_available %><span class="text-red">*</span>
-        <%= f.select :is_available, candidate_is_available_options, { :include_blank => false }, class: 'form-control select2' %>
+        <%= f.select :is_available, candidate_is_available_options, { include_blank: false }, class: 'form-control select2' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :cpt %><span class="text-red">*</span>

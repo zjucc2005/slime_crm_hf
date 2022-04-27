@@ -255,6 +255,7 @@ en:
         total_project_tasks: "Total tasks"
         total_duration: "Total duration"
         total_charge_duration: "Total charge duration"
+        work_board: "Work board"
 
       project_requirement:
         status: "Status"

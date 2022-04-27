@@ -285,6 +285,7 @@ zh_cn:
         total_project_tasks: "任务总数"
         total_duration: "总时长"
         total_charge_duration: "总收费时长"
+        work_board: "工作板"
 
       project_requirement:
         status: "状态"

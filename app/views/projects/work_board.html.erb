@@ -1,0 +1,47 @@
+<% if @projects.present? %>
+    <div class="row">
+        <div class="col-2 pr-0">
+            <ul class="nav nav-tabs-column flex-column">
+                <% @projects.each_with_index do |project, index| %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= index.zero? ? 'active' : '' %>" data-toggle="tab" href="#project_<%= project.id %>">
+                            <div class="" title="<%= project.name %>"><%= truncate(project.name, length: 13) %></div>
+                            <div class="text-smaller"><%= project.code %></div>
+                        </a>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+        <div class="col-10 pl-0">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <% @projects.each_with_index do |project, index| %>
+                    <div id="project_<%= project.id %>" class="container-fluid bg-white tab-pane <%= index.zero? ? 'active' : '' %>" style="height: 600px;">
+                        <h3><%= project.name %></h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+
+    <%#= will_paginate @projects %>
+<% else %>
+    <div class="card p-2">
+        <div class="p-4 text-center">
+            <h5 class="text-gray mb-0"><%= t(:not_found) %></h5>
+        </div>
+    </div>
+<% end %>
+<style>
+    .nav-tabs-column .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+    }
+    .nav-tabs-column .nav-link.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #fff #dee2e6 #dee2e6;
+    }
+</style>

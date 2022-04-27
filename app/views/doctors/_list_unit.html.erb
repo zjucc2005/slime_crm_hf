@@ -33,7 +33,11 @@
                         <span class="mr-1" title="<%= candidate.city %>"><%= truncate(candidate.city, length: 9) %></span>
                         <span class="text-gray mr-1">/</span>
                         <%= content_tag :span, :id => "show_phone_wrapper_#{candidate.id}", :class => 'mr-1' do %>
-                            <%= link_to '查看联系方式', show_phone_candidate_path(candidate), :remote => true %>
+                            <% if candidate.phone.blank? && candidate.phone1.blank? %>
+                                <span class="text-gray">无联系方式</span>
+                            <% else %>
+                                <%= link_to '查看联系方式', show_phone_candidate_path(candidate), :remote => true %>
+                            <% end %>
                         <% end %>
                     </div>
                 </div>

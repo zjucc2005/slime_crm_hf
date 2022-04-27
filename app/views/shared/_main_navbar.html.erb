@@ -1,8 +1,8 @@
 <% activate_sidebar %>
 <header class="header">
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
-        <!--<%= link_to root_path, :class => 'navbar-brand' do %>-->
-            <!--<%= image_pack_tag 'logo-white.svg', :style => 'width: 100px' %>-->
+        <!--<%= link_to root_path, class:'navbar-brand' do %>-->
+            <!--<%= image_pack_tag 'logo-white.svg', style: 'width: 100px' %>-->
         <!--<% end %>-->
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -11,26 +11,26 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <%= link_to t(:homepage), root_path, :class => "nav-link #{yield :nav_home}" %>
+                    <%= link_to t(:homepage), root_path, class:"nav-link #{yield :nav_home}" %>
                 </li>
                 <% if can? :index, Candidate %>
                     <li class="nav-item">
-                        <%= link_to mt(:expert), candidates_path, :class => "nav-link #{yield :nav_candidates}" %>
+                        <%= link_to mt(:expert), candidates_path, class:"nav-link #{yield :nav_candidates}" %>
                     </li>
                 <% end %>
                 <% if can? :index, Doctor %>
                     <li class="nav-item">
-                        <%= link_to mt(:doctor), doctors_path, :class => "nav-link #{yield :nav_doctors}" %>
+                        <%= link_to mt(:doctor), doctors_path, class:"nav-link #{yield :nav_doctors}" %>
                     </li>
                 <% end %>
                 <% if can? :index, Company %>
                     <li class="nav-item">
-                        <%= link_to mt(:company), companies_path, :class => "nav-link #{yield :nav_companies}" %>
+                        <%= link_to mt(:company), companies_path, class:"nav-link #{yield :nav_companies}" %>
                     </li>
                 <% end if false %>
                 <% if can? :index, Company %>
                     <li class="nav-item dropdown">
-                        <%= link_to '#', :id => 'companies-drop', data: { toggle: 'dropdown' }, class: "nav-link dropdown-toggle #{yield :nav_companies}" do %>
+                        <%= link_to '#', id: 'companies-drop', data: { toggle: 'dropdown' }, class: "nav-link dropdown-toggle #{yield :nav_companies}" do %>
                             <%= controller_name == 'clients' ? mt(:candidate, :seat) : mt(:company) %>
                         <% end %>
                         <div class="dropdown-menu fa-fixed">
@@ -45,42 +45,45 @@
                 <% end %>
                 <% if can? :index, Project %>
                     <li class="nav-item">
-                        <%= link_to mt(:project), projects_path, :class => "nav-link #{yield :nav_projects}" %>
+                        <%= link_to mt(:project), projects_path, class:"nav-link #{yield :nav_projects}" %>
                     </li>
                 <% end if false %>
                 <% if can? :index, Project %>
                     <li class="nav-item dropdown">
-                        <%= link_to '#', :id => 'projects-drop', :data => { :toggle => 'dropdown' }, :class => "nav-link dropdown-toggle #{yield :nav_projects}" do %>
+                        <%= link_to '#', id: 'projects-drop', data: { toggle: 'dropdown' }, class:"nav-link dropdown-toggle #{yield :nav_projects}" do %>
                             <%= controller_name == 'project_requirements' ? mt(:project_requirement) : mt(:project) %>
                         <% end %>
                         <div class="dropdown-menu fa-fixed">
-                            <%= link_to projects_path, :class => 'dropdown-item' do %>
-                                <%= fa_icon_tag('map') %> <%= mt(:project) %>
+                            <%= link_to projects_path, class:'dropdown-item' do %>
+                                <i class="fa fa-map"></i> <%= mt(:project) %>
                             <% end if can?(:index, Project) %>
-                            <%= link_to project_requirements_path, :class => 'dropdown-item' do %>
-                                <%= fa_icon_tag('tasks') %> <%= mt(:project_requirement) %>
+                            <%= link_to project_requirements_path, class:'dropdown-item' do %>
+                                <i class="fa fa-tasks"></i> <%= mt(:project_requirement) %>
                             <% end if can?(:index, ProjectRequirement) %>
+                            <%= link_to work_board_projects_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-th-large"></i> <%= mt(:project, :work_board) %>
+                            <% end if can?(:work_board, Project) %>
                         </div>
                     </li>
                 <% end %>
                 <% if can? :index, CallRecord %>
                     <li class="nav-item">
-                        <%= link_to mt(:call_record), call_records_path, :class => "nav-link #{yield :nav_call_records}" %>
+                        <%= link_to mt(:call_record), call_records_path, class:"nav-link #{yield :nav_call_records}" %>
                     </li>
                 <% end %>
                 <% if can? :index, Finance %>
                     <li class="nav-item">
-                        <%= link_to mt(:finance), finance_index_path, :class => "nav-link #{yield :nav_finance}" %>
+                        <%= link_to mt(:finance), finance_index_path, class:"nav-link #{yield :nav_finance}" %>
                     </li>
                 <% end %>
                 <% if can? :index, User %>
                     <li class="nav-item">
-                        <%= link_to mt(:user), users_path, :class => "nav-link #{yield :nav_users}" %>
+                        <%= link_to mt(:user), users_path, class:"nav-link #{yield :nav_users}" %>
                     </li>
                 <% end %>
                 <% if can? :index, UserChannel %>
                     <li class="nav-item">
-                        <%= link_to mt(:user_channel), user_channels_path, :class => "nav-link #{yield :nav_user_channels}" %>
+                        <%= link_to mt(:user_channel), user_channels_path, class:"nav-link #{yield :nav_user_channels}" %>
                     </li>
                 <% end %>
                 <li class="nav-item dropdown">
@@ -88,35 +91,35 @@
                         <%= t(:settings) %>
                     </a>
                     <div class="dropdown-menu fa-fixed">
-                        <%= link_to card_templates_path, :class => 'dropdown-item' do %>
+                        <%= link_to card_templates_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('drivers-license-o') %> <%= mt(:card_template) %>
                         <% end if can?(:index, CardTemplate) %>
-                        <%= link_to location_data_path, :class => 'dropdown-item' do %>
+                        <%= link_to location_data_path, class:'dropdown-item' do %>
                             <%= model_icon('LocationDatum') %> <%= mt(:location_datum) %>
                         <% end if can?(:index, LocationDatum) %>
-                        <%= link_to hospitals_path, :class => 'dropdown-item' do %>
+                        <%= link_to hospitals_path, class:'dropdown-item' do %>
                             <%= model_icon('Hospital') %> <%= mt(:hospital) %>
                         <% end if can?(:index, Hospital) %>
-                        <%= link_to banks_path, :class => 'dropdown-item' do %>
+                        <%= link_to banks_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('bank') %> <%= mt(:bank) %>
                         <% end if can?(:index, Bank) %>
-                        <%= link_to industries_path, :class => 'dropdown-item' do %>
+                        <%= link_to industries_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('industry') %> <%= mt(:industry) %>
                         <% end if can?(:index, Industry) %>
-                        <%= link_to search_aliases_path, :class => 'dropdown-item' do %>
+                        <%= link_to search_aliases_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('font') %> <%= mt(:search_alias) %>
                         <% end if can?(:index, SearchAlias) %>
-                        <%= link_to import_gllue_candidates_extras_path, :class => 'dropdown-item' do %>
+                        <%= link_to import_gllue_candidates_extras_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('wrench') %> <%= t(:import_gllue_candidates) %>
                         <% end if can?(:import_gllue_candidates, Extra) %>
-                        <%= link_to my_account_users_path, :class => 'dropdown-item' do %>
+                        <%= link_to my_account_users_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('user') %> <%= t(:my_account) %>
                         <% end if can?(:my_account, User) %>
                         <div class="dropdown-divider"></div>
-                        <%= link_to destroy_user_session_path, :method => :delete, :data => { :confirm => t(:sure_to_logout) }, :class => 'dropdown-item' do %>
+                        <%= link_to destroy_user_session_path, method: :delete, data: { confirm: t(:sure_to_logout) }, class:'dropdown-item' do %>
                             <i class="fa fa-sign-out"></i> <%= t('action.quit') %>
                         <% end if signed_in? %>
-                        <%= link_to css_demo_path, :class => 'dropdown-item' do %>
+                        <%= link_to css_demo_path, class:'dropdown-item' do %>
                             <i class="fa fa-cc text-danger"></i> CSS DEMO
                         <% end if can?(:css_demo, HomeController) %>
                     </div>
