@@ -23,6 +23,7 @@
                         <%= link_to doctor_path(candidate), :target => '_blank' do %>
                             <span><%= candidate.name %> </span>
                         <% end %>
+                        <%= content_tag :span, 'kol', class: 'text-smaller roundy px-1 py-0 text-light bg-primary' if candidate.is_kol %>
                     </div>
                 </div>
 

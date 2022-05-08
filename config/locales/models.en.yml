@@ -94,6 +94,7 @@ en:
         gender: "Gender"
         description: "Description"
         is_available: "Available"
+        is_kol: "KOL"
         cpt: "CPT"
         currency: "Currency"
         bank: "Bank name"

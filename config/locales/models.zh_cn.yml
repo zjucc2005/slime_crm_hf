@@ -124,6 +124,7 @@ zh_cn:
         gender: "性别"
         description: "背景说明"
         is_available: "访谈意愿"
+        is_kol: "KOL"
         cpt: "专家费率"
         currency: "货币"
         bank: "银行名称"

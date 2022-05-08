@@ -708,7 +708,7 @@ class ProjectsController < ApplicationController
       row = index + 2
       sheet.add_cell(row, 0, task.project.code)                                               # A, 内部项目号
       sheet.add_cell(row, 1, index + 1)                                                       # B, 序号
-      sheet.add_cell(row, 2, '全国')                                                          # C, 城市
+      sheet.add_cell(row, 2, task.expert.city.present? ? task.expert.city : '全国')            # C, 城市
       sheet.add_cell(row, 3, '')                                                              # D
       sheet.add_cell(row, 4, '')                                                              # E
       sheet.add_cell(row, 5, '')                                                              # F
