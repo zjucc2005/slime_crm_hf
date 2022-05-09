@@ -62,7 +62,7 @@
                             <% end if can?(:index, ProjectRequirement) %>
                             <%= link_to work_board_projects_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-th-large"></i> <%= mt(:project, :work_board) %>
-                            <% end if can?(:work_board, Project) %>
+                            <% end if false # can?(:work_board, Project) %>
                         </div>
                     </li>
                 <% end %>

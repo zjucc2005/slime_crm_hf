@@ -1,12 +1,15 @@
 <% if @projects.present? %>
-    <div class="row">
+    <div class="row" id="workboard">
         <div class="col-2 pr-0">
             <ul class="nav nav-tabs-column flex-column">
                 <% @projects.each_with_index do |project, index| %>
                     <li class="nav-item">
                         <a class="nav-link <%= index.zero? ? 'active' : '' %>" data-toggle="tab" href="#project_<%= project.id %>">
-                            <div class="" title="<%= project.name %>"><%= truncate(project.name, length: 13) %></div>
-                            <div class="text-smaller"><%= project.code %></div>
+                            <div class="text-smaller" title="<%= project.name %>"><%= truncate("#{project.code} #{project.name}", length: 19) %></div>
+                            <div class="text-gray text-smaller d-flex justify-content-between">
+                                <span><%= "# #{project.uid}" %></span>
+                                <span><%= project.created_at.strftime('%F %T') %></span>
+                            </div>
                         </a>
                     </li>
                 <% end %>
@@ -16,8 +19,12 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <% @projects.each_with_index do |project, index| %>
-                    <div id="project_<%= project.id %>" class="container-fluid bg-white tab-pane <%= index.zero? ? 'active' : '' %>" style="height: 600px;">
-                        <h3><%= project.name %></h3>
+                    <div id="project_<%= project.id %>" class="container-fluid bg-white tab-pane <%= index.zero? ? 'active' : '' %>">
+                        <div class="tab-header">
+                            <h3 class="mb-0"><%= "#{project.code} #{project.name}" %></h3>
+                            <button class="btn btn-primary">Create Record</button>
+                        </div>
+
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     </div>
                 <% end %>
@@ -25,7 +32,7 @@
         </div>
     </div>
 
-    <%#= will_paginate @projects %>
+    <%= will_paginate @projects %>
 <% else %>
     <div class="card p-2">
         <div class="p-4 text-center">
@@ -34,14 +41,26 @@
     </div>
 <% end %>
 <style>
-    .nav-tabs-column .nav-link {
-        border: 1px solid transparent;
-        border-top-left-radius: 0.25rem;
-        border-bottom-left-radius: 0.25rem;
-    }
-    .nav-tabs-column .nav-link.active {
+    .nav-tabs-column .nav-item .nav-link {
         color: #495057;
+        /*border: 1px solid transparent;*/
+        border-bottom: 1px solid #dee2e6;
+        border-top-left-radius: 0.3rem;
+        border-bottom-left-radius: 0.3rem;
+    }
+    .nav-tabs-column .nav-item .nav-link.active {
+        color: #4680ff;
         background-color: #fff;
         border-color: #dee2e6 #fff #dee2e6 #dee2e6;
+        border-left: 0.15rem solid #007bff;
+    }
+    #workboard .tab-content .tab-pane {
+        min-height: 600px;
+    }
+    .tab-pane .tab-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
 </style>
