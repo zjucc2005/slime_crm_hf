@@ -774,12 +774,12 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 12, task.expert_name_for_external)                                  # M, 医生姓名
       sheet.add_cell(row, 13, exp.title)                                                      # N, 技术职称
       sheet.add_cell(row, 14, exp.title1)                                                     # O, 行政职务
-      sheet.add_cell(row, 15, task.expert.phone1)                                             # P, 受访者座机
-      sheet.add_cell(row, 16, task.expert.phone)                                              # Q, 受访者手机号码
+      sheet.add_cell(row, 15, '会议平台沟通')                                                   # P, 受访者座机
+      sheet.add_cell(row, 16, '会议平台沟通')                                                   # Q, 受访者手机号码
       sheet.add_cell(row, 17, (task.started_at.strftime('%F') rescue ''))                     # R, 访问日期
       sheet.add_cell(row, 18, (task.started_at.strftime('%H:%M') rescue ''))                  # S, 访问时间
-      sheet.add_cell(row, 19, '')                                                             # T, 访问地点
-      sheet.add_cell(row, 20, '')                                                             # U, 礼金支付方
+      sheet.add_cell(row, 19, '电话沟通')                                                       # T, 访问地点
+      sheet.add_cell(row, 20, '由代理支付礼金')                                                  # U, 礼金支付方
       sheet.add_cell(row, 21, task.costs.where(category: 'expert').sum(:price))               # V, 礼金支付数额
       sheet.add_cell(row, 22, '银行卡转帐（公对私）')                                             # W, 礼金支付方式
       sheet.add_cell(row, 23, '')                                                             # X
