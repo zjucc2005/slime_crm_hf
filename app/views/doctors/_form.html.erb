@@ -69,7 +69,7 @@
     </div>
     <div class="col-3 form-group">
         <%= label_tag :department, mt(:candidate_experience, :department) %><span class="text-red">*</span>
-        <%= select_tag :'exp[dep_id]', options_for_select(hospital_department_options(@exp.dep_id), @exp.dep_id), prompt: default_prompt, required: true, class: 'form-control select2' %>
+        <%= select_tag :'exp[dep_id]', options_for_select(hospital_department_options(@exp.org_id), @exp.dep_id), prompt: default_prompt, required: true, class: 'form-control select2' %>
     </div>
     <div class="col-3 form-group">
         <%= label_tag :title, mt(:candidate_experience, :title) %>

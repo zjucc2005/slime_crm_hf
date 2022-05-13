@@ -11,13 +11,13 @@
                 </div>
                 <div class="col-3 form-group">
                     <%= label_tag :province, mt(:hospital, :province) %>
-                    <%= select_tag :ld_province_id, options_for_select([], params[:ld_province_id]),
+                    <%= select_tag :ld_province_id, options_for_select(@current_province_options || [], params[:ld_province_id]),
                                    onchange: "loadChildrenForProvince(this.value, #{params[:ld_city_id]})",
                                    prompt: default_prompt, class: 'form-control select2-province-options' %>
                 </div>
                 <div class="col-3 form-group">
                     <%= label_tag :city, mt(:hospital, :city) %>
-                    <%= select_tag :ld_city_id, options_for_select([], params[:ld_city_id]), prompt: default_prompt, class: 'form-control select2' %>
+                    <%= select_tag :ld_city_id, options_for_select(ld_city_options(params[:ld_province_id]), params[:ld_city_id]), prompt: default_prompt, class: 'form-control select2' %>
                 </div>
                 <div class="col-3 form-group">
                     <%= label_tag :hospital_level, mt(:hospital, :level) %>

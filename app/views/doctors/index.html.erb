@@ -57,13 +57,13 @@
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :province, mt(:hospital, :province) %>
-                <%= select_tag :ld_province_id, options_for_select([], params[:ld_province_id]),
+                <%= select_tag :ld_province_id, options_for_select(@current_province_options || [], params[:ld_province_id]),
                                onchange: "loadChildrenForProvince(this.value, #{params[:ld_city_id]})",
                                prompt: default_prompt, class: 'form-control select2-province-options' %>
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :city, mt(:hospital, :city) %>
-                <%= select_tag :ld_city_id, options_for_select([], params[:ld_city_id]), prompt: default_prompt, class: 'form-control select2' %>
+                <%= select_tag :ld_city_id, options_for_select(ld_city_options(params[:ld_province_id]), params[:ld_city_id]), prompt: default_prompt, class: 'form-control select2' %>
             </div>
         </div>
         <div class="row">
@@ -73,13 +73,13 @@
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :hospital, mt(:candidate_experience, :hospital) %>
-                <%= select_tag :hospital_id, options_for_select([], params[:hospital_id]),
+                <%= select_tag :hospital_id, options_for_select(@current_hospital_options || [], params[:hospital_id]),
                                onchange: "loadChildrenForHospital(this.value, #{params[:hospital_department_id]})",
                                prompt: default_prompt, class: 'form-control select2-hospital-options' %>
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :department, mt(:candidate_experience, :department) %>
-                <%= select_tag :hospital_department_id, options_for_select([], params[:hospital_department_id]), prompt: default_prompt, class: 'form-control select2' %>
+                <%= select_tag :hospital_department_id, options_for_select(hospital_department_options(params[:hospital_id]), params[:hospital_department_id]), prompt: default_prompt, class: 'form-control select2' %>
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :title, mt(:candidate_experience, :title) %>

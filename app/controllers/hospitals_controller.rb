@@ -26,6 +26,10 @@ class HospitalsController < ApplicationController
               end
       query = query.where(level: level)
     end
+    if params[:ld_province_id].present?
+      _province_ = LocationDatum.provinces.where(id: params[:ld_province_id]).first
+      @current_province_options = [[_province_.name, _province_.id]] if _province_
+    end
     @hospitals = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 50)
   end
 

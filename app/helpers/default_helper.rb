@@ -26,14 +26,20 @@ module DefaultHelper
     Hospital.all.order(created_at: :asc).pluck(:name, :id)
   end
 
-  def hospital_department_options(dep_id)
-    dep = HospitalDepartment.where(id: dep_id).first
-    return [] if dep.nil?
-    dep.hospital.departments.order(created_at: :asc).pluck(:name, :id)
+  def hospital_department_options(hos_id)
+    hospital = Hospital.where(id: hos_id).first
+    return [] if hospital.nil?
+    hospital.departments.order(created_at: :asc).pluck(:name, :id)
   end
 
   def hospital_level_options
     Hospital::LEVEL
+  end
+
+  def ld_city_options(province_id)
+    province = LocationDatum.provinces.where(id: province_id).first
+    return [] if province.nil?
+    province.direct_children.pluck(:name, :id)
   end
 
   def bank_options
