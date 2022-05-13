@@ -134,6 +134,8 @@ zh_cn:
     expense_others: "其他费用"
     finance_summary: "财务统计总览"
     finance_statistics_annual: "%{year}年财务统计"
+    interview_hour: "访谈小时"
+    manage_hour: "管理小时"
     unscheduled_projects: "未安排访谈的项目"
     ongoing_project_requirements: "进展中的项目需求"
     ongoing_tasks: "进展中的任务"

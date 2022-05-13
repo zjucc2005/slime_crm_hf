@@ -53,12 +53,24 @@ class StatisticsController < ApplicationController
     users = user_channel_filter(users)
     project_tasks = ProjectTask.where(status: 'finished').where('started_at >= ? AND started_at < ?', s_month, s_month + 1.month)
     users.each do |user|
-      pm_minutes = project_tasks.where(pm_id: user.id).sum(:charge_duration) * 0.5       # 权重 0.5
-      pa_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration) * 0.5  # 权重 0.5
-      total_minutes = pm_minutes + pa_minutes
-      if total_minutes > 0
-        result << { :username => user.name_cn, :pm_minutes => pm_minutes, :pa_minutes => pa_minutes, :total_minutes => total_minutes }
+      if user.is_role?('admin', 'pm')
+        interview_minutes = project_tasks.where(pm_id: user.id, created_by: user.id).sum(:charge_duration)
+        manage_minutes = project_tasks.where(pm_id: user.id).where.not(created_by: user.id).sum(:charge_duration)
+      else
+        interview_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration)
+        manage_minutes = 0.0
       end
+      total_minutes = interview_minutes + manage_minutes
+      if total_minutes > 0
+        result << { username: user.name_cn, interview_minutes: interview_minutes, manage_minutes: manage_minutes, total_minutes: total_minutes }
+      end
+
+      # pm_minutes = project_tasks.where(pm_id: user.id).sum(:charge_duration) * 0.5       # 权重 0.5
+      # pa_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration) * 0.5  # 权重 0.5
+      # total_minutes = pm_minutes + pa_minutes
+      # if total_minutes > 0
+      #   result << { :username => user.name_cn, :pm_minutes => pm_minutes, :pa_minutes => pa_minutes, :total_minutes => total_minutes }
+      # end
     end
 
     @current_month_task_ranking = result.sort_by{|e| e[:total_minutes]}.reverse

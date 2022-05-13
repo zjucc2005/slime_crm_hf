@@ -1,3 +1,19 @@
+<% if @self_hour_monthly.present? %>
+<div class="col-lg-3 col-12">
+    <div class="ctag">
+        <div class="ctag-item teal f-2">本月访谈小时</div>
+        <div class="ctag-item f-3"><%= @self_hour_monthly %></div>
+    </div>
+</div>
+<% end %>
+<% if @manage_hour_monthly.present? %>
+<div class="col-lg-3 col-12">
+    <div class="ctag">
+        <div class="ctag-item teal f-2">本月管理小时</div>
+        <div class="ctag-item f-3"><%= @manage_hour_monthly %></div>
+    </div>
+</div>
+<% end %>
 <div class="col-12 mb-3">
     <div class="card">
         <div class="card-header">
