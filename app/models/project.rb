@@ -19,6 +19,7 @@ class Project < ApplicationRecord
   has_many :users, :class_name => 'User', :through => :project_users
   has_many :project_requirements, :class_name => 'ProjectRequirement'
   has_many :project_tasks, :class_name => 'ProjectTask'
+  has_many :call_records, class_name: 'CallRecord'
 
   # Validations
   validates_presence_of :name

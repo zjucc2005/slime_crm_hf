@@ -85,9 +85,12 @@
                     <%= link_to new_candidate_comment_path(candidate_id: candidate.id, return_to: "#{request.url}#cid_#{candidate.id}"), :class => 'dropdown-item text-smaller' do %>
                         <i class="fa fa-commenting"></i> <%= t('action.add_model', model: mt(:candidate_comment)) %>
                     <% end if can?(:new, CandidateComment) %>
-                    <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id})", :class => 'dropdown-item text-smaller' do %>
+                    <%= link_to 'javascript:void(0);', disabled: true, class: 'dropdown-item text-smaller text-secondary', onclick: "alert('已禁用;')" do %>
                         <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
                     <% end %>
+                    <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id})", class: 'dropdown-item text-smaller' do %>
+                        <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
+                    <% end if false %>
                 </div>
             </div>
         </div>

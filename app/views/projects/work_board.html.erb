@@ -1,5 +1,5 @@
 <% if @projects.present? %>
-    <div class="row" id="workboard">
+    <div class="row mb-2" id="workboard">
         <div class="col-2 pr-0">
             <ul class="nav nav-tabs-column flex-column">
                 <% @projects.each_with_index do |project, index| %>
@@ -22,10 +22,60 @@
                     <div id="project_<%= project.id %>" class="container-fluid bg-white tab-pane <%= index.zero? ? 'active' : '' %>">
                         <div class="tab-header">
                             <h3 class="mb-0"><%= "#{project.code} #{project.name}" %></h3>
-                            <button class="btn btn-primary">Create Record</button>
+                            <%= link_to new_call_record_path, class: 'btn btn-sm btn-primary' do %>
+                                <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:call_record))}" %>
+                            <% end %>
                         </div>
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <div class="tab-body">
+                            <table class="table table-sm table-striped nowrap card-text">
+                                <thead>
+                                <tr>
+                                    <th><%= mt(:call_record, :id) %></th>
+                                    <th><%= mt(:call_record, :name) %></th>
+                                    <th><%= mt(:call_record, :company) %></th>
+                                    <th><%= mt(:call_record, :title) %></th>
+                                    <th><%= mt(:call_record, :memo) %></th>
+                                    <th><%= mt(:call_record, :phone) %></th>
+                                    <th><%= mt(:call_record, :number_of_calls) %></th>
+                                    <th><%= mt(:call_record, :status) %></th>
+                                    <th><%= mt(:call_record, :operator) %></th>
+                                    <th><%= mt(:call_record, :updated_at) %></th>
+                                    <th class="action"><%= t(:operation) %></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% project.call_records.each do |call_record| %>
+                                    <tr>
+                                        <td><%= content_tag :span, "# #{call_record.uid}", class: 'text-gray' %></td>
+                                        <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
+                                        <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
+                                        <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
+                                        <td>
+                                            <a data-toggle="popover" data-trigger="hover" data-placement="right" title="<%= mt(:call_record, :memo) %>" data-html="true" data-content="<%= call_record.memo.gsub("\n", '<br>') %>">
+                                                <span class="text-link"><%= truncate(call_record.memo, length: 19) %></span>
+                                            </a>
+                                        </td>
+                                        <td title="<%= call_record.phone %>"><%= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %></td>
+                                        <td><%= call_record.number_of_calls %></td>
+                                        <td><%= call_record_status_badge(call_record.status) %></td>
+                                        <td><%= call_record.operator.try(:name_cn) %></td>
+                                        <td><%= call_record.updated_at.strftime('%F %T') %></td>
+                                        <td class="action">
+                                            <div class="btn-group">
+                                                <%= link_to edit_call_record_path(call_record), class: 'btn btn-edit btn-xs' do %>
+                                                    <i class="fa fa-edit"></i> <%= t('action.update') %>
+                                                <% end %>
+                                                <%= link_to call_record_path(call_record), method: :delete, class: 'btn btn-danger btn-xs', data: { confirm: t(:sure_to_delete)} do %>
+                                                    <i class="fa fa-trash"></i> <%= t('action.delete') %>
+                                                <% end %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% end %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 <% end %>
             </div>
@@ -61,6 +111,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        padding: 8px 0;
+        /*border-bottom: 1px solid rgba(0, 0, 0, 0.125);*/
     }
 </style>
