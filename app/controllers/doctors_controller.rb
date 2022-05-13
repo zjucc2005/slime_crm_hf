@@ -74,6 +74,15 @@ class DoctorsController < ApplicationController
       query = query.joins(:experiences).where(and_conditions.join(' AND '))
     end
 
+    # 保留动态搜索条件
+    if params[:ld_province_id].present?
+      _province_ = LocationDatum.provinces.where(id: params[:ld_province_id]).first
+      @current_province_options = [[_province_.name, _province_.id]] if _province_
+    end
+    if params[:hospital_id].present?
+      _hospital_ = Hospital.where(id: params[:hospital_id]).first
+      @current_hospital_options = [[_hospital_.name, _hospital_.id]] if _hospital_
+    end
     @doctors = query.distinct.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
   end
 
