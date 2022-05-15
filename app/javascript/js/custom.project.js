@@ -103,3 +103,7 @@ window.exportFinanceExcel = function(mode){
         window.location.href = '/finance/export_finance_excel?' + params;
     }
 };
+
+window.loadProjectCallRecords = function(project_id){
+    $.get('/call_records/remote_index.js', { project_id: project_id });
+}

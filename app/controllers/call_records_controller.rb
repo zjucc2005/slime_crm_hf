@@ -156,6 +156,49 @@ class CallRecordsController < ApplicationController
     end
   end
 
+  def remote_index
+    @project = Project.find(params[:project_id])
+    @call_records = @project.call_records.order(created_at: :desc)
+    respond_to { |f| f.js }
+  end
+
+  def remote_create
+    begin
+      @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
+      @call_record.save!
+      @project = @call_record.project
+      @call_records = @project.call_records
+    rescue => e
+      @error = "ERROR: #{e.message}"
+    end
+    respond_to { |f| f.js }
+  end
+
+  def remote_update
+    begin
+      @call_record = CallRecord.find(params[:id])
+      operate_params = { number_of_calls: @call_record.number_of_calls + 1, operator_id: current_user.id } # 记录操作信息
+      @call_record.update!(call_record_params.merge(operate_params))
+      @project = @call_record.project
+      @call_records = @project.call_records
+    rescue => e
+      @error = "ERROR: #{e.message}"
+    end
+    respond_to { |f| f.js }
+  end
+
+  def remote_delete
+    begin
+      @call_record = CallRecord.find(params[:id])
+      @call_record.destroy!
+      @project = @call_record.project
+      @call_records = @project.call_records
+    rescue => e
+      @error = "ERROR: #{e.message}"
+    end
+    respond_to { |f| f.js }
+  end
+
   private
   def call_record_params
     params.require(:call_record).permit(:name, :phone, :company, :title, :status, :memo, :project_id, :candidate_id, :operator_id)

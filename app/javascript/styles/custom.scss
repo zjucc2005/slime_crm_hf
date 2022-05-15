@@ -115,4 +115,28 @@
     color: #007bff;
 }
 
+/* #workboard */
+#workboard {
+    .nav-tabs-column .nav-item .nav-link {
+        color: #495057;
+        border-bottom: 1px solid #dee2e6;
+        border-top-left-radius: 0.3rem;
+        border-bottom-left-radius: 0.3rem;
+    }
+    .nav-tabs-column .nav-item .nav-link.active {
+        color: #4680ff;
+        background-color: #fff;
+        border-color: #dee2e6 #fff #dee2e6 #dee2e6;
+        border-left: 0.15rem solid #007bff;
+    }
+    .tab-content .tab-pane {
+        min-height: 600px;
+    }
+    .tab-pane .tab-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+    }
+}
 

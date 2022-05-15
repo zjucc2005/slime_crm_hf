@@ -10,6 +10,10 @@ Rails.application.routes.draw do
     post :createExpert, on: :collection
   end
 
+  resources :utils do
+    get :loading_modal, on: :collection
+  end
+
   resources :users do
     post :admin_create,      on: :collection  # create users by admin
     get :edit_password,      on: :member
@@ -148,6 +152,11 @@ Rails.application.routes.draw do
     get :add_to_candidate, on: :member
 
     post :batch_import, on: :collection
+
+    get :remote_index, on: :collection
+    post :remote_create, on: :collection
+    post :remote_update, on: :member
+    post :remote_delete, on: :member
   end
 
   resources :location_data do

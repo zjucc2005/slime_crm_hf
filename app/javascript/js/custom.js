@@ -137,3 +137,8 @@ window.disableMouseWheelScroll = function(e){
     }
     return false;
 };
+
+window.utilsLoadingModal = function(params){
+    console.log('utilsLoadingModal:', params);
+    $.get('/utils/loading_modal.js', params);
+};
