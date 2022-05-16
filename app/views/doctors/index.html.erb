@@ -85,6 +85,10 @@
                 <%= label_tag :title, mt(:candidate_experience, :title) %>
                 <%= text_field_tag :title, params[:title], class: 'form-control' %>
             </div>
+            <div class="col-lg-2 col-6 form-group">
+                <%= label_tag :category2, mt(:candidate, :category) %>
+                <%= select_tag :category2, options_for_select(Doctor::CATEGORY.to_a.map(&:reverse), params[:category2]), prompt: default_prompt, class: 'form-control select2' %>
+            </div>
         </div>
         <%= button_tag type: 'submit', class: 'btn btn-submit' do %>
             <i class="fa fa-search"></i> <%= t('action.search') %>

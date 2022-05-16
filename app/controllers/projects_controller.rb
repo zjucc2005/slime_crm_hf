@@ -450,7 +450,22 @@ class ProjectsController < ApplicationController
   end
 
   def work_board
-    query = user_channel_filter(Project.all)
+    query = current_user.admin? ? Project.all : current_user.projects
+    query = user_channel_filter(query)
+    query = query.where('created_at >= ?', params[:created_at_ge]) if params[:created_at_ge].present?
+    query = query.where('created_at <= ?', params[:created_at_le]) if params[:created_at_le].present?
+    %w[name code].each do |field|
+      query = query.where("#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
+    end
+    %w[id status].each do |field|
+      query = query.where(field.to_sym => params[field]) if params[field].present?
+    end
+    if params[:company].present?
+      query = query.joins(:company).where('companies.name ILIKE :company OR companies.name_abbr ILIKE :company', { company: "%#{params[:company].strip}%" })
+    end
+    if params[:client_name].present?
+      query = query.joins(:candidates).where('candidates.category': 'client').where('candidates.name ILIKE ?', "%#{params[:client_name].strip}%").distinct
+    end
     @projects = query.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 

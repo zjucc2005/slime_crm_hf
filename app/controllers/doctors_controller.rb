@@ -14,7 +14,7 @@ class DoctorsController < ApplicationController
     query = query.where('candidates.phone ILIKE ?', "%#{params[:phone].strip}%") if params[:phone].present?
     query = query.where('candidates.email ILIKE ?', "%#{params[:email].strip}%") if params[:email].present?
     query = query.where('candidates.is_available' => params[:is_available] == 'nil' ? nil : params[:is_available] ) if params[:is_available].present?
-    %w[id user_channel_id].each do |field|
+    %w[id user_channel_id category2].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
     # -- 省份/城市 --

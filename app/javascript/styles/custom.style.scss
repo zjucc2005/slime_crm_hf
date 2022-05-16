@@ -411,6 +411,9 @@ input[type=checkbox].checkbox-square {
   }
 }
 
+/* .popover */
+.popover { max-width: 800px; }
+
 /* .ctag */
 .ctag {
   display: flex; color: #495057; text-decoration: none; background: #fff; margin-bottom: 1rem;

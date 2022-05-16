@@ -22,8 +22,8 @@
             <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
             <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
             <td>
-                <a data-toggle="popover" data-trigger="hover" data-placement="right" title="<%= mt(:call_record, :memo) %>" data-html="true" data-content="<%= call_record.memo.gsub("\n", '<br>') %>">
-                    <span class="text-link"><%= truncate(call_record.memo, length: 19) %></span>
+                <a data-toggle="popover" data-trigger="hover" data-placement="right" title="<%= mt(:call_record, :memo) %>" data-html="true" data-content="<%= call_record.memo.to_s.gsub("\n", '<br>') %>">
+                    <span class="text-link"><%= truncate(call_record.memo.to_s, length: 19) %></span>
                 </a>
             </td>
             <td title="<%= call_record.phone %>"><%= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %></td>

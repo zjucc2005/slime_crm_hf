@@ -164,9 +164,9 @@ class CallRecordsController < ApplicationController
 
   def remote_create
     begin
-      @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
+      @project = Project.find(params[:project_id])
+      @call_record = @project.call_records.new(call_record_params.merge(created_by: current_user.id))
       @call_record.save!
-      @project = @call_record.project
       @call_records = @project.call_records
     rescue => e
       @error = "ERROR: #{e.message}"

@@ -9,6 +9,7 @@ class UtilsController < ApplicationController
     case @op
     when 'newCallRecord' then set_new_call_record
     when 'editCallRecord' then set_edit_call_record
+    when 'showProjectRequirement' then set_show_project_requirement
     else nil
     end
     respond_to { |f| f.js }
@@ -28,5 +29,13 @@ class UtilsController < ApplicationController
     @project = @call_record.project
     @modal_title = t('action.update_model', model: t('activerecord.models.call_record'))
     @modal_body_form = 'call_records/loading_modal/edit'
+  end
+
+  def set_show_project_requirement
+    @project = Project.find(params[:project_id])
+    @project_requirements = @project.project_requirements.order(created_at: :desc)
+    @modal_title = t('activerecord.models.project_requirement')
+    @modal_body_form = 'projects/work_board/project_requirements'
+    @modal_dialog_max_width = 1080
   end
 end
