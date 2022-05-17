@@ -16,7 +16,7 @@ class CallRecord < ApplicationRecord
   belongs_to :candidate, :class_name => 'Candidate', :optional => true
 
   # Validations
-  validates_presence_of :name, :phone
+  validates_presence_of :name
   validates_inclusion_of :status, :in => STATUS
   validates_numericality_of :number_of_calls, :greater_than_or_equal_to => 0
 
@@ -41,7 +41,7 @@ class CallRecord < ApplicationRecord
   private
   def setup
     self.status          ||= 'pending'
-    self.number_of_calls ||= 1
+    self.number_of_calls ||= 0
     self.operator_id     ||= self.created_by
     self.user_channel_id ||= self.creator.user_channel_id
   end
