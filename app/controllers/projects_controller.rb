@@ -466,7 +466,7 @@ class ProjectsController < ApplicationController
     if params[:client_name].present?
       query = query.joins(:candidates).where('candidates.category': 'client').where('candidates.name ILIKE ?', "%#{params[:client_name].strip}%").distinct
     end
-    @projects = query.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+    @projects = query.order(updated_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 
   private
