@@ -36,7 +36,7 @@
 <% if @projects.present? %>
     <div class="row mb-2" id="workboard">
         <div class="col-2 pr-0">
-            <ul class="nav nav-tabs-column flex-column">
+            <ul class="nav nav-tabs-column flex-column mb-2">
                 <% @projects.each_with_index do |project, index| %>
                     <li class="nav-item">
                         <a class="nav-link <%= index.zero? ? 'active' : '' %>" data-toggle="tab" href="#project_<%= project.id %>" onclick="loadProjectCallRecords(<%= project.id %>);">
@@ -49,6 +49,7 @@
                     </li>
                 <% end %>
             </ul>
+            <%= will_paginate @projects, inner_window: 0, outer_window: 0, previous_label: '<', next_label: '>' %>
         </div>
         <div class="col-10 pl-0">
             <!-- Tab panes -->
@@ -75,8 +76,6 @@
             </div>
         </div>
     </div>
-
-    <%= will_paginate @projects %>
 <% else %>
     <div class="card p-2">
         <div class="p-4 text-center">

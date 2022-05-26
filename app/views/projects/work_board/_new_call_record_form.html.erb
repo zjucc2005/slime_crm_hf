@@ -22,9 +22,14 @@
         </div>
         <div class="col-2">
             <%= label_tag :space, '&nbsp;'.html_safe %><br>
-            <%= button_tag class: 'btn btn-sm btn-submit w-100' do %>
-                <i class="fa fa-phone"></i> <%= "#{t('action.new_model', model: mt(:call_record))}" %>
-            <% end %>
+            <div class="btn-group w-100">
+                <%= button_tag class: 'btn btn-sm btn-submit w-100' do %>
+                    <i class="fa fa-phone"></i> <%= "#{t('action.new_model', model: mt(:call_record))}" %>
+                <% end %>
+                <%= link_to 'javascript:void(0);', onclick: "utilsLoadingModal({op: 'importCallRecords', project_id: #{project.id}})", class: 'btn btn-sm btn-default' do %>
+                    <i class="fa fa-caret-down"></i>
+                <% end %>
+            </div>
         </div>
     </div>
 <% end %>

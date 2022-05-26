@@ -199,6 +199,25 @@ class CallRecordsController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  def remote_import
+    begin
+      @project = Project.find(params[:project_id])
+      sheet = open_spreadsheet(params[:file])
+      raise 'excel表格里没有信息' if sheet.last_row < 2
+      raise 'excel不能超过100行' if sheet.last_row > 100
+      2.upto(sheet.last_row) do |i|
+        parser = Utils::CallRecordTemplateParser.new(sheet.row(i), current_user.id, @project.id)
+        unless parser.import
+          raise "Row #{i}: #{parser.errors.join(', ')}"
+        end
+      end
+      @call_records = @project.call_records
+    rescue => e
+      @error = "ERROR: #{e.message}"
+    end
+    respond_to { |f| f.js }
+  end
+
   private
   def call_record_params
     params.require(:call_record).permit(:name, :phone, :company, :title, :status, :memo, :project_id, :candidate_id, :operator_id)

@@ -5,10 +5,11 @@ module Utils
 
     attr_accessor :errors, :row, :created_by, :call_record_attr
 
-    def initialize(row, created_by)
+    def initialize(row, created_by, project_id=nil)
       @row = row.map(&method(:cell_strip))
       @errors = []
       @created_by = created_by
+      @project_id = project_id
       @call_record_attr = {}
       set_call_record_attr
     end
@@ -45,7 +46,7 @@ module Utils
       @errors << '姓名不能为空' if name.blank?
       @errors << '电话不能为空' if phone.blank?
       @call_record_attr = {
-        name: name, phone: phone, company: company, title: title, memo: memo, created_by: @created_by
+        name: name, phone: phone, company: company, title: title, memo: memo, created_by: @created_by, project_id: @project_id
       }
     end
 

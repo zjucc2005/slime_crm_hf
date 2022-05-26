@@ -157,6 +157,7 @@ Rails.application.routes.draw do
     post :remote_create, on: :collection
     post :remote_update, on: :member
     post :remote_delete, on: :member
+    post :remote_import, on: :collection
   end
 
   resources :location_data do
