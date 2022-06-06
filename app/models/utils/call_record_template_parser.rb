@@ -44,7 +44,7 @@ module Utils
 
       # validates_presence_of - name, phone
       @errors << '姓名不能为空' if name.blank?
-      @errors << '电话不能为空' if phone.blank?
+      # @errors << '电话不能为空' if phone.blank?
       @call_record_attr = {
         name: name, phone: phone, company: company, title: title, memo: memo, created_by: @created_by, project_id: @project_id
       }
