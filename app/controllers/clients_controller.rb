@@ -11,7 +11,7 @@ class ClientsController < ApplicationController
     %w[title].each do |field|
       query = query.where("candidates.#{field} ~* ?", params[field].strip.shellescape) if params[field].present?
     end
-    %w[company_id job_status].each do |field|
+    %w[company_id job_status department].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
     if params[:client_active] == 'true'

@@ -31,10 +31,14 @@
                                 <%= select_tag :job_status, options_for_select(Candidate::JOB_STATUS.to_a.map(&:reverse), params[:job_status]),
                                                prompt: default_prompt, class: 'from-control select2' %>
                             </div>
-                            <div class="col-lg-6 col-12 form-group">
+                            <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :id, mt(:company) %>
                                 <%= select_tag :company_id, options_for_select(company_options, params[:company_id]),
                                                prompt: default_prompt, class: 'form-control select2' %>
+                            </div>
+                            <div class="col-lg-3 col-6 form-group">
+                                <%= label_tag :department, mt(:candidate, :department) %>
+                                <%= text_field_tag :department, params[:department], class: 'form-control' %>
                             </div>
                             <div class="col-lg-3 col-6 form-group">
                                 <%= label_tag :edu_exp, t(:education_info) %>
