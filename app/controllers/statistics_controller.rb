@@ -54,7 +54,7 @@ class StatisticsController < ApplicationController
     project_tasks = ProjectTask.where(status: 'finished').where('started_at >= ? AND started_at < ?', s_month, s_month + 1.month)
     users.each do |user|
       if user.is_role?('admin', 'pm')
-        interview_minutes = project_tasks.where(pm_id: user.id, created_by: user.id).sum(:charge_duration)
+        interview_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration)
         manage_minutes = project_tasks.where(pm_id: user.id).where.not(created_by: user.id).sum(:charge_duration)
       else
         interview_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration)
