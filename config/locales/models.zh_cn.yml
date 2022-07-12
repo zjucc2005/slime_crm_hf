@@ -342,6 +342,7 @@ zh_cn:
         category: "费用类型"
         price: "价格"
         currency: "货币"
+        lijin: "礼金支出数额"
         memo: "备注"
         payment_way: "支付类型"
         payment_status: "支付状态"

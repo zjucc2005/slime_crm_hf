@@ -312,6 +312,7 @@ en:
         category: "Cost category"
         price: "Price"
         currency: "Currency"
+        lijin: "Lijin"
         memo: "Memo"
         payment_way: "Payment way"
         payment_status: "Payment status"

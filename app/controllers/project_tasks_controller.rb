@@ -55,7 +55,8 @@ class ProjectTasksController < ApplicationController
         cost.category = params[:category]
         cost.price    = params[:price]
         cost.currency = params[:currency]
-        cost.memo    = params[:memo]
+        cost.memo     = params[:memo]
+        cost.lijin    = params[:lijin]
 
         if params[:category] == 'expert' && params[:advance_payment] == 'false'  # expert fee
           template_expert = @project_task.expert.payment_infos.where(id: params[:template_expert]).first

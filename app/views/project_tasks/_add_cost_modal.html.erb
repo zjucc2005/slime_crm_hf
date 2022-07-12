@@ -76,6 +76,12 @@
                             <%= text_field_tag :memo, nil, :class => 'form-control' %>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-6 form-group">
+                            <%= label_tag :lijin, mt(:project_task_cost, :lijin) %>
+                            <%= number_field_tag :lijin, nil, :min => 0, :step => 0.01, :required => true, :class => 'form-control' %>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-dismiss="modal" class="btn btn-back"><%= t('action.close') %></button>
@@ -103,15 +109,19 @@
         let template_expert = $('#template_expert');
         let template_recommend = $('#template_recommend');
         let advance_payment = $('#advance_payment');
+        let lijin = $('#lijin');
         template_expert.parent().hide();
         template_expert.val('').change();
         template_recommend.parent().hide();
         template_recommend.val('').change();
         advance_payment.parent().hide();
+        lijin.parent().hide();
+        lijin.val('');
 
         if(category.val() === 'expert'){
             template_expert.parent().show();
             advance_payment.parent().show();
+            lijin.parent().show();
         }else if(category.val() === 'recommend'){
             template_recommend.parent().show();
         }
