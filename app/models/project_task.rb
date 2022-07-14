@@ -139,6 +139,14 @@ class ProjectTask < ApplicationRecord
     end
   end
 
+  # 用于受访表模板 - 礼金支出数额
+  # 访谈时间 < 1h 时, 则优先取填写的礼金数值
+  def lijin_for_settlement
+    costs.where(category: 'expert').map do |cost|
+      duration >= 60 ? cost.price : (cost.lijin || cost.price)
+    end.sum
+  end
+
   private
   def setup
     self.status         ||= 'ongoing'   # init

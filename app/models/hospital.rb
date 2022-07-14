@@ -7,6 +7,10 @@ class Hospital < ApplicationRecord
   LEVEL = %w[三级 三甲 三乙 三丙 二级 二甲 二乙 二丙 一级 一甲 一乙 一丙]
   MAX_KWLIST_LENGTH = 5
 
+  def self.level_sort(level)
+    %w[一 二 三].include?(level[0]) ? "#{level[0]}级" : '未评级'
+  end
+
   private
   def setup
     if self.kwlist.is_a? String
