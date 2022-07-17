@@ -187,6 +187,18 @@ class CallRecordsController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # 异步更新页面, 只接收提交数据, 不刷新页面
+  def remote_update_silent
+    begin
+      @call_record = CallRecord.find(params[:id])
+      operate_params = { operator_id: current_user.id } # 记录操作信息
+      @call_record.update!(call_record_params.merge(operate_params))
+      render json: { status: 0 }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
   def remote_delete
     begin
       @call_record = CallRecord.find(params[:id])

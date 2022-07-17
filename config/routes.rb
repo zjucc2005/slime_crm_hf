@@ -156,6 +156,7 @@ Rails.application.routes.draw do
     get :remote_index, on: :collection
     post :remote_create, on: :collection
     post :remote_update, on: :member
+    post :remote_update_silent, on: :member
     post :remote_delete, on: :member
     post :remote_import, on: :collection
   end

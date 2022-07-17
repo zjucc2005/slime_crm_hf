@@ -69,7 +69,7 @@
                             <%= render partial: 'projects/work_board/new_call_record_form', locals: { project: project } %>
                         </div>
                         <div class="tab-body">
-                            <%= render partial: 'call_records/remote_index', locals: { call_records: project.call_records } if index.zero? %>
+                            <%= render partial: 'call_records/remote_index', locals: { call_records: project.call_records, project_id: project.id } if index.zero? %>
                         </div>
                     </div>
                 <% end %>

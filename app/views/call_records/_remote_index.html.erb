@@ -9,14 +9,28 @@
         <th><%= mt(:call_record, :phone) %></th>
         <th><%= mt(:call_record, :number_of_calls) %></th>
         <th><%= mt(:call_record, :status) %></th>
-        <th><%= mt(:call_record, :operator) %></th>
+        <th>
+            <div class="dropdown">
+                <span class="dropdown-toggle" data-toggle="dropdown">
+                    <%= mt(:call_record, :operator) %>
+                </span>
+                <div class="dropdown-menu">
+                    <% call_records.pluck(:operator_id).uniq.each do |operator_id| %>
+                    <div class="dropdown-item text-smaller">
+                        <%= check_box_tag :operator_id, operator_id, true, onclick: 'rfsCallRecord(this);' %>
+                        <%= User.find_by(id: operator_id).try(:name_cn) %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </th>
         <th><%= mt(:call_record, :updated_at) %></th>
         <th class="action"><%= t(:operation) %></th>
     </tr>
     </thead>
     <tbody>
     <% call_records.each do |call_record| %>
-        <tr>
+        <tr data-operator-id="<%= call_record.operator_id %>">
             <td><%= content_tag :span, "# #{call_record.uid}", class: 'text-gray' %></td>
             <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
             <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
@@ -26,7 +40,10 @@
                     <span class="text-link"><%= truncate(call_record.memo.to_s, length: 19) %></span>
                 </a>
             </td>
-            <td title="<%= call_record.phone %>"><%= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %></td>
+            <td title="<%= call_record.phone %>">
+                <%= text_field_tag :phone, call_record.phone, onchange: 'rusCallRecord(this);', data: { id: call_record.id, attr: 'phone' } %>
+                <%#= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %>
+            </td>
             <td><%= call_record.number_of_calls %></td>
             <td><%= call_record_status_badge(call_record.status) %></td>
             <td><%= call_record.operator.try(:name_cn) %></td>

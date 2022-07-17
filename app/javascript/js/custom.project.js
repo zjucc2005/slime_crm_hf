@@ -106,4 +106,35 @@ window.exportFinanceExcel = function(mode){
 
 window.loadProjectCallRecords = function(project_id){
     $.get('/call_records/remote_index.js', { project_id: project_id });
-}
+};
+
+// remote update silent - CallRecord work board
+window.rusCallRecord = function(ele){
+    var attr = {};
+    attr[ele.dataset.attr] = ele.value;
+    console.log('remote update silent:', { model: 'CallRecord', data: attr });
+    $.ajax({
+        type: 'POST',
+        url: '/call_records/' + ele.dataset.id + '/remote_update_silent.js',
+        data: { call_record: attr },
+        dataType: 'json',
+        success: function(data){
+            if(data.status === 0){
+                console.log('remote update silent:ok!');
+            } else {
+                console.log('remote update silent:', data.msg);
+                alert(data.msg);
+            }
+        }
+    });
+};
+
+// js filter - CallRecord  work board
+window.rfsCallRecord = function(ele){
+    var rows = $('tr[data-operator-id=' + ele.value + ']');
+    if(ele.checked) {
+        rows.show();
+    } else {
+        rows.hide();
+    }
+};
