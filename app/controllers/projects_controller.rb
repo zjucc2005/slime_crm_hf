@@ -851,10 +851,10 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 12, task.expert_name_for_external)                                  # M, 医生姓名
       sheet.add_cell(row, 13, exp.title)                                                      # N, 技术职称
       sheet.add_cell(row, 14, exp.title1)                                                     # O, 行政职务
-      sheet.add_cell(row, 16, '会议平台沟通')                                                   # Q, 受访者手机号码
+      sheet.add_cell(row, 16, '4008063263')                                                   # Q, 受访者手机号码
       sheet.add_cell(row, 17, (task.started_at.strftime('%Y/%m/%d') rescue ''))               # R, 访问日期
       sheet.add_cell(row, 18, (task.started_at.strftime('%H:%M') rescue ''))                  # S, 访问时间
-      sheet.add_cell(row, 19, '电话沟通')                                                       # T, 访问地点
+      sheet.add_cell(row, 19, '263会议')                                                       # T, 访问地点
       sheet.add_cell(row, 20, '由代理支付礼金')                                                  # U, 礼金支付方
       sheet.add_cell(row, 21, task.lijin_for_settlement)                                      # V, 礼金支付数额
       sheet.add_cell(row, 22, '银行卡转帐（公对私）')                                             # W, 礼金支付方式
@@ -874,7 +874,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_定性受访信息表V8.xlsx"
+    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
