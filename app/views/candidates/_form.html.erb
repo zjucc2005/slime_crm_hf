@@ -93,8 +93,13 @@
 
     <div class="col-12 form-group">
         <%= f.label :file %>
-        <%= link_to @candidate.file.url do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @candidate.file.present? %>
+        <%= link_to @candidate.file.url, target: '_blank' do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @candidate.file.present? %>
         <%= f.file_field :file, :class => 'form-control-file' %>
+    </div>
+    <div class="col-12 form-group">
+        <%= f.label :sign_file %>
+        <%= link_to @candidate.sign_file.url, target: '_blank' do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @candidate.sign_file.present? %>
+        <%= f.file_field :sign_file, class: 'form-control-file', accept: 'image/jpeg,image/png' %>
     </div>
 </div>
 

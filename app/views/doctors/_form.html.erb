@@ -50,10 +50,15 @@
         <%= f.label :wechat %>
         <%= f.text_field :wechat, class: 'form-control' %>
     </div>
-    <div class="col-lg-9 col-12 form-group">
+    <div class="col-12 form-group">
         <%= f.label :file %>
-        <%= link_to @doctor.file.url do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @doctor.file.present? %>
+        <%= link_to @doctor.file.url, target: '_blank' do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @doctor.file.present? %>
         <%= f.file_field :file, class: 'form-control-file' %>
+    </div>
+    <div class="col-12 form-group">
+        <%= f.label :sign_file %>
+        <%= link_to @doctor.sign_file.url, target: '_blank' do %><%= fa_icon_tag('download') %> <%= t(:file) %><% end if @doctor.sign_file.present? %>
+        <%= f.file_field :sign_file, class: 'form-control-file', accept: 'image/jpeg,image/png' %>
     </div>
 </div>
 

@@ -146,6 +146,16 @@
                     <%= content_tag :span, nil, class: 'form-control' %>
                 <% end %>
             </div>
+            <div class="col-12 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= mt(:candidate, :sign_file) %></span>
+                </div>
+                <% if @doctor.sign_file.present? %>
+                    <%= image_tag @doctor.sign_file.url, class: 'img-thumbnail', style: 'max-height: 64px;' %>
+                <% else %>
+                    <%= content_tag :span, nil, class: 'form-control' %>
+                <% end %>
+            </div>
         </div>
 
         <!-- 工作经历 -->
