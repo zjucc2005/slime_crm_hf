@@ -132,6 +132,7 @@ Rails.application.routes.draw do
     get :get_base_price, on: :member  # 计算基础价格(实时)
     post :add_cost,      on: :member  # 添加支出信息
     delete :remove_cost, on: :member  # 删除支出信息
+    get :draw_consent,   on: :member  # 生成知情同意书
 
     put :cancel,         on: :member  # 取消任务
     put :moveto,         on: :member  # 转移任务

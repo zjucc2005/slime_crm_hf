@@ -10,6 +10,11 @@
                 <h6>
                     <span class="text-gray mr-3"><%= "# #{@project_task.uid}" %></span>
                 </h6>
+                <div class="btn-group btn-group-sm">
+                    <%= link_to draw_consent_project_task_path(@project_task), target: '_blank', class: 'btn btn-warning' do %>
+                        <i class="fa fa-cube"></i> 知情同意书
+                    <% end if @project_task.can_draw_consent? %>
+                </div>
             </div>
         </div>
 

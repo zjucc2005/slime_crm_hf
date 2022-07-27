@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_24_074837) do
+ActiveRecord::Schema.define(version: 2022_07_27_080052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,6 +164,8 @@ ActiveRecord::Schema.define(version: 2022_07_24_074837) do
     t.string "compliance_file"
     t.bigint "user_channel_id"
     t.jsonb "property", default: {}
+    t.string "consent_file"
+    t.jsonb "consent_file_options", default: {}
     t.index ["user_channel_id"], name: "index_companies_on_user_channel_id"
   end
 

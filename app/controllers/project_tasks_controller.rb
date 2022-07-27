@@ -175,6 +175,13 @@ class ProjectTasksController < ApplicationController
     redirect_to project_tasks_project_path(@project_task.project)
   end
 
+  # GET
+  def draw_consent
+    load_project_task
+    file_path = @project_task.draw_consent
+    redirect_to file_path.gsub(/^public/, '')
+  end
+
   private
   def load_project_task
     @project_task = ProjectTask.find(params[:id])

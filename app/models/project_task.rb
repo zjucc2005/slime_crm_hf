@@ -147,6 +147,60 @@ class ProjectTask < ApplicationRecord
     end.sum
   end
 
+  # 绘制知情同意书
+  def can_draw_consent?
+    File.exists? project.company.consent_file.to_s
+  end
+
+  def draw_consent
+    template_path = project.company.consent_file
+    return 'template not found' unless File.exists? template_path.to_s
+    options = project.company.consent_file_options
+    params = {
+        project_name: project.name,
+        duration: duration.to_s,
+        expert_name: expert.name,
+        price: actual_price.round.to_s,
+        interview_date: started_at.strftime('%F')
+    }
+    if expert.sign_file.present?
+      params[:sign_file] = expert.sign_file.path # 签名文件路径
+    end
+    puts "SET PARAMS: #{params}"
+    template = Magick::Image.read(template_path).first
+    full_height = template.rows
+    full_width = template.columns
+    canvas = Magick::Image.new(full_width, full_height)
+    canvas.composite!(template, 0, 0, Magick::CopyCompositeOp) # 铺上模板图层
+    text = Magick::Draw.new # 初始化文本格式
+    if options['_font_'].present?
+      puts "SET FONT: #{options['_font_']}"
+      text.font_family = options['_font_']['font_family'] if options['_font_']['font_family'].present?
+      text.pointsize = options['_font_']['font_size'] if options['_font_']['font_size'].present?
+      text.fill = options['_font_']['color'] if options['_font_']['color'].present?
+    end
+    params.each do |key, val|
+      if %w[sign_file].include?(key.to_s)
+        opt = options[key.to_s]
+        image_file = Magick::Image.read(params[key]).first
+        image_file.resize_to_fit!(*opt['resize_to_fit'])
+        canvas.composite!(image_file, *opt['position'], Magick::CopyCompositeOp) # 铺上图片
+      else
+        opt = options[key.to_s]
+        text.annotate(canvas, 0, 0, *opt['position'], val) do |t|
+          t.font_family = opt['font_family'] if opt['font_family'].present?
+          t.pointsize = opt['font_size'] if opt['font_size'].present?
+          t.fill = opt['color'] if opt['color'].present?
+        end
+      end
+    end
+    save_file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p save_file_dir unless File.exist? save_file_dir
+    save_file = "#{save_file_dir}/project_task_consent_#{id}.jpg"
+    canvas.write(save_file)
+    save_file # return
+  end
+
   private
   def setup
     self.status         ||= 'ongoing'   # init
