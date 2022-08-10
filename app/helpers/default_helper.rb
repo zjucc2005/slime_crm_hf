@@ -54,6 +54,10 @@ module DefaultHelper
     %w[咨询公司 公募基金 PE/VC 券商 企业客户]
   end
 
+  def month_picker_pattern
+    '^\d{4}-(0?[1-9]|1[0-2])$'
+  end
+
   ##
   # boolean options for select tag
   def boolean_options

@@ -51,7 +51,7 @@ class CandidatesController < ApplicationController
       query = query.where(and_conditions.join(' AND '))
       query = query.distinct  # 去重
     end
-    @candidates = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
+    @candidates = query.order(coef: :desc, created_at: :desc).paginate(page: params[:page], per_page: @per_page)
   end
 
   # GET /candidates/:id
@@ -84,6 +84,11 @@ class CandidatesController < ApplicationController
         ActiveRecord::Base.transaction do
           @candidate.save!
           (params[:work_exp] || {}).each do |key, val|
+            %w[started_at ended_at].each do |field|
+              if val[field].to_s.match(/^\d{4}-(0?[1-9]|1[0-2])$/)
+                val[field] = "#{val[field]}-01"
+              end
+            end
             @candidate.experiences.work.create!(val.permit(experience_fields))
           end
           unless @candidate.validates_presence_of_experiences
@@ -123,6 +128,11 @@ class CandidatesController < ApplicationController
         work_exp  = params[:work_exp]  || {}  # new work_exp
         @candidate.experiences.work.where.not(id: _work_exp.keys).destroy_all  # update existed experiences
         @candidate.experiences.work.where(id: _work_exp.keys).each do |exp|
+          %w[started_at ended_at].each do |field|
+            if _work_exp[exp.id.to_s][field].to_s.match(/^\d{4}-(0?[1-9]|1[0-2])$/)
+              _work_exp[exp.id.to_s][field] = "#{_work_exp[exp.id.to_s][field]}-01"
+            end
+          end
           exp.update!(_work_exp[exp.id.to_s].permit(experience_fields))
         end
         work_exp.each do |key, val|

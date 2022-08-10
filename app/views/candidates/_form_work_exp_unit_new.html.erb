@@ -5,15 +5,17 @@
         <%= label_tag :duration, mt(:candidate_experience, :duration) %><span class="text-red">*</span>
         <div class="form-group-range">
             <div class="form-group-range-input">
-                <%= text_field_tag :"work_exp[#{i}][started_at]", (params[:work_exp][i.to_s][:started_at] rescue nil),
-                                   :required => true, :class => 'form-control datepicker', :placeholder => "#{t(:begin)}*" %>
+                <%#= text_field_tag :"work_exp[#{i}][started_at]", (params[:work_exp][i.to_s][:started_at] rescue nil), :required => true, :class => 'form-control datepicker', :placeholder => "#{t(:begin)}*" %>
+                <%= text_field_tag :"work_exp[#{i}][started_at]", (params[:work_exp][i.to_s][:started_at] rescue nil), pattern: month_picker_pattern,
+                                   required: true, class: 'form-control', placeholder: "#{t(:begin)}* yyyy-mm" %>
             </div>
             <span class="form-group-range-divider">
                 <i class="fa fa-arrow-right"></i>
             </span>
             <div class="form-group-range-input">
-                <%= text_field_tag :"work_exp[#{i}][ended_at]", (params[:work_exp][i.to_s][:ended_at] rescue nil),
-                                   :class => 'form-control datepicker', :placeholder => t(:end) %>
+                <%#= text_field_tag :"work_exp[#{i}][ended_at]", (params[:work_exp][i.to_s][:ended_at] rescue nil), :class => 'form-control datepicker', :placeholder => t(:end) %>
+                <%= text_field_tag :"work_exp[#{i}][ended_at]", (params[:work_exp][i.to_s][:ended_at] rescue nil), pattern: month_picker_pattern,
+                                   class: 'form-control', placeholder: "#{t(:end)} yyyy-mm" %>
             </div>
         </div>
     </div>

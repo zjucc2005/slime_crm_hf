@@ -8,6 +8,7 @@ $(document).on('turbolinks:load', function(){
     setTimeout("$('.alert').css('display','none')",5000);
     $('.datetimepicker').datetimePicker();
     $('.datepicker').datePicker();
+    $('.monthpicker').monthPicker();
     if($('select.select2').next('.select2-container').length){
         $('.select2-container').remove();  // turbolinks:reload + select2 重复加载bug修复
     }
@@ -93,6 +94,16 @@ $.fn.datetimePicker = function(){
         {
             format: 'Y-m-d H:i',
             timepicker: true,
+            allowBlank: true
+        }
+    );
+};
+
+$.fn.monthPicker = function(){
+    $(this).datetimepicker(
+        {
+            format: 'Y-m',
+            timepicker: false,
             allowBlank: true
         }
     );

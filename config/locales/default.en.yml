@@ -87,6 +87,7 @@ en:
   user_account: "User account"
   work_experience: "Work experience"
   year: "Year"
+  month: "Month"
 
   action:
     add: "Add"

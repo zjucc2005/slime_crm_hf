@@ -199,6 +199,14 @@ class Candidate < ApplicationRecord
     _rate_ == 0 ? '' : "#{_rate_}/小时"
   end
 
+  # 搜索权重算法
+  def calculate_coef
+    score = 0
+    score += 1 if project_tasks.count > 0  # 做过访谈 + 1
+    score += 0.5 if is_available           # 访谈意愿 + 0.5
+    score
+  end
+
   private
   def setup
     self.category    ||= 'expert'  # init category
@@ -210,6 +218,7 @@ class Candidate < ApplicationRecord
     self.phone1        = phone1.to_s.gsub(/[^\d]/, '')
     self.email         = email.strip if email
     self.email1        = email1.strip if email1
+    self.coef          = calculate_coef if %w[doctor expert].include?(category)
   end
 
   def validates_uniqueness_of_phone

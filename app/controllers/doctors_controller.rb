@@ -83,7 +83,7 @@ class DoctorsController < ApplicationController
       _hospital_ = Hospital.where(id: params[:hospital_id]).first
       @current_hospital_options = [[_hospital_.name, _hospital_.id]] if _hospital_
     end
-    @doctors = query.distinct.order(:created_at => :desc).paginate(:page => params[:page], :per_page => @per_page)
+    @doctors = query.distinct.order(coef: :desc, created_at: :desc).paginate(page: params[:page], per_page: @per_page)
   end
 
   # GET /doctors/:id

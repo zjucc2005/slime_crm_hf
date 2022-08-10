@@ -224,7 +224,7 @@
             <tbody>
             <% @candidate.experiences.work.order(:started_at => :desc).each do |exp| %>
                 <tr>
-                    <td style="white-space: nowrap;"><%= exp.friendly_timestamp('%F') %></td>
+                    <td style="white-space: nowrap;"><%= exp.friendly_timestamp('%Y-%m') %></td>
                     <td><%= exp.org_cn %></td>
                     <td><%= exp.org_en %></td>
                     <td><%= exp.title %></td>
