@@ -55,6 +55,7 @@ class ProjectTask < ApplicationRecord
 
       project_candidate = ProjectCandidate.where(project_id: project_id, candidate_id: expert_id).first
       project_candidate.update!(mark: 'interviewed') if project_candidate  # 自动更新专家项目中标识为已访谈
+      expert.save # 触发更新搜索权重
     end
 
     if notice_email_sent_at.nil? && %w[A B].include?(notice_email)
