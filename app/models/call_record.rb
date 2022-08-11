@@ -41,7 +41,7 @@ class CallRecord < ApplicationRecord
   private
   def setup
     self.status          ||= 'pending'
-    self.number_of_calls ||= 0
+    self.number_of_calls ||= 1
     self.operator_id     ||= self.created_by
     self.user_channel_id ||= self.creator.user_channel_id
   end

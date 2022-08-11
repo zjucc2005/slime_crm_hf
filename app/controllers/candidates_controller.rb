@@ -51,7 +51,7 @@ class CandidatesController < ApplicationController
       query = query.where(and_conditions.join(' AND '))
       query = query.distinct  # 去重
     end
-    @candidates = query.order(coef: :desc, created_at: :desc).paginate(page: params[:page], per_page: @per_page)
+    @candidates = query.order(coef: :desc, id: :desc).paginate(page: params[:page], per_page: @per_page)
   end
 
   # GET /candidates/:id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_27_080052) do
+ActiveRecord::Schema.define(version: 2022_08_11_073358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 2022_07_27_080052) do
     t.boolean "is_kol", default: false
     t.decimal "coef", precision: 4, scale: 2, default: "0.0"
     t.string "sign_file"
+    t.index ["coef"], name: "index_candidates_on_coef"
     t.index ["company_id"], name: "index_candidates_on_company_id"
     t.index ["recommender_id"], name: "index_candidates_on_recommender_id"
     t.index ["user_channel_id"], name: "index_candidates_on_user_channel_id"
