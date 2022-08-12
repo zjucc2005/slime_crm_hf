@@ -18,7 +18,7 @@ class CandidateExperience < ApplicationRecord
 
 
   def friendly_timestamp(strftime='%F')
-    "#{started_at.strftime(strftime)} - #{ended_at ? ended_at.strftime(strftime) : I18n.t(:up_to_now)}"
+    "#{started_at ? started_at.strftime(strftime) : nil} - #{ended_at ? ended_at.strftime(strftime) : I18n.t(:up_to_now)}"
   end
 
   def org_instance
