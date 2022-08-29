@@ -144,7 +144,8 @@ class ProjectTask < ApplicationRecord
   # 访谈时间 < 1h 时, 则优先取填写的礼金数值
   def lijin_for_settlement
     costs.where(category: 'expert').map do |cost|
-      duration >= 60 ? cost.price : (cost.lijin || cost.price)
+      # duration >= 60 ? cost.price : (cost.lijin || cost.price)
+      cost.lijin || cost.price
     end.sum
   end
 
