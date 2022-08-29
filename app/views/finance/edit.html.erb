@@ -39,6 +39,10 @@
                     <%= f.select :payment_status, ProjectTask::PAYMENT_STATUS.to_a.map(&:reverse), { :include_blank => false },
                                  :class => 'form-control select2' %>
                 </div>
+                <div class="col-lg-3 col-12 form-group">
+                    <%= f.label :lijin, mt(:project_task_cost, :lijin) %>
+                    <%= text_field_tag :lijin, @project_task.costs.expert.pluck(:lijin)[0], class: 'form-control', disabled: @project_task.costs.expert.count.zero? %>
+                </div>
 
                 <div class="col-12 form-group mb-0">
                     <%= submit_tag t('action.submit'), :class => 'btn btn-primary' %>

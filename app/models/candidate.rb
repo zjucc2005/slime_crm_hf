@@ -2,7 +2,7 @@
 class Candidate < ApplicationRecord
 
   # ENUM
-  CATEGORY = { :expert => '专家', :doctor => '医生', :client => '客户' }.stringify_keys
+  CATEGORY = { expert: '专家', doctor: '医生', client: '客户', delete: '删除' }.stringify_keys
   DATA_SOURCE = { :manual => '手工录入', :excel => 'Excel导入', :plugin => '插件采集', :api => 'API创建' }.stringify_keys
   GENDER = { :male => '男', :female => '女' }.stringify_keys
   DATA_CHANNEL = {

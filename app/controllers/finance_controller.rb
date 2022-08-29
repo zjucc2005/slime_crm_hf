@@ -55,6 +55,11 @@ class FinanceController < ApplicationController
       @project_task.shorthand_price = params[:project_task][:shorthand_price]
       @project_task.charge_status   = params[:project_task][:charge_status]
       @project_task.payment_status  = params[:project_task][:payment_status]
+      if params.has_key?(:lijin)
+        expert_cost = @project_task.costs.expert.first
+        raise '缺少专家费用, missing expert fee' if expert_cost.nil?
+        expert_cost.update(lijin: params[:lijin])
+      end
       if @project_task.charge_status_changed?
         @project_task.set_charge_timestamp
       end
