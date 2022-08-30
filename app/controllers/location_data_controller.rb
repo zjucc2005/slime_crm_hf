@@ -34,12 +34,19 @@ class LocationDataController < ApplicationController
 
   # GET, js
   def load_children
-    @province = LocationDatum.provinces.where(id: params[:id]).first
+    @province = LocationDatum.provinces.where(id: params[:ld_province_id]).first
     @city_options = '<option value>Please select</option>'
     if @province
       @cities = @province.direct_children
       @city_options += @cities.map { |city| "<option value=\"#{city.id}\">#{city.name}</option>" }.join
       if @cities && @cities.exists?(id: params[:ld_city_id])
+        @ld_city_id = params[:ld_city_id]
+      end
+    else
+      LocationDatum.provinces.each do |province|
+        @city_options += province.direct_children.map { |city| "<option value=\"#{city.id}\">#{city.name}</option>" }.join
+      end
+      if LocationDatum.exists?(id: params[:ld_city_id])
         @ld_city_id = params[:ld_city_id]
       end
     end

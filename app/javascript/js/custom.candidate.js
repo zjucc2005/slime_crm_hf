@@ -90,9 +90,10 @@ window.loadingModal = function(category, reference_id){
 
 window.loadChildrenForProvince = function(ld_province_id, ld_city_id){
     if(ld_province_id){
-        $.get('/location_data/' + ld_province_id + '/load_children.js?ld_city_id=' + (ld_city_id || ''));
+        $.get('/location_data/load_children.js?ld_province_id=' + ld_province_id + '&ld_city_id=' + (ld_city_id || ''));
     } else {
-        $('select#ld_city_id').html('<option value>Please select</option>');
+        // $('select#ld_city_id').html('<option value>Please select</option>');
+        $.get('/location_data/load_children.js?ld_city_id=' + (ld_city_id || ''));
     }
 };
 

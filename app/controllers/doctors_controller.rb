@@ -25,11 +25,15 @@ class DoctorsController < ApplicationController
       if @province && params[:ld_city_id].present?
         @city = @province.direct_children.where(id: params[:ld_city_id]).first
       end
+    elsif params[:ld_city_id].present?
+      @city = LocationDatum.where(id: params[:ld_city_id]).first
     end
     if @province && @city
       query = query.joins(:experiences).where('candidates.city': "#{@province.name} #{@city.name}")
     elsif @province
       query = query.joins(:experiences).where('candidates.city ILIKE ?', "#{@province.name} %")
+    elsif @city
+      query = query.joins(:experiences).where('candidates.city ILIKE ?', "% #{@city.name}")
     end
     # -- 医院/科室 --
     query = query.joins(:experiences).where('candidate_experiences.org_id': params[:hospital_id]) if params[:hospital_id].present?

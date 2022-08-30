@@ -38,8 +38,15 @@ module DefaultHelper
 
   def ld_city_options(province_id)
     province = LocationDatum.provinces.where(id: province_id).first
-    return [] if province.nil?
-    province.direct_children.pluck(:name, :id)
+    if province.nil?
+      options = []
+      LocationDatum.provinces.each do |prov|
+        options += prov.direct_children.pluck(:name, :id)
+      end
+    else
+      options = province.direct_children.pluck(:name, :id)
+    end
+    options  # return
   end
 
   def bank_options

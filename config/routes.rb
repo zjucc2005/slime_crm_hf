@@ -165,7 +165,7 @@ Rails.application.routes.draw do
   resources :location_data do
     get :autocomplete_city, on: :collection
     get :show_phone_location, on: :collection
-    get :load_children, on: :member
+    get :load_children, on: :collection
     get :province_options, on: :collection
   end
   resources :hospitals do
