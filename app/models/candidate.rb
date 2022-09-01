@@ -150,7 +150,8 @@ class Candidate < ApplicationRecord
     when :expert_level then self._c_t_expert_level
     when :rate         then self.cpt.to_i
     when :gj_rate      then self._c_t_gj_rate_
-    when :iqvia_rate   then self._c_t_iqvia_rate_
+    when :iqvia_rate   then _c_t_iqvia_rate_
+    when :iqvia_rate2  then _c_t_iqvia_rate2_
     else nil
     end
   end
@@ -184,19 +185,38 @@ class Candidate < ApplicationRecord
     _rate_ == 0 ? '' : "电话-#{_rate_}/小时"
   end
 
+  # 费率映射规则
+  def _c_t_iqvia_rate_mapping_
+    case cpt
+    when 0 then 0
+    when 0..1000 then 2500 - cpt.to_i
+    when 1000..1500 then 3250 - cpt.to_i
+    when 1500..2000 then 4000 - cpt.to_i
+    when 2000..2500 then 4750 - cpt.to_i
+    when 2500..3000 then 5500 - cpt.to_i
+    when 3000..3500 then 6250 - cpt.to_i
+    when 3500..4000 then 7000 - cpt.to_i
+    else nil
+    end
+  end
+
   def _c_t_iqvia_rate_
     _rate_ = 0
     if currency == 'RMB'
-      _rate_ = case self.cpt
-                 when 0 then 0
-                 when 0..1000 then 2500 - self.cpt.to_i
-                 when 1000..1500 then 3250 - self.cpt.to_i
-                 when 1500..2000 then 4000 - self.cpt.to_i
-                 when 2000..2500 then 4750 - self.cpt.to_i
-                 else 'TBD'
-               end
+      _rate_ = _c_t_iqvia_rate_mapping_ || 'TBD'
     end
     _rate_ == 0 ? '' : "#{_rate_}/小时"
+  end
+
+  def _c_t_iqvia_rate2_
+    result = 0
+    if currency == 'RMB'
+      iqvia_rate = _c_t_iqvia_rate_mapping_
+      if iqvia_rate
+        result = (cpt + iqvia_rate) * 0.84 - cpt
+      end
+    end
+    result
   end
 
   # 搜索权重算法
