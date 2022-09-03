@@ -222,8 +222,10 @@ class Candidate < ApplicationRecord
   # 搜索权重算法
   def calculate_coef
     score = 0
-    score += 1 if project_tasks.count > 0  # 做过访谈 + 1
-    score += 0.5 if is_available           # 访谈意愿 + 0.5
+    project_tasks_count = project_tasks.count
+    score += 2 if (created_at || Time.now) > Time.now - 30.days && project_tasks_count.zero?  # 一个月内新建的专家没做过访谈时, 有额外权重
+    score += 1 if project_tasks_count > 0  # 做过访谈 + 1
+    score += 0.5 if is_available  # 访谈意愿 + 0.5
     score
   end
 
