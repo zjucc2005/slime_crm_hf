@@ -13,7 +13,7 @@ class ProjectTask < ApplicationRecord
     :others         => '其他'
   }.stringify_keys
   EXPERT_LEVEL = { :standard => 'Standard', :premium  => 'Premium' }.stringify_keys
-  NOTICE_EMAIL = { A: '标准模板', B: 'iqvia模板' }.stringify_keys
+  NOTICE_EMAIL = { A: '标准模板', B: 'iqvia模板', C: 'ipsos模板' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
