@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th><%= mt(:call_record, :id) %></th>
+        <th></th>
         <th><%= mt(:call_record, :name) %></th>
         <th><%= mt(:call_record, :company) %></th>
         <th><%= mt(:call_record, :title) %></th>
@@ -32,6 +33,9 @@
     <% call_records.each do |call_record| %>
         <tr data-operator-id="<%= call_record.operator_id %>">
             <td><%= content_tag :span, "# #{call_record.uid}", class: 'text-gray' %></td>
+            <td>
+                <%= call_record_category_badge(call_record.category) %>
+            </td>
             <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
             <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
             <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>

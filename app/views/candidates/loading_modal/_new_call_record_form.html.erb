@@ -1,5 +1,5 @@
-<%= form_for @call_record, :url => call_records_path(return_to: candidates_path) do |f| %>
-    <%= render :partial => 'call_records/form', :locals => { :f => f } %>
+<%= form_for @call_record, url: call_records_path(return_to: @return_to || candidates_path) do |f| %>
+    <%= render partial: 'call_records/form', locals: { f: f } %>
 
     <div class="form-group mb-0">
         <%= f.submit t('action.submit'), :class => 'btn btn-submit' %>

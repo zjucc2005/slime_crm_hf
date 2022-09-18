@@ -60,6 +60,7 @@ Rails.application.routes.draw do
 
     get :loading_modal, on: :collection
     post :batch_update_file, on: :collection  # 批量更新附件
+    get :new_call_record, on: :member
   end
 
   resources :candidate_payment_infos
@@ -113,6 +114,7 @@ Rails.application.routes.draw do
     post :export_billing_excel, on: :member  # 导出项目出账模板
 
     get :work_board, on: :collection
+    get :load_project_requirements, on: :collection
   end
 
   resources :project_requirements do

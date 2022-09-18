@@ -21,6 +21,9 @@ class CallRecord < ApplicationRecord
   validates_numericality_of :number_of_calls, :greater_than_or_equal_to => 0
 
   before_validation :setup, :on => [:create, :update]
+  after_save do
+    sync_phone_to_candidate
+  end
 
   def project_candidate
     if project_id && candidate_id
@@ -36,6 +39,13 @@ class CallRecord < ApplicationRecord
 
   def can_be_edited_by(user)
     user.admin? || self.operator_id == user.id
+  end
+
+  # 同步更新电话到专家/医生数据
+  def sync_phone_to_candidate
+    if candidate_id && candidate.phone != phone
+      candidate.update(phone: phone)
+    end
   end
 
   private

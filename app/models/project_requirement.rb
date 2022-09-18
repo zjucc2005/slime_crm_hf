@@ -28,6 +28,12 @@ class ProjectRequirement < ApplicationRecord
     status == 'ongoing'
   end
 
+  def content_abstract
+    max_length = 120
+    first_line = content.split[0]
+    first_line.length <= max_length ? first_line : "#{first_line[0,120]}..."
+  end
+
   private
   def setup
     self.status ||= 'ongoing'

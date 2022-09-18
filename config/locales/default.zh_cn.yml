@@ -114,6 +114,7 @@ zh_cn:
     search: "搜索"
     search_and_export: "搜索并导出"
     submit: "提交"
+    submit_and_call: "提交并添加通话记录"
     submit_and_confirm: "提交确认"
     submit_and_continue: "提交并继续创建"
     submit_and_continue_to_add: "提交并继续添加"

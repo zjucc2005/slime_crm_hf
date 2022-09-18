@@ -5,18 +5,34 @@
         <span class="badge badge-light"><%= show_creator(@call_record) %></span>
         <span class="badge badge-light"><%= show_timestamps(@call_record) %></span>
         <%= link_to "#{mt(:call_record, :project)}: ##{@call_record.project.uid} #{@call_record.project.name}", project_path(@call_record.project_id), :target => '_blank', :class => 'badge badge-light' if @call_record.project_id.present? %>
-        <%= link_to "#{mt(:call_record, :candidate)}: ##{@call_record.candidate.uid} #{@call_record.candidate.name}", candidate_path(@call_record.candidate_id), :target => '_blank', :class => 'badge badge-light' if @call_record.candidate_id.present? %>
+        <%#= link_to "#{mt(:call_record, :candidate)}: ##{@call_record.candidate.uid} #{@call_record.candidate.name}", candidate_path(@call_record.candidate_id), :target => '_blank', :class => 'badge badge-light' if @call_record.candidate_id.present? %>
     </div>
-    <%= f.hidden_field :project_id %>
+</div>
+<div class="row">
+    <div class="col-3 form-group">
+        <%= label_tag :project_id, mt(:project) %>
+        <%= f.select :project_id, project_options, { include_blank: default_prompt }, onchange: "loadProjectRequirements(this.value);", class: 'form-control select2' %>
+    </div>
+    <div class="col-9 form-group">
+        <%= label_tag :project_requirement_id, mt(:project_requirement) %>
+        <% if @call_record.project_id.present? %>
+            <%= f.select :project_requirement_id, @call_record.project.project_requirements.order(created_at: :asc).map{|item| [item.content_abstract, item.id]}, { include_blank: default_prompt }, class: 'form-control select2' %>
+        <% else %>
+            <%= f.select :project_requirement_id, [], { include_blank: default_prompt }, class: 'form-control select2' %>
+        <% end %>
+    </div>
     <%= f.hidden_field :candidate_id %>
+    <%= f.hidden_field :category %>
+</div>
 
+<div class="row">
     <div class="col-3 form-group">
         <%= f.label :name %><span class="text-red">*</span>
         <%= f.text_field :name, :required => true, :class => 'form-control' %>
     </div>
     <div class="col-3 form-group">
-        <%= f.label :phone %><span class="text-red">*</span>
-        <%= f.text_field :phone, :required => true, :class => 'form-control' %>
+        <%= f.label :phone %>
+        <%= f.text_field :phone, :class => 'form-control' %>
     </div>
     <div class="col-3 form-group">
         <%= f.label :company %>
@@ -36,3 +52,8 @@
         <%= f.text_area :memo, :rows => 5, :class => 'form-control' %>
     </div>
 </div>
+<script>
+    $(function() {
+        $('select#project_id').change();
+    })
+</script>

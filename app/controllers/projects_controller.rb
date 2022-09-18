@@ -466,6 +466,16 @@ class ProjectsController < ApplicationController
     @projects = query.order(updated_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 
+  # GET .js/json
+  def load_project_requirements
+    @project = Project.find_by(id: params[:project_id])
+    @options = '<option value>Please select</option>'
+    if @project
+      @options += @project.project_requirements.order(created_at: :asc).map { |item| "<option value=\"#{item.id}\">#{item.content_abstract}</option>" }.join
+    end
+    respond_to { |f| f.js }
+  end
+
   private
   def load_project
     @project = Project.find(params[:id])

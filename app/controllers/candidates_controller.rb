@@ -27,7 +27,7 @@ class CandidatesController < ApplicationController
       end
       and_conditions = []
       # or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_experiences.description]
-      or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_comments.content]
+      or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title]
       @terms.each do |term|
         sa = SearchAlias.where('kwlist @> ?', term.to_json).first
         if sa
@@ -47,7 +47,7 @@ class CandidatesController < ApplicationController
       else
         query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id AND candidate_experiences.ended_at IS NULL')
       end
-      query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
+      # query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
       query = query.where(and_conditions.join(' AND '))
       query = query.distinct  # 去重
     end
@@ -97,7 +97,11 @@ class CandidatesController < ApplicationController
         end
 
         flash[:success] = t(:operation_succeeded)
-        redirect_to candidate_path(@candidate)
+        if params[:commit] == t('action.submit_and_call')
+          redirect_to new_call_record_candidate_path(@candidate)
+        else
+          redirect_to candidate_path(@candidate)
+        end
       else
         flash.now[:error] = t(:operation_failed)
         render :new
@@ -381,7 +385,8 @@ class CandidatesController < ApplicationController
     if @category == 'newCallRecord'
       @candidate = Candidate.find(params[:reference_id])
       exp = @candidate.latest_work_experience
-      @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), title: exp.try(:title))
+      @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), title: exp.try(:title), category: @candidate.category)
+      @return_to = @candidate.category == 'doctor' ? doctors_path : candidates_path
       @modal_title = t('action.new_model', :model => t('activerecord.models.call_record'))
       @modal_body_form = 'candidates/loading_modal/new_call_record_form'
     end
@@ -401,6 +406,13 @@ class CandidatesController < ApplicationController
     end
     flash[:success] = t(:operation_succeeded)
     redirect_to candidates_path
+  end
+
+  def new_call_record
+    @candidate = Candidate.find(params[:id])
+    exp = @candidate.latest_work_experience
+    @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), title: exp.try(:title), category: @candidate.category)
+    @return_to = @candidate.category == 'doctor' ? doctors_path : candidates_path
   end
 
   private

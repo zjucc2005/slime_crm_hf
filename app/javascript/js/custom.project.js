@@ -108,6 +108,10 @@ window.loadProjectCallRecords = function(project_id){
     $.get('/call_records/remote_index.js', { project_id: project_id });
 };
 
+window.loadProjectRequirements = function(project_id){
+    $.get('/projects/load_project_requirements.js', { project_id: project_id });
+};
+
 // remote update silent - CallRecord work board
 window.rusCallRecord = function(ele){
     var attr = {};

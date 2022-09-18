@@ -123,7 +123,11 @@ class DoctorsController < ApplicationController
         end
 
         flash[:success] = t(:operation_succeeded)
-        redirect_to doctor_path(@doctor)
+        if params[:commit] == t('action.submit_and_call')
+          redirect_to new_call_record_candidate_path(@doctor)
+        else
+          redirect_to doctor_path(@doctor)
+        end
       else
         flash.now[:error] = t(:operation_failed)
         render :new

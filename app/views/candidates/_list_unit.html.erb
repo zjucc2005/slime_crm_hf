@@ -64,9 +64,10 @@
             <% call_record = user_channel_filter(candidate.call_records).order(:updated_at => :desc).first %>
             <% if call_record %>
                 <div class="text-smaller">
-                    <span>最近通话： </span>
+                    <span class="text-gray mr-1"><%= call_record.updated_at.strftime('%F') %></span>
+                    <span>[<%= call_record.operator.name_cn %>]</span>
                     <%= call_record_status_badge(call_record.status) %>
-                    <span><%= "#{call_record.updated_at.strftime('%F %H:%M')}, #{call_record.operator.name_cn}" %></span>
+                    <span><%= truncate(call_record.memo, length: 20) %></span>
                 </div>
             <% end %>
             <% candidate.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).order(:is_top => :desc, :created_at => :desc).limit(2).each do |comment| %>
@@ -82,15 +83,15 @@
                     <%= fa_icon_tag('cog') %> <%= t(:operation) %>
                 </button>
                 <div class="dropdown-menu">
-                    <%= link_to new_candidate_comment_path(candidate_id: candidate.id, return_to: "#{request.url}#cid_#{candidate.id}"), :class => 'dropdown-item text-smaller' do %>
-                        <i class="fa fa-commenting"></i> <%= t('action.add_model', model: mt(:candidate_comment)) %>
-                    <% end if can?(:new, CandidateComment) %>
-                    <%= link_to 'javascript:void(0);', disabled: true, class: 'dropdown-item text-smaller text-secondary', onclick: "alert('已禁用;')" do %>
+                    <%= link_to 'javascript:void(0);', onclick: "loadingModal('newCallRecord',#{candidate.id})", class: 'dropdown-item text-smaller' do %>
                         <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
                     <% end %>
-                    <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id})", class: 'dropdown-item text-smaller' do %>
-                        <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
-                    <% end if false %>
+                    <%= link_to new_candidate_comment_path(candidate_id: candidate.id, return_to: "#{request.url}#cid_#{candidate.id}"), :class => 'dropdown-item text-smaller' do %>
+                        <i class="fa fa-commenting"></i> <%= t('action.add_model', model: mt(:candidate_comment)) %>
+                    <% end if false # can?(:new, CandidateComment) %>
+                    <%= link_to 'javascript:void(0);', disabled: true, class: 'dropdown-item text-smaller text-secondary', onclick: "alert('已禁用;')" do %>
+                        <i class="fa fa-commenting"></i> <%= t('action.add_model', model: mt(:candidate_comment)) %>
+                    <% end %>
                 </div>
             </div>
         </div>

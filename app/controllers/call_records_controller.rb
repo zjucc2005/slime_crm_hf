@@ -43,6 +43,10 @@ class CallRecordsController < ApplicationController
   def create
     @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
     if @call_record.save
+      # 自动添加通话记录中专家到项目, 补齐关联关系
+      if @call_record.candidate_id && @call_record.project_id
+        @call_record.project.project_candidates.expert.find_or_create_by!(candidate_id: @call_record.candidate_id)
+      end
       flash[:success] = t(:operation_succeeded)
       redirect_with_return_to call_records_path
     else
@@ -232,7 +236,7 @@ class CallRecordsController < ApplicationController
 
   private
   def call_record_params
-    params.require(:call_record).permit(:name, :phone, :company, :title, :status, :memo, :project_id, :candidate_id, :operator_id)
+    params.require(:call_record).permit(:name, :phone, :company, :title, :status, :memo, :project_id, :project_requirement_id, :candidate_id, :operator_id, :category)
   end
 
   def load_call_record
