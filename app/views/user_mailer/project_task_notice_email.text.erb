@@ -34,7 +34,7 @@
 
 访谈时长：<%= @project_task.duration %>分钟
 专家倍率：<%= expert_rate %>
-收费时长：<%= ((@project_task.charge_duration || 0) / 60 * expert_rate).round(2) %>小时
+收费时长：<%= ((@project_task.charge_duration.to_f) / 60 * expert_rate).round(2) %>小时
 基础费率：<%= @project_task.charge_rate %>/小时(含税)
 访谈费用：<%= actual_price %>元(含税)
 备注：<%= @project_task.memo %>
