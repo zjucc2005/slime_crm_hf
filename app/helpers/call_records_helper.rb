@@ -13,7 +13,7 @@ module CallRecordsHelper
 
   def call_record_category_badge(category)
     case category
-    when 'expert' then (content_tag :i, nil, class: 'fa fa-star text-primary', title: mt(:expert))
+    when 'expert' then (content_tag :i, nil, class: 'fa fa-user-circle text-primary', title: mt(:expert))
     when 'doctor' then (content_tag :i, nil, class: 'fa fa-heartbeat text-danger', title: mt(:doctor))
     end
   end

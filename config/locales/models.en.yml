@@ -265,6 +265,7 @@ en:
         demand_number: "Demand number"
         file: "File"
         operator: "Operator"
+        title: "Title"
 
       project_candidate:
         mark: "Project mark"

@@ -6,12 +6,13 @@
         <% end if can?(:add_project_requirement, Project) && @can_operate && @project.can_add_requirement? %>
     </div>
 
-    <div class="card-body" style="overflow-y: scroll; max-height: 240px;">
+    <div class="card-body">
         <% if project_requirements.any? %>
             <table class="table table-sm table-striped card-text">
                 <thead>
                 <tr>
-                    <th><%= mt(:project_requirement, :content) %></th>
+                    <th><%= mt(:project_requirement, :id) %></th>
+                    <th><%= mt(:project_requirement, :title) %> / <%= mt(:project_requirement, :content) %></th>
                     <th><%= mt(:project_requirement, :demand_number) %></th>
                     <th><%= mt(:project_requirement, :file) %></th>
                     <th><%= mt(:project_requirement, :status) %></th>
@@ -23,7 +24,13 @@
                 <tbody>
                 <% project_requirements.each do |requirement| %>
                     <tr>
-                        <td style="white-space: pre-line;"><%= requirement.content %></td>
+                        <td><%= content_tag :span, "# #{requirement.uid}", class: 'text-gray' %></td>
+                        <td>
+                            <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= requirement.uid %>" data-html="true" data-content="<%= requirement.content.gsub("\n", '<br>') %>">
+                                <%= truncate(requirement.title, length: 45) %>
+                            </a>
+                        </td>
+<!--                        <td style="white-space: pre-line;"><%##= requirement.content %></td>-->
                         <td><%= requirement.demand_number %></td>
                         <td><%= link_to requirement.file.url, :title => requirement.file.identifier do %><%= fa_icon_tag('download') %><% end if requirement.file.present? %></td>
                         <td><%= project_requirement_status_badge(requirement.status) %></td>

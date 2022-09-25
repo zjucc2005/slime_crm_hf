@@ -134,11 +134,22 @@ window.rusCallRecord = function(ele){
 };
 
 // js filter - CallRecord  work board
-window.rfsCallRecord = function(ele){
-    var rows = $('tr[data-operator-id=' + ele.value + ']');
-    if(ele.checked) {
-        rows.show();
-    } else {
-        rows.hide();
+window.rfsCallRecord = (project_id) => {
+    const cond = {
+        'projectRequirementId': [],
+        'operatorId': []
+    };
+    for(let k in cond) {
+        $(`input[type=checkbox][name=${k}_${project_id}]`).map((index, item) => item.checked ? cond[k].push(item.value) : '')
     }
+    $(`tr[data-project-id=${project_id}]`).map((index, item) => {
+        let show = true;
+        for(let k in cond) {
+            if(cond[k].indexOf(item.dataset[k]) === -1) {
+                show = false;
+                break
+            }
+        }
+        item.hidden = !show
+    })
 };

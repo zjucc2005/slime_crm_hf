@@ -14,10 +14,10 @@
     <tbody>
     <% @project_requirements.each do |instance| %>
         <tr>
-            <td><%= content_tag :span, "# #{instance.uid}", :class => 'text-gray' %></td>
+            <td><%= content_tag :span, "# #{instance.uid}", class: 'text-gray' %></td>
             <td>
                 <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= instance.uid %>" data-html="true" data-content="<%= instance.content.gsub("\n", '<br>') %>">
-                    <%= truncate(instance.content, length: 30) %>
+                    <%= truncate(instance.title, length: 30) %>
                 </a>
             </td>
             <td><%= instance.demand_number %></td>

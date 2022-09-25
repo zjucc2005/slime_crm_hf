@@ -295,6 +295,7 @@ zh_cn:
         demand_number: "需求人数"
         file: "文件"
         operator: "操作员"
+        title: "标题"
 
       project_candidate:
         mark: "项目标识"

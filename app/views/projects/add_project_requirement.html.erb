@@ -17,7 +17,10 @@
                     <%= f.label :operator %><span class="text-red">*</span>
                     <%= f.select :operator_id, @project.users.map{|user| [user.uid_name, user.id]}, { :prompt => default_prompt }, :required => true, :class => 'form-control select2' %>
                 </div>
-
+                <div class="col-12 form-group">
+                    <%= f.label :title %><span class="text-red">*</span>
+                    <%= f.text_field :title, required: true, class: 'form-control' %>
+                </div>
                 <div class="col-12 form-group">
                     <%= f.label :content %><span class="text-red">*</span>
                     <%= f.text_area :content, :required => true, :rows => 5, :class => 'form-control' %>

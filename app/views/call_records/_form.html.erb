@@ -16,7 +16,7 @@
     <div class="col-9 form-group">
         <%= label_tag :project_requirement_id, mt(:project_requirement) %>
         <% if @call_record.project_id.present? %>
-            <%= f.select :project_requirement_id, @call_record.project.project_requirements.order(created_at: :asc).map{|item| [item.content_abstract, item.id]}, { include_blank: default_prompt }, class: 'form-control select2' %>
+            <%= f.select :project_requirement_id, @call_record.project.project_requirements.order(id: :asc).map{|item| [item.title, item.id]}, { include_blank: default_prompt }, class: 'form-control select2' %>
         <% else %>
             <%= f.select :project_requirement_id, [], { include_blank: default_prompt }, class: 'form-control select2' %>
         <% end %>

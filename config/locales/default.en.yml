@@ -70,6 +70,7 @@ en:
   reset_password: "Reset password"
   return_back_and_reedit: "Return back and reedit"
   select_payment_info: "Select payment info"
+  seq_number: "Seq No."
   settings: "Settings"
   show_all: "Show all"
   standard_template: "Standard template"

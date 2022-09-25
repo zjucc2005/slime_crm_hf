@@ -162,7 +162,7 @@ class CallRecordsController < ApplicationController
 
   def remote_index
     @project = Project.find(params[:project_id])
-    @call_records = @project.call_records.order(created_at: :desc)
+    @call_records = @project.call_records.order(id: :desc)
     respond_to { |f| f.js }
   end
 
@@ -171,7 +171,7 @@ class CallRecordsController < ApplicationController
       @project = Project.find(params[:project_id])
       @call_record = @project.call_records.new(call_record_params.merge(created_by: current_user.id))
       @call_record.save!
-      @call_records = @project.call_records
+      @call_records = @project.call_records.order(id: :desc)
     rescue => e
       @error = "ERROR: #{e.message}"
     end
@@ -184,7 +184,7 @@ class CallRecordsController < ApplicationController
       operate_params = { number_of_calls: @call_record.number_of_calls + 1, operator_id: current_user.id } # 记录操作信息
       @call_record.update!(call_record_params.merge(operate_params))
       @project = @call_record.project
-      @call_records = @project.call_records
+      @call_records = @project.call_records.order(id: :desc)
     rescue => e
       @error = "ERROR: #{e.message}"
     end
@@ -208,7 +208,7 @@ class CallRecordsController < ApplicationController
       @call_record = CallRecord.find(params[:id])
       @call_record.destroy!
       @project = @call_record.project
-      @call_records = @project.call_records
+      @call_records = @project.call_records.order(id: :desc)
     rescue => e
       @error = "ERROR: #{e.message}"
     end

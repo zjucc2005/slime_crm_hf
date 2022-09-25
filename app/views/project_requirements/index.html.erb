@@ -16,7 +16,7 @@
                 <th><%= mt(:project_requirement, :id) %></th>
                 <th><%= mt(:project, :name) %></th>
                 <th><%= t(:project_id) %></th>
-                <th><%= mt(:project_requirement, :content) %></th>
+                <th><%= mt(:project_requirement, :title) %> / <%= mt(:project_requirement, :content) %></th>
                 <th><%= mt(:project_requirement, :demand_number) %></th>
                 <th><%= mt(:project_requirement, :file) %></th>
                 <th><%= mt(:project_requirement, :status) %></th>
@@ -35,7 +35,7 @@
                     <td><%= instance.project.uid %></td>
                     <td>
                         <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= instance.uid %>" data-html="true" data-content="<%= instance.content.gsub("\n", '<br>') %>">
-                            <%= truncate(instance.content, length: 30) %>
+                            <%= truncate(instance.title, length: 45) %>
                         </a>
                     </td>
                     <td><%= instance.demand_number %></td>

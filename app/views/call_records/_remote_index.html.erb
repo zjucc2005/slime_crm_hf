@@ -13,12 +13,31 @@
         <th>
             <div class="dropdown">
                 <span class="dropdown-toggle" data-toggle="dropdown">
+                    <%= mt(:project_requirement) %> ID
+                </span>
+                <div class="dropdown-menu">
+                    <% project = Project.find_by(id: project_id) %>
+                    <% project.project_requirements.order(id: :asc).each do |item| %>
+                        <div class="dropdown-item text-smaller">
+                            <%= check_box_tag :project_requirement_id, item.id, true, name: "projectRequirementId_#{project_id}", onclick: "rfsCallRecord(#{project_id});" %>
+                            <%= "# #{item.uid}" %>
+                        </div>
+                    <% end %>
+                    <div class="dropdown-item text-smaller">
+                        <%= check_box_tag :project_requirement_id, '', true, name: "projectRequirementId_#{project_id}", onclick: "rfsCallRecord(#{project_id});" %>
+                    </div>
+                </div>
+            </div>
+        </th>
+        <th>
+            <div class="dropdown">
+                <span class="dropdown-toggle" data-toggle="dropdown">
                     <%= mt(:call_record, :operator) %>
                 </span>
                 <div class="dropdown-menu">
                     <% call_records.pluck(:operator_id).uniq.each do |operator_id| %>
                     <div class="dropdown-item text-smaller">
-                        <%= check_box_tag :operator_id, operator_id, true, onclick: 'rfsCallRecord(this);' %>
+                        <%= check_box_tag :operator_id, operator_id, true, name: "operatorId_#{project_id}", onclick: "rfsCallRecord(#{project_id});" %>
                         <%= User.find_by(id: operator_id).try(:name_cn) %>
                     </div>
                     <% end %>
@@ -31,7 +50,7 @@
     </thead>
     <tbody>
     <% call_records.each do |call_record| %>
-        <tr data-operator-id="<%= call_record.operator_id %>">
+        <tr data-project-id="<%= project_id %>" data-operator-id="<%= call_record.operator_id %>" data-project-requirement-id="<%= call_record.project_requirement_id %>">
             <td><%= content_tag :span, "# #{call_record.uid}", class: 'text-gray' %></td>
             <td>
                 <%= call_record_category_badge(call_record.category) %>
@@ -50,6 +69,7 @@
             </td>
             <td><%= call_record.number_of_calls %></td>
             <td><%= call_record_status_badge(call_record.status) %></td>
+            <td><%= call_record.project_requirement_id ? (content_tag :span, "# #{sprintf("%06d", call_record.project_requirement_id)}", class: 'text-gray') : '' %></td>
             <td><%= call_record.operator.try(:name_cn) %></td>
             <td><%= call_record.updated_at.strftime('%F %T') %></td>
             <td class="action">
