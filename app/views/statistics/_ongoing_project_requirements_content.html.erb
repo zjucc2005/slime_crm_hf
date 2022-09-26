@@ -16,7 +16,7 @@
   <% @project_requirements.each do |instance| %>
       <tr>
         <td><%= content_tag :span, "# #{instance.uid}", :class => 'text-gray' %></td>
-        <td title="<%= instance.project.name %>"><%= link_to truncate(instance.project.name, length: 8), project_path(instance.project_id) %></td>
+        <td title="<%= instance.project.name %>"><%= link_to truncate(instance.project.name, length: 18), project_path(instance.project_id) %></td>
         <td><%= instance.project.uid %></td>
         <td>
           <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= instance.uid %>" data-html="true" data-content="<%= instance.content.gsub("\n", '<br>') %>">
