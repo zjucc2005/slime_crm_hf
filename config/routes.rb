@@ -162,6 +162,8 @@ Rails.application.routes.draw do
     post :remote_update_silent, on: :member
     post :remote_delete, on: :member
     post :remote_import, on: :collection
+
+    post :remote_create_for_candidate, on: :collection
   end
 
   resources :location_data do

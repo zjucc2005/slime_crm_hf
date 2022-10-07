@@ -54,6 +54,25 @@ class CallRecordsController < ApplicationController
     end
   end
 
+  def remote_create_for_candidate
+    begin
+      @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
+      @error = nil
+      if @call_record.save
+        # 自动添加通话记录中专家到项目, 补齐关联关系
+        if @call_record.candidate_id && @call_record.project_id
+          @call_record.project.project_candidates.expert.find_or_create_by!(candidate_id: @call_record.candidate_id)
+        end
+        @message = t(:operation_succeeded)
+      else
+        @error = @call_record.errors.full_messages.join(',')
+      end
+    rescue Exception => e
+      @error = e.message
+    end
+    respond_to { |f| f.js }
+  end
+
   # GET /call_records/:id/edit
   def edit
     load_call_record
