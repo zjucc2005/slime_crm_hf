@@ -55,7 +55,14 @@
             <td>
                 <%= call_record_category_badge(call_record.category) %>
             </td>
-            <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
+            <td title="<%= call_record.name %>">
+                <% if call_record.candidate_id %>
+                    <%= link_to truncate(call_record.name, length: 9),
+                                call_record.category == 'doctor' ? doctor_path(call_record.candidate_id) : candidate_path(call_record.candidate_id), target: '_blank' %>
+                <% else %>
+                    <%= truncate(call_record.name, length: 9) %>
+                <% end %>
+            </td>
             <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
             <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
             <td>

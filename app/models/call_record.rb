@@ -3,10 +3,11 @@ class CallRecord < ApplicationRecord
 
   # ENUM
   STATUS = {
-    :pending  => '待定',
-    :missed   => '未接',
-    :accepted => '接受',
-    :declined => '拒绝'
+    pending: '待定',
+    missed: '未接',
+    unsuitable: '不合适',
+    accepted: '接受',
+    declined: '拒绝'
   }.stringify_keys
 
   # Associations
