@@ -63,7 +63,7 @@
             </div>
             <% call_record = user_channel_filter(candidate.call_records).order(:updated_at => :desc).first %>
             <% if call_record %>
-                <div class="text-smaller">
+                <div class="text-smaller" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="<%= call_record.memo %>">
                     <span class="text-gray mr-1"><%= call_record.updated_at.strftime('%F') %></span>
                     <span>[<%= call_record.operator.name_cn %>]</span>
                     <%= call_record_status_badge(call_record.status) %>
@@ -76,7 +76,7 @@
                     <span>[<%= comment.creator.name_cn %>]</span>
                     <span><%= content_tag(:i, nil, :class => 'fa fa-flag text-red') if comment.is_top? %><%= truncate(comment.content, length: 20) %></span>
                 </div>
-            <% end %>
+            <% end if false %>
 
             <div class="dropdown">
                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">

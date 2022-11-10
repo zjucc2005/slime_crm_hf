@@ -19,6 +19,7 @@
                 <th><%= mt(:call_record, :name) %></th>
                 <th><%= mt(:call_record, :phone) %></th>
                 <th><%= mt(:call_record, :company) %></th>
+                <th><%= mt(:call_record, :department) %></th>
                 <th><%= mt(:call_record, :title) %></th>
                 <th><%= mt(:call_record, :number_of_calls) %></th>
                 <th><%= mt(:call_record, :status) %></th>
@@ -45,6 +46,7 @@
                     <td title="<%= call_record.name %>"><%= truncate(call_record.name, length: 9) %></td>
                     <td title="<%= call_record.phone %>"><%= link_to truncate(call_record.phone, length: 14), candidates_path(phone: call_record.phone) %></td>
                     <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
+                    <td title="<%= call_record.department %>"><%= truncate(call_record.department, length: 18) %></td>
                     <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
                     <td><%= call_record.number_of_calls %></td>
                     <td><%= call_record_status_badge(call_record.status) %></td>

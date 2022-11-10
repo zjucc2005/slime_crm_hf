@@ -161,7 +161,7 @@ class CallRecordsController < ApplicationController
       begin
         sheet = open_spreadsheet(params[:file])
         raise 'excel表格里没有信息' if sheet.last_row < 2
-        raise 'excel不能超过10000行' if sheet.last_row > 10000
+        raise 'excel不能超过1000行' if sheet.last_row > 1000
         2.upto(sheet.last_row) do |i|
           parser = Utils::CallRecordTemplateParser.new(sheet.row(i), current_user.id)
           @errors << "Row #{i}: #{parser.errors.join(', ')}" unless parser.import
@@ -255,7 +255,8 @@ class CallRecordsController < ApplicationController
 
   private
   def call_record_params
-    params.require(:call_record).permit(:name, :phone, :company, :title, :status, :memo, :project_id, :project_requirement_id, :candidate_id, :operator_id, :category)
+    params.require(:call_record).permit(:name, :phone, :company, :department, :title, :status, :memo, :project_id,
+                                        :project_requirement_id, :candidate_id, :operator_id, :category)
   end
 
   def load_call_record

@@ -385,7 +385,7 @@ class CandidatesController < ApplicationController
     if @category == 'newCallRecord'
       @candidate = Candidate.find(params[:reference_id])
       exp = @candidate.latest_work_experience
-      @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), title: exp.try(:title), category: @candidate.category)
+      @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), department: exp.try(:department), title: exp.try(:title), category: @candidate.category)
       @return_to = @candidate.category == 'doctor' ? doctors_path : candidates_path
       @modal_title = t('action.new_model', :model => t('activerecord.models.call_record'))
       @modal_body_form = 'candidates/loading_modal/new_call_record_form'

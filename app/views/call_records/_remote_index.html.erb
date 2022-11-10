@@ -5,6 +5,7 @@
         <th></th>
         <th><%= mt(:call_record, :name) %></th>
         <th><%= mt(:call_record, :company) %></th>
+        <th><%= mt(:call_record, :department) %></th>
         <th><%= mt(:call_record, :title) %></th>
         <th><%= mt(:call_record, :memo) %></th>
         <th><%= mt(:call_record, :phone) %></th>
@@ -64,6 +65,7 @@
                 <% end %>
             </td>
             <td title="<%= call_record.company %>"><%= truncate(call_record.company, length: 18) %></td>
+            <td title="<%= call_record.department %>"><%= truncate(call_record.department, length: 18) %></td>
             <td title="<%= call_record.title %>"><%= truncate(call_record.title, length: 10) %></td>
             <td>
                 <a data-toggle="popover" data-trigger="hover" data-placement="right" title="<%= mt(:call_record, :memo) %>" data-html="true" data-content="<%= call_record.memo.to_s.gsub("\n", '<br>') %>">

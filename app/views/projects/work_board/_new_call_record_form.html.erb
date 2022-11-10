@@ -13,6 +13,10 @@
             <%= f.text_field :company, class:'form-control' %>
         </div>
         <div class="col-2 form-group">
+            <%= f.label :department %>
+            <%= f.text_field :department, class: 'form-control' %>
+        </div>
+        <div class="col-2 form-group">
             <%= f.label :title %>
             <%= f.text_field :title, class:'form-control' %>
         </div>
@@ -20,15 +24,15 @@
             <%= f.label :memo %>
             <%= f.text_field :memo, class:'form-control' %>
         </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-8 form-group">
+            <%= f.label :project_requirement_id, mt(:project_requirement) %>
+            <%= f.select :project_requirement_id, project.project_requirements.order(id: :asc).map{|item| [item.title, item.id]}, { include_blank: default_prompt }, class: 'form-control select2', id: "call_record_project_requirement_#{project.id}" %>
+        </div>
         <div class="col-2 form-group">
             <%= f.label :status %>
             <%= f.select :status, CallRecord::STATUS.to_a.map(&:reverse), { :include_blank => false }, class: 'form-control select2', id: "call_record_status_#{project.id}" %>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-10 form-group">
-            <%= f.label :project_requirement_id, mt(:project_requirement) %>
-            <%= f.select :project_requirement_id, project.project_requirements.order(id: :asc).map{|item| [item.title, item.id]}, { include_blank: default_prompt }, class: 'form-control select2', id: "call_record_project_requirement_#{project.id}" %>
         </div>
         <div class="col-2">
             <%= label_tag :space, '&nbsp;'.html_safe %><br>

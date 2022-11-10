@@ -36,17 +36,18 @@ module Utils
     end
 
     def set_call_record_attr
-      name    = @row[0].to_s
-      phone   = @row[1]
-      company = @row[2]
-      title   = @row[3]
-      memo    = @row[4]
+      name       = @row[0].to_s
+      phone      = @row[1]
+      company    = @row[2]
+      department = @row[3]
+      title      = @row[4]
+      memo       = @row[5]
 
       # validates_presence_of - name, phone
       @errors << '姓名不能为空' if name.blank?
       # @errors << '电话不能为空' if phone.blank?
       @call_record_attr = {
-        name: name, phone: phone, company: company, title: title, memo: memo, created_by: @created_by, project_id: @project_id
+        name: name, phone: phone, company: company, department: department, title: title, memo: memo, created_by: @created_by, project_id: @project_id
       }
     end
 

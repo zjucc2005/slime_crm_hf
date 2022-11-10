@@ -352,7 +352,8 @@ zh_cn:
 
       call_record:
         name: "姓名"
-        company: "公司"
+        company: "公司/医院"
+        department: "部门/科室"
         title: "职位"
         phone: "电话"
         number_of_calls: "拨打次数"

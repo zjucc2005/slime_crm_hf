@@ -323,6 +323,7 @@ en:
       call_record:
         name: "Name"
         company: "Company"
+        department: "Department"
         title: "Title"
         phone: "Phone"
         number_of_calls: "Number of calls"
