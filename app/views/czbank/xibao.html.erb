@@ -2,27 +2,27 @@
 <div class="card p-2 mb-1">
     <%= form_for CzbankXibao.new, url: xibao_create_czbank_index_path, method: :post do |f| %>
         <div class="row">
-            <div class="col-lg-2 col-6 form-group">
+            <div class="col-lg-2 col-12 form-group">
                 <%= f.label :org_name, '归属机构' %><span class="text-red">*</span>
                 <%= f.select :org_name, CzbankXibao::ORG_LIST, { include_blank: default_prompt }, required: true, class: 'form-control select2' %>
             </div>
-            <div class="col-lg-2 col-6 form-group">
+            <div class="col-lg-2 col-12 form-group">
                 <%= f.label :staff_name, '绩效认领人' %>
                 <%= f.text_field :staff_name, class: 'form-control' %>
             </div>
-            <div class="col-lg-2 col-6 form-group">
+            <div class="col-lg-2 col-12 form-group">
                 <%= f.label :sale_value, '交易金额(万元)' %><span class="text-red">*</span>
                 <%= f.number_field :sale_value, min: 0, required: true, class: 'form-control' %>
             </div>
-            <div class="col-lg-2 col-6 form-group">
+            <div class="col-lg-2 col-12 form-group">
                 <%= f.label :trans_date, '交易日期(不填默认为当天)' %>
                 <%= f.date_field :trans_date, class: 'form-control' %>
             </div>
-            <div class="col-lg-2 col-6 form-group">
+            <div class="col-lg-2 col-12 form-group">
                 <%= f.label :bill_count, '笔数(不填默认为1)' %>
                 <%= f.number_field :bill_count, min: 1, class: 'form-control' %>
             </div>
-            <div class="col-lg-2 col-6 form-group">
+            <div class="col-lg-2 col-12 form-group">
                 <%= label_tag :space, '&nbsp;'.html_safe %><br>
                 <%= submit_tag '生成喜报', class: 'btn btn-sm btn-danger w-100' %>
             </div>
