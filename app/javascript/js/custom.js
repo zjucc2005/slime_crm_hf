@@ -1,6 +1,7 @@
 // import all custom js files
 import './custom.candidate'
 import './custom.project'
+import './custom.czbank'
 
 
 // DOMContentLoaded events ----------------------------------------------------------------------

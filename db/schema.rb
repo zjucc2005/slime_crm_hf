@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_10_135551) do
+ActiveRecord::Schema.define(version: 2022_11_22_124541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,19 @@ ActiveRecord::Schema.define(version: 2022_11_10_135551) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "shorthand_rate", precision: 10, scale: 2
     t.index ["company_id"], name: "index_contracts_on_company_id"
+  end
+
+  create_table "czbank_xibaos", force: :cascade do |t|
+    t.string "cod_id"
+    t.string "org_name"
+    t.string "staff_name"
+    t.string "staff_id"
+    t.integer "sale_value"
+    t.datetime "trans_date"
+    t.integer "bill_count"
+    t.integer "dl_count", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "hospital_departments", force: :cascade do |t|

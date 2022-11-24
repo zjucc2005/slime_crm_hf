@@ -201,4 +201,14 @@ Rails.application.routes.draw do
     get :import_gllue_candidates,  on: :collection
     post :import_gllue_candidates, on: :collection
   end
+
+  # tmp utils for czbank
+  resources :czbank do
+    get :xibao, on: :collection
+    post :xibao_create, on: :collection
+    post :xibao_import, on: :collection
+
+    get :xibao_list, on: :collection
+    get :xibao_gen_pic, on: :collection
+  end
 end

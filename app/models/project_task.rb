@@ -156,7 +156,7 @@ class ProjectTask < ApplicationRecord
 
   def draw_consent
     template_path = project.company.consent_file
-    return 'template not found' unless File.exists? template_path.to_s
+    raise 'template not found' unless File.exists? template_path.to_s
     options = project.company.consent_file_options
     params = {
         project_name: project.name,

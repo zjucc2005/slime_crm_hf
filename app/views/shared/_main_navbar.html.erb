@@ -122,6 +122,9 @@
                         <%= link_to css_demo_path, class:'dropdown-item' do %>
                             <i class="fa fa-cc text-danger"></i> CSS DEMO
                         <% end if can?(:css_demo, HomeController) %>
+                        <%= link_to xibao_czbank_index_path, class: 'dropdown-item' do %>
+                            <i class="fa fa-picture-o text-danger"></i> CZBANK XIBAO
+                        <% end if can?(:xibao, CzbankController) %>
                     </div>
                 </li>
             </ul>

@@ -1,5 +1,5 @@
 # encoding: utf-8
-class HospitalDepartment < ActiveRecord::Base
+class HospitalDepartment < ApplicationRecord
   belongs_to :hospital, :class_name => 'Hospital'
   validates_presence_of :name
   before_validation :setup, on: [:create, :update]
