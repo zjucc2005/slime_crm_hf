@@ -87,7 +87,7 @@
                         <span>[<%= comment.creator.name_cn %>]</span>
                         <span><%= content_tag(:i, nil, :class => 'fa fa-flag text-red') if comment.is_top? %><%= truncate(comment.content, length: 20) %></span>
                     </div>
-                <% end if false %>
+                <% end %>
 
                 <div class="dropdown">
                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
