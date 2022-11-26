@@ -46,21 +46,26 @@ class CzbankXibao < ApplicationRecord
     canvas.composite!(template, 0, 0, Magick::CopyCompositeOp) # 铺上模板图层
     text = Magick::Draw.new # 初始化文本格式
     text.font_family = 'Source Han Sans SC'
+    text.font_weight = Magick::BoldWeight
     puts "SET PARAMS: #{options.to_json}"
-    text.annotate(canvas, 0, 0, 240 - options[:org_name].length * 23, 430, options[:org_name]) do
+    text.annotate(canvas, 0, 0, 234 - options[:org_name].length * 24, 370, options[:org_name]) do
       self.pointsize = 50
       self.fill = '#CD1D1D'
     end
-    text.annotate(canvas, 0, 0, 240 - options[:staff_name].length * 23, 500, options[:staff_name]) do
+    text.annotate(canvas, 0, 0, 234 - options[:staff_name].length * 24, 445, options[:staff_name]) do
       self.pointsize = 50
       self.fill = '#CD1D1D'
     end
-    text.annotate(canvas, 0, 0, 180, 570, options[:trans_date]) do
+    text.annotate(canvas, 0, 0, 160, 523, options[:trans_date]) do
       self.pointsize = 20
       self.fill = '#FFF9E1'
     end
-    text.annotate(canvas, 0, 0, 180, 690, options[:sale_value]) do
-      self.pointsize = 70
+    text.annotate(canvas, 0, 0, 180, 550, '大额存单销售') do
+      self.pointsize = 20
+      self.fill = '#FFF9E1'
+    end
+    text.annotate(canvas, 0, 0, 160, 640, options[:sale_value]) do
+      self.pointsize = 80
       self.fill = '#FFF9E1'
     end
     canvas.write(save_file)
