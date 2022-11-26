@@ -45,8 +45,7 @@ class CzbankXibao < ApplicationRecord
     canvas = Magick::Image.new(full_width, full_height)
     canvas.composite!(template, 0, 0, Magick::CopyCompositeOp) # 铺上模板图层
     text = Magick::Draw.new # 初始化文本格式
-    text.font_family = 'Source Han Serif CN'
-    # text.font_family = 'Noto Sans CJK SC'
+    text.font_family = 'Source Han Sans SC'
     puts "SET PARAMS: #{options.to_json}"
     text.annotate(canvas, 0, 0, 240 - options[:org_name].length * 23, 430, options[:org_name]) do
       self.pointsize = 50
