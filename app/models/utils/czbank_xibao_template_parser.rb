@@ -18,20 +18,20 @@ module Utils
       if valid?
         # import code
         begin
-          if @instance_attr[:cod_id].present?
-            instance = CzbankXibao.where(cod_id: @instance_attr[:cod_id]).first
-            if instance
-              instance.update!(@instance_attr)
-            else
-              CzbankXibao.create!(@instance_attr)
-            end
-          else
+          # if @instance_attr[:cod_id].present?
+          #   instance = CzbankXibao.where(cod_id: @instance_attr[:cod_id]).first
+          #   if instance
+          #     instance.update!(@instance_attr)
+          #   else
+          #     CzbankXibao.create!(@instance_attr)
+          #   end
+          # else
             instance = CzbankXibao.where(org_name: @instance_attr[:org_name], staff_name: @instance_attr[:staff_name],
                                          trans_date: @instance_attr[:trans_date], sale_value: @instance_attr[:sale_value]).first
             if instance.nil?
               CzbankXibao.create!(@instance_attr)
             end
-          end
+          # end
           true  # return
         rescue Exception => e
           @errors << e.message

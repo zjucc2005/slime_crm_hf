@@ -21,12 +21,15 @@ class CzbankController < ApplicationController
 
   def xibao_create
     begin
-      if params[:commit] == '生成喜报'
-        redirect_to xibao_gen_pic_czbank_index_path(czbank_xibao_params)
+      if params[:commit] == '保存并生成喜报'
+        @xibao = CzbankXibao.find_or_create_by(czbank_xibao_params)
+        redirect_to xibao_gen_pic_czbank_index_path(@xibao.to_api)
       else
-        @xibao = CzbankXibao.new(czbank_xibao_params)
-        @xibao.save!
-        flash[:success] = '操作成功'
+        if CzbankXibao.exists?(czbank_xibao_params)
+          flash[:success] = '该数据已存在'
+        else
+          @xibao = CzbankXibao.create(czbank_xibao_params)
+        end
         redirect_to xibao_czbank_index_path
       end
     rescue => e

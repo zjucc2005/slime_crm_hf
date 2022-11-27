@@ -1,51 +1,71 @@
 <div class="row">
-    <div class="col-6">
-        <% if @org_ranking.present? %>
-        <h3><span class="badge badge-danger">机构 - 当日销量排名</span></h3>
-            <p class="text-danger">NOTE! 鼠标点击表格的行,切换背景色</p>
-        <table class="table table-sm table-bordered nowrap card-text text-center text-bold" style="font-size: 1.2rem;">
-            <thead>
-            <tr>
-                <th colspan="3" class="border-dark p-3" style="font-size: 1.4rem;"><i>奋战40天智慧大额存单销量表（每日）</i></th>
-            </tr>
-            <tr>
-                <th class="border-dark">机构</th>
-                <th class="border-dark">当日销量(万元)</th>
-                <th class="border-dark">当日出单笔数</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @org_ranking.each_with_index do |item, index| %>
-                <% if (0..2).include?(index) %>
-                    <% className = 'table-danger' %>
-                <% elsif item[1].zero? || (@org_ranking.length-3..@org_ranking.length-1).include?(index) %>
-                    <% className = 'table-success' %>
-                <% else %>
-                    <% className = 'table-warning' %>
+    <div class="col-lg-6 col-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#table_<%= params[:trans_date] %>">表格</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="pill" href="#chart_<%= params[:trans_date] %>">图表</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane tab-container" id="table_<%= params[:trans_date] %>">
+                <% if @org_ranking.present? %>
+                    <p class="text-danger">NOTE! 鼠标点击表格的行,切换背景色</p>
+                    <table class="table table-sm table-bordered nowrap card-text text-center text-bold" style="font-size: 1.2rem;">
+                        <thead>
+                        <tr>
+                            <th colspan="3" class="border-dark p-3" style="font-size: 1.4rem;"><i>奋战40天智慧大额存单销售数据分析日报（<%= Time.parse(params[:trans_date]).strftime('%m.%d') %>）</i></th>
+                        </tr>
+                        <tr>
+                            <th class="border-dark">机构</th>
+                            <th class="border-dark">当日销量(万元)</th>
+                            <th class="border-dark">当日出单笔数</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @org_ranking.each_with_index do |item, index| %>
+                            <% if (0..2).include?(index) %>
+                                <% className = 'table-danger' %>
+                            <% elsif item[1].zero? || (@org_ranking.length-3..@org_ranking.length-1).include?(index) %>
+                                <% className = 'table-success' %>
+                            <% else %>
+                                <% className = 'table-warning' %>
+                            <% end %>
+                            <tr onclick="changeBgColor(this);" class="<%= className %>">
+                                <td class="border-dark"><%= item[0] %></td>
+                                <td class="border-dark"><%= item[1] %></td>
+                                <td class="border-dark"><%= item[2] %></td>
+                            </tr>
+                        <% end %>
+                        <tr>
+                            <td class="border-dark">总计</td>
+                            <td class="border-dark"><%= @org_ranking.sum{|item| item[1]} %></td>
+                            <td class="border-dark"><%= @org_ranking.sum{|item| item[2]} %></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 <% end %>
-                <tr onclick="changeBgColor(this);" class="<%= className %>">
-                    <td class="border-dark"><%= item[0] %></td>
-                    <td class="border-dark"><%= item[1] %></td>
-                    <td class="border-dark"><%= item[2] %></td>
-                </tr>
-            <% end %>
-            <tr>
-                <td class="border-dark">总计</td>
-                <td class="border-dark"><%= @org_ranking.sum{|item| item[1]} %></td>
-                <td class="border-dark"><%= @org_ranking.sum{|item| item[2]} %></td>
-            </tr>
-            </tbody>
-        </table>
-        <% end %>
+            </div>
+            <div class="tab-pane tab-container active" id="chart_<%= params[:trans_date] %>">
+                <% if @org_ranking.present? %>
+                    <%= render partial: 'czbank/xibao_list/chart_daily' %>
+                <% end %>
+            </div>
+        </div>
     </div>
     <div class="col-6">
-        <h3><span class="badge badge-primary">明细 - 共 <%= @xibao_list.count %> 条数据</span></h3>
-        <table class="table table-sm table-striped nowrap card-text">
+        <ul class="nav nav-tabs border-bottom-0">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="pill" href="#detail_<%= params[:trans_date] %>">明细 - 共 <%= @xibao_list.count %> 条数据</a>
+            </li>
+        </ul>
+        <table class="table table-sm table-bordered table-striped nowrap card-text">
             <thead>
             <tr>
                 <th>归属机构</th>
                 <th>绩效认领人</th>
-                <th>工号</th>
                 <th>交易金额(万元)</th>
                 <th>笔数</th>
                 <th>下载喜报</th>
@@ -57,15 +77,14 @@
                 <tr>
                     <td><%= instance.org_name %></td>
                     <td><%= instance.staff_name %></td>
-                    <td><%= instance.staff_id %></td>
                     <td><%= instance.sale_value %></td>
                     <td>
                         <%= content_tag :span, instance.bill_count, class: instance.bill_count == 1 ? '' : 'text-bold text-danger' %>
                     </td>
                     <td>
-                        <%= instance.dl_count > 0 ? '是' : '否' %>
+                        <%#= instance.dl_count > 0 ? '是' : '否' %>
                         <%= link_to xibao_gen_pic_czbank_index_path(instance.to_api), class: 'btn btn-danger btn-xs' do %>
-                            <i class="fa fa-picture-o"></i> 生成喜报
+                            生成喜报 <i class="fa fa-angle-right"></i>
                         <% end %>
                     </td>
                     <td class="action">
