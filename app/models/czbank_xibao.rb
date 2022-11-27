@@ -25,6 +25,24 @@ class CzbankXibao < ApplicationRecord
       '分行业务五部' => 800,
       '分行本级中后台' => 0
   }
+  STAFF_COUNT = {
+      '分行业务一部' => 1,
+      '三门支行' => 25,
+      '玉环支行' => 34,
+      '天台支行' => 31,
+      '临海支行' => 43,
+      '分行小企业一部' => 6,
+      '温岭支行' => 35,
+      '分行营业部' => 26,
+      '仙居支行' => 27,
+      '黄岩支行' => 25,
+      '路桥支行' => 34,
+      '分行市场一部' => 4,
+      '分行业务二部' => 4,
+      '分行业务三部' => 4,
+      '分行业务五部' => 2,
+      '分行本级中后台' => 92
+  }
 
   def to_api
     { id: id, org_name: org_name, staff_name: staff_name, sale_value: sale_value, trans_date: trans_date }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_22_124541) do
+ActiveRecord::Schema.define(version: 2022_11_27_152448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_124541) do
     t.integer "dl_count", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_public", default: false
   end
 
   create_table "hospital_departments", force: :cascade do |t|

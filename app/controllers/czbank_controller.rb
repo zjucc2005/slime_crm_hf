@@ -63,10 +63,12 @@ class CzbankController < ApplicationController
       query = CzbankXibao.where(trans_date: params[:trans_date])
       @xibao_list = query.order(id: :desc)
       org_ranking_o = query.select('org_name, SUM(sale_value) AS sum_sale_value, SUM(bill_count) AS sum_bill_count').group(:org_name).order(sum_sale_value: :desc)
-      @org_ranking = org_ranking_o.map{ |item| [item.org_name, item.sum_sale_value, item.sum_bill_count] }
+      @org_ranking = org_ranking_o.map{ |item|
+        { org_name: item.org_name, sale_value: item.sum_sale_value, bill_count: item.sum_bill_count }
+      }
       CzbankXibao::ORG_LIST.each do |org_name|
-        if @org_ranking.select{|item| item[0] == org_name }[0].nil?
-          @org_ranking << [org_name, 0, 0]
+        if @org_ranking.select{|item| item[:org_name] == org_name }[0].nil?
+          @org_ranking << { org_name: org_name, sale_value: 0, bill_count: 0 }
         end
       end
     else
@@ -75,14 +77,34 @@ class CzbankController < ApplicationController
       sum_ranking_o = query.select('org_name, SUM(sale_value) AS sum_sale_value, SUM(bill_count) AS sum_bill_count').group(:org_name)
       @sum_ranking = sum_ranking_o.map { |item|
         target = CzbankXibao::TARGET[item.org_name]
-        [item.org_name, item.sum_sale_value, item.sum_bill_count, target, target.zero? ? -1 : (item.sum_sale_value.to_f / target).round(2)]
+        staff_active = CzbankXibao.where(org_name: item.org_name, is_public: false).select('staff_name').distinct.count
+        staff_total = CzbankXibao::STAFF_COUNT[item.org_name]
+        {
+            org_name: item.org_name,
+            sale_value: item.sum_sale_value,
+            bill_count: item.sum_bill_count,
+            sale_target: target,
+            sale_rate: target.zero? ? -1 : (item.sum_sale_value.to_f / target).round(2),
+            staff_active: staff_active,
+            staff_total: staff_total,
+            staff_active_rate: staff_active.to_f / staff_total
+        }
       }
       CzbankXibao::ORG_LIST.each do |org_name|
-        if @sum_ranking.select{ |item| item[0] == org_name}[0].nil?
-          @sum_ranking << [org_name, 0, 0, CzbankXibao::TARGET[org_name], 0]
+        if @sum_ranking.select{ |item| item[:org_name] == org_name}[0].nil?
+          @sum_ranking << {
+              org_name: org_name,
+              sale_value: 0,
+              bill_count: 0,
+              sale_target: CzbankXibao::TARGET[org_name],
+              sale_rate: 0,
+              staff_active: 0,
+              staff_total: CzbankXibao::STAFF_COUNT[org_name],
+              staff_active_rate: 0
+          }
         end
       end
-      @sum_ranking.sort_by!{ |item| item[4] }.reverse!
+      @sum_ranking.sort_by!{ |item| item[:sale_rate] }.reverse!
       @period = [(CzbankXibao.minimum(:trans_date) || Time.now).to_date, Time.now.to_date]
     end
 

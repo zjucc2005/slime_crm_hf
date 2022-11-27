@@ -18,20 +18,20 @@ module Utils
       if valid?
         # import code
         begin
-          # if @instance_attr[:cod_id].present?
-          #   instance = CzbankXibao.where(cod_id: @instance_attr[:cod_id]).first
-          #   if instance
-          #     instance.update!(@instance_attr)
-          #   else
-          #     CzbankXibao.create!(@instance_attr)
-          #   end
-          # else
+          if @instance_attr[:cod_id].present?
+            instance = CzbankXibao.where(cod_id: @instance_attr[:cod_id]).first
+            if instance
+              instance.update!(@instance_attr)
+            else
+              CzbankXibao.create!(@instance_attr)
+            end
+          else
             instance = CzbankXibao.where(org_name: @instance_attr[:org_name], staff_name: @instance_attr[:staff_name],
                                          trans_date: @instance_attr[:trans_date], sale_value: @instance_attr[:sale_value]).first
             if instance.nil?
               CzbankXibao.create!(@instance_attr)
             end
-          # end
+          end
           true  # return
         rescue Exception => e
           @errors << e.message
@@ -52,13 +52,18 @@ module Utils
       trans_date = @row[10].present? ? @row[10] : nil
       staff_id   = (@row[20].present? && @row[20] != '#N/A') ? @row[20].to_s.upcase : @row[17].to_s.upcase
       staff_name = @row[21].present? ? @row[21] : ''
+      if staff_name.include?('公共') || staff_name.include?('未认领') || ['', '#N/A'].include?(staff_name)
+        is_public = true
+      else
+        is_public = false
+      end
       org_name   = @row[22] == '分行本级' ? '分行本级中后台' : @row[22]
       sale_value = @row[23]
       bill_count = @row[24]
 
       @instance_attr = {
           cod_id: cod_id, trans_date: trans_date, staff_id: staff_id, staff_name: staff_name, org_name: org_name,
-          sale_value: sale_value, bill_count: bill_count
+          sale_value: sale_value, bill_count: bill_count, is_public: is_public
       }
     end
 

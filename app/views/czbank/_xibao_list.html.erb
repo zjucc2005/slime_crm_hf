@@ -28,21 +28,55 @@
                         <% @org_ranking.each_with_index do |item, index| %>
                             <% if (0..2).include?(index) %>
                                 <% className = 'table-danger' %>
-                            <% elsif item[1].zero? || (@org_ranking.length-3..@org_ranking.length-1).include?(index) %>
+                            <% elsif item[:sale_value].zero? || (@org_ranking.length-3..@org_ranking.length-1).include?(index) %>
                                 <% className = 'table-success' %>
                             <% else %>
                                 <% className = 'table-warning' %>
                             <% end %>
                             <tr onclick="changeBgColor(this);" class="<%= className %>">
-                                <td class="border-dark"><%= item[0] %></td>
-                                <td class="border-dark"><%= item[1] %></td>
-                                <td class="border-dark"><%= item[2] %></td>
+                                <td class="border-dark"><%= item[:org_name] %></td>
+                                <td class="border-dark"><%= item[:sale_value] %></td>
+                                <td class="border-dark"><%= item[:bill_count] %></td>
                             </tr>
                         <% end %>
                         <tr>
                             <td class="border-dark">总计</td>
-                            <td class="border-dark"><%= @org_ranking.sum{|item| item[1]} %></td>
-                            <td class="border-dark"><%= @org_ranking.sum{|item| item[2]} %></td>
+                            <td class="border-dark"><%= @org_ranking.sum{|item| item[:sale_value]} %></td>
+                            <td class="border-dark"><%= @org_ranking.sum{|item| item[:bill_count]} %></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <% elsif @sum_ranking.present? %>
+                    <h3>奋战40天智慧大额存单位销售周报（<%= @period.map{|item| item.strftime('%m.%d')}.join('-') %>）</h3>
+                    <table class="table table-sm table-border-dark nowrap card-text text-center text-bold">
+                        <thead>
+                        <tr>
+                            <th>机构</th>
+                            <th>销量(万元)</th>
+                            <th>笔数</th>
+                            <th>出单人数</th>
+                            <th>总人数</th>
+                            <th>人员参与率</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @sum_ranking.sort_by{|item| item[:staff_active_rate]}.reverse.each do |item| %>
+                            <tr>
+                                <td><%= item[:org_name] %></td>
+                                <td><%= item[:sale_value] %></td>
+                                <td><%= item[:bill_count] %></td>
+                                <td><%= item[:staff_active] %></td>
+                                <td><%= item[:staff_total] %></td>
+                                <td><%= "#{(item[:staff_active_rate] * 100).round(2)}%" %></td>
+                            </tr>
+                        <% end %>
+                        <tr>
+                            <td>总计</td>
+                            <td><%= @sum_ranking.sum{|item| item[:sale_value]} %></td>
+                            <td><%= @sum_ranking.sum{|item| item[:bill_count]} %></td>
+                            <td><%= @sum_ranking.sum{|item| item[:staff_active]} %></td>
+                            <td><%= @sum_ranking.sum{|item| item[:staff_total]} %></td>
+                            <td><%= "#{(@sum_ranking.sum{|item| item[:staff_active]} * 100.0 / @sum_ranking.sum{|item| item[:staff_total]}).round(2)}%" %></td>
                         </tr>
                         </tbody>
                     </table>

@@ -8,10 +8,10 @@
 
 <div class="text-center mb-4">
     <span class="chart_sale_field_font">今日总销售额：</span>
-    <span class="chart_sale_value_font"><%= @org_ranking.sum{|item| item[1]} %></span>
+    <span class="chart_sale_value_font"><%= @org_ranking.sum{|item| item[:sale_value]} %></span>
     <span class="chart_sale_field_font mr-5">万元</span>
     <span class="chart_sale_field_font">总销售笔数：</span>
-    <span class="chart_sale_value_font"><%= @org_ranking.sum{|item| item[2]} %></span>
+    <span class="chart_sale_value_font"><%= @org_ranking.sum{|item| item[:bill_count]} %></span>
     <span class="chart_sale_field_font">笔</span>
 </div>
 
@@ -42,7 +42,7 @@
                     name: 'Access From',
                     type: 'pie',
                     radius: '80%',
-                    data: <%= @org_ranking.map{|item| { name: item[0], value: item[1] } }.to_json.html_safe %>,
+                    data: <%= @org_ranking.map{|item| { name: item[:org_name], value: item[:sale_value] } }.to_json.html_safe %>,
                     label: {
                         position: 'outside',
                         alignTo: 'edge',
@@ -91,7 +91,7 @@
             },
             xAxis: {
                 type: 'category',
-                data: <%= @org_ranking.map{|item| item[0]}.to_json.html_safe %>,
+                data: <%= @org_ranking.map{|item| item[:org_name]}.to_json.html_safe %>,
                 axisLabel: {
                     interval: 0,
                     rotate: 45,
@@ -104,7 +104,7 @@
             },
             series: [
                 {
-                    data: <%= @org_ranking.map{|item| item[2]}.to_json.html_safe %>,
+                    data: <%= @org_ranking.map{|item| item[:bill_count]}.to_json.html_safe %>,
                     type: 'bar',
                     barWidth: 15,
                     itemStyle: {

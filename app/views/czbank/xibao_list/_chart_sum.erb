@@ -8,10 +8,10 @@
 
 <div class="text-center mb-4">
     <span class="chart_sale_field_font">累计总销售额：</span>
-    <span class="chart_sale_value_font"><%= @sum_ranking.sum{|item| item[1]} %></span>
+    <span class="chart_sale_value_font"><%= @sum_ranking.sum{|item| item[:sale_value]} %></span>
     <span class="chart_sale_field_font mr-5">万元</span>
     <span class="chart_sale_field_font">累计总销售笔数：</span>
-    <span class="chart_sale_value_font"><%= @sum_ranking.sum{|item| item[2]} %></span>
+    <span class="chart_sale_value_font"><%= @sum_ranking.sum{|item| item[:bill_count]} %></span>
     <span class="chart_sale_field_font">笔</span>
 </div>
 
@@ -38,21 +38,21 @@
         </tr>
         </thead>
         <tbody>
-        <% @sum_ranking.each_with_index do |item, index| %>
+        <% @sum_ranking.each do |item| %>
             <tr>
-                <td><%= item[0] %></td>
-                <td><%= item[1] %></td>
-                <td><%= item[2] %></td>
-                <td><%= item[3].zero? ? '/' : item[3] %></td>
-                <td><%= item[4] < 0 ? '/' : "#{(item[4] * 100).round}%" %></td>
+                <td><%= item[:org_name] %></td>
+                <td><%= item[:sale_value] %></td>
+                <td><%= item[:bill_count] %></td>
+                <td><%= item[:sale_target].zero? ? '/' : item[:sale_target] %></td>
+                <td><%= item[:sale_rate] < 0 ? '/' : "#{(item[:sale_rate] * 100).round}%" %></td>
             </tr>
         <% end %>
         <tr style="background: #fcc000;">
             <td>总计</td>
-            <td><%= @sum_ranking.sum{|item| item[1]} %></td>
-            <td><%= @sum_ranking.sum{|item| item[2]} %></td>
-            <td><%= @sum_ranking.sum{|item| item[3]} %></td>
-            <td><%= "#{(@sum_ranking.sum{|item| item[1]} * 100.0 / @sum_ranking.sum{|item| item[3]}).round}%" %></td>
+            <td><%= @sum_ranking.sum{|item| item[:sale_value]} %></td>
+            <td><%= @sum_ranking.sum{|item| item[:bill_count]} %></td>
+            <td><%= @sum_ranking.sum{|item| item[:sale_target]} %></td>
+            <td><%= "#{(@sum_ranking.sum{|item| item[:sale_value]} * 100.0 / @sum_ranking.sum{|item| item[:sale_target]}).round}%" %></td>
         </tr>
         </tbody>
     </table>
@@ -70,7 +70,7 @@
             },
             xAxis: {
                 type: 'category',
-                data: <%= @sum_ranking.map{|item| item[0]}.to_json.html_safe %>,
+                data: <%= @sum_ranking.map{|item| item[:org_name]}.to_json.html_safe %>,
                 axisLabel: {
                     interval: 0,
                     rotate: 45,
@@ -83,7 +83,7 @@
             },
             series: [
                 {
-                    data: <%= @sum_ranking.map{|item| item[1]}.to_json.html_safe %>,
+                    data: <%= @sum_ranking.map{|item| item[:sale_value]}.to_json.html_safe %>,
                     type: 'bar',
                     barWidth: 10,
                     itemStyle: {
