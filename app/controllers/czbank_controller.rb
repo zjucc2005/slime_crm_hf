@@ -72,6 +72,18 @@ class CzbankController < ApplicationController
     else
       query = CzbankXibao.all
       @xibao_list = query.order(id: :desc)
+      sum_ranking_o = query.select('org_name, SUM(sale_value) AS sum_sale_value, SUM(bill_count) AS sum_bill_count').group(:org_name)
+      @sum_ranking = sum_ranking_o.map { |item|
+        target = CzbankXibao::TARGET[item.org_name]
+        [item.org_name, item.sum_sale_value, item.sum_bill_count, target, target.zero? ? -1 : (item.sum_sale_value.to_f / target).round(2)]
+      }
+      CzbankXibao::ORG_LIST.each do |org_name|
+        if @sum_ranking.select{ |item| item[0] == org_name}[0].nil?
+          @sum_ranking << [org_name, 0, 0, CzbankXibao::TARGET[org_name], 0]
+        end
+      end
+      @sum_ranking.sort_by!{ |item| item[4] }.reverse!
+      @period = [(CzbankXibao.minimum(:trans_date) || Time.now).to_date, Time.now.to_date]
     end
 
     respond_to { |f| f.js }

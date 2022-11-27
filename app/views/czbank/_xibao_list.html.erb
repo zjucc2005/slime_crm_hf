@@ -51,6 +51,8 @@
             <div class="tab-pane tab-container active" id="chart_<%= params[:trans_date] %>">
                 <% if @org_ranking.present? %>
                     <%= render partial: 'czbank/xibao_list/chart_daily' %>
+                <% elsif @sum_ranking.present? %>
+                    <%= render partial: 'czbank/xibao_list/chart_sum' %>
                 <% end %>
             </div>
         </div>
