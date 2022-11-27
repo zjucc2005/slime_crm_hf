@@ -48,7 +48,7 @@
                     </table>
                 <% elsif @sum_ranking.present? %>
                     <h3>奋战40天智慧大额存单位销售周报（<%= @period.map{|item| item.strftime('%m.%d')}.join('-') %>）</h3>
-                    <table class="table table-sm table-border-dark nowrap card-text text-center text-bold">
+                    <table class="table table-sm table-border-dark card-text text-center text-bold">
                         <thead>
                         <tr>
                             <th>机构</th>
@@ -77,6 +77,18 @@
                             <td><%= @sum_ranking.sum{|item| item[:staff_active]} %></td>
                             <td><%= @sum_ranking.sum{|item| item[:staff_total]} %></td>
                             <td><%= "#{(@sum_ranking.sum{|item| item[:staff_active]} * 100.0 / @sum_ranking.sum{|item| item[:staff_total]}).round(2)}%" %></td>
+                        </tr>
+                        <tr style="text-align: left;">
+                            <td colspan="6">
+                                销量方面：排名前三<%= @sum_ranking.sort_by{|item| item[:sale_value]}.map{|item| item[:org_name]}.reverse[0,3].join('、') %>，
+                                排名后三<%= @sum_ranking.sort_by{|item| item[:sale_value]}.map{|item| item[:org_name]}[0,3].join('、') %>；
+                                <%= @sum_ranking.select{|item| item[:sale_value].zero? }.map{|item| item[:org_name]}.reverse.join('、') %>暂无销量；
+                                笔数参与度方面：排名前三的是<%= @sum_ranking.sort_by{|item| item[:bill_count]}.map{|item| item[:org_name]}.reverse[0,3].join('、') %>，
+                                排名后三<%= @sum_ranking.sort_by{|item| item[:bill_count]}.map{|item| item[:org_name]}[0,3].join('、') %>；
+                                人数参与度方面：排名前三<%= @sum_ranking.sort_by{|item| item[:staff_active]}.map{|item| item[:org_name]}.reverse[0,3].join('、') %>，
+                                排名后三<%= @sum_ranking.sort_by{|item| item[:staff_active]}.map{|item| item[:org_name]}[0,3].join('、') %>；
+                                以上为本周大额存单销售情况，供各支行领导参阅及营销推动，数据如有遗漏，请与我联系。明日将销售明细转发各机构负责人及零售分管行长邮箱。
+                            </td>
                         </tr>
                         </tbody>
                     </table>
