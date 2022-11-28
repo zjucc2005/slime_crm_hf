@@ -94,7 +94,7 @@ class CzbankXibao < ApplicationRecord
   def setup
     self.staff_id   ||= ''
     self.staff_name ||= ''
-    self.trans_date ||= Time.now.to_date
+    self.trans_date ||= belong_date
     self.bill_count ||= 1
   end
 end

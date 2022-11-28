@@ -15,8 +15,8 @@
                 <%= f.number_field :sale_value, min: 0, required: true, class: 'form-control' %>
             </div>
             <div class="col-lg-2 col-12 form-group">
-                <%= f.label :trans_date, '交易日期(不填默认为当天)' %>
-                <%= f.date_field :trans_date, value: Time.now.strftime('%F'), class: 'form-control' %>
+                <%= f.label :belong_date, '交易日期(不填默认为当天)' %>
+                <%= f.date_field :belong_date, value: Time.now.strftime('%F'), class: 'form-control' %>
             </div>
             <!--
             <div class="col-lg-2 col-12 form-group">

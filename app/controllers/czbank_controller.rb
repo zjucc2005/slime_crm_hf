@@ -114,6 +114,6 @@ class CzbankController < ApplicationController
 
   private
   def czbank_xibao_params
-    params.require(:czbank_xibao).permit(:org_name, :staff_name, :sale_value, :trans_date, :bill_count)
+    params.require(:czbank_xibao).permit(:org_name, :staff_name, :sale_value, :belong_date, :bill_count)
   end
 end
