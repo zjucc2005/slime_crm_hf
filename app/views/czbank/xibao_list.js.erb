@@ -1,6 +1,6 @@
-<% if params[:trans_date].present? %>
-$("#date_<%= params[:trans_date] %>>.tab-body").html('<%= j(render partial: 'xibao_list') %>');
-$("#date_<%= params[:trans_date] %>>.tab-body [data-toggle='popover']").popover();
+<% if @date.present? %>
+$("#date_<%= @date %>>.tab-body").html('<%= j(render partial: 'xibao_list') %>');
+$("#date_<%= @date %>>.tab-body [data-toggle='popover']").popover();
 <% else %>
 $("#date_sum>.tab-body").html('<%= j(render partial: 'xibao_list') %>');
 $("#date_sum>.tab-body [data-toggle='popover']").popover();

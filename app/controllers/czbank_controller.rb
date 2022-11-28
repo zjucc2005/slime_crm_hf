@@ -3,7 +3,7 @@
 class CzbankController < ApplicationController
 
   def xibao
-    start_date = (CzbankXibao.minimum(:trans_date) || Time.now).to_date
+    start_date = (CzbankXibao.minimum(:belong_date) || Time.now).to_date
     end_date = Time.now.to_date
     @date_options = (start_date..end_date).map{|t| t.to_s}.reverse
   end
@@ -47,7 +47,7 @@ class CzbankController < ApplicationController
       2.upto(sheet.last_row) do |i|
         parser = Utils::CzbankXibaoTemplateParser.new(sheet.row(i))
         unless parser.import
-          raise "Row #{i}: #{parser.errors.join(', ')}"
+          logger.info "Row #{i}: #{parser.errors.join(', ')}"
         end
       end
       flash[:success] = '导入成功'
@@ -59,8 +59,8 @@ class CzbankController < ApplicationController
   end
 
   def xibao_list
-    if params[:trans_date].present?
-      query = CzbankXibao.where(trans_date: params[:trans_date])
+    if params[:belong_date].present?
+      query = CzbankXibao.where(belong_date: params[:belong_date])
       @xibao_list = query.order(id: :desc)
       org_ranking_o = query.select('org_name, SUM(sale_value) AS sum_sale_value, SUM(bill_count) AS sum_bill_count').group(:org_name).order(sum_sale_value: :desc)
       @org_ranking = org_ranking_o.map{ |item|
@@ -105,9 +105,10 @@ class CzbankController < ApplicationController
         end
       end
       @sum_ranking.sort_by!{ |item| item[:sale_rate] }.reverse!
-      @period = [(CzbankXibao.minimum(:trans_date) || Time.now).to_date, Time.now.to_date]
+      @period = [(CzbankXibao.minimum(:belong_date) || Time.now).to_date, Time.now.to_date]
     end
 
+    @date = params[:belong_date]
     respond_to { |f| f.js }
   end
 

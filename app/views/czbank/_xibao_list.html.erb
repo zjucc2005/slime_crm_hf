@@ -2,21 +2,21 @@
     <div class="col-lg-6 col-12">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#table_<%= params[:trans_date] %>">表格</a>
+                <a class="nav-link" data-toggle="pill" href="#table_<%= @date %>">表格</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="pill" href="#chart_<%= params[:trans_date] %>">图表</a>
+                <a class="nav-link active" data-toggle="pill" href="#chart_<%= @date %>">图表</a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane tab-container" id="table_<%= params[:trans_date] %>">
+            <div class="tab-pane tab-container" id="table_<%= @date %>">
                 <% if @org_ranking.present? %>
                     <p class="text-danger">NOTE! 鼠标点击表格的行,切换背景色</p>
                     <table class="table table-sm table-bordered nowrap card-text text-center text-bold" style="font-size: 1.2rem;">
                         <thead>
                         <tr>
-                            <th colspan="3" class="border-dark p-3" style="font-size: 1.4rem;"><i>奋战40天智慧大额存单销售数据分析日报（<%= Time.parse(params[:trans_date]).strftime('%m.%d') %>）</i></th>
+                            <th colspan="3" class="border-dark p-3" style="font-size: 1.4rem;"><i>奋战40天智慧大额存单销售数据分析日报（<%= Time.parse(@date).strftime('%m.%d') %>）</i></th>
                         </tr>
                         <tr>
                             <th class="border-dark">机构</th>
@@ -94,7 +94,7 @@
                     </table>
                 <% end %>
             </div>
-            <div class="tab-pane tab-container active" id="chart_<%= params[:trans_date] %>">
+            <div class="tab-pane tab-container active" id="chart_<%= @date %>">
                 <% if @org_ranking.present? %>
                     <%= render partial: 'czbank/xibao_list/chart_daily' %>
                 <% elsif @sum_ranking.present? %>
@@ -106,7 +106,7 @@
     <div class="col-6">
         <ul class="nav nav-tabs border-bottom-0">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="pill" href="#detail_<%= params[:trans_date] %>">明细 - 共 <%= @xibao_list.count %> 条数据</a>
+                <a class="nav-link active" data-toggle="pill" href="#detail_<%= @date %>">明细 - 共 <%= @xibao_list.count %> 条数据</a>
             </li>
         </ul>
         <table class="table table-sm table-bordered table-striped nowrap card-text">
@@ -114,6 +114,7 @@
             <tr>
                 <th>归属机构</th>
                 <th>绩效认领人</th>
+                <th>交易时间</th>
                 <th>交易金额(万元)</th>
                 <th>笔数</th>
                 <th>下载喜报</th>
@@ -125,6 +126,7 @@
                 <tr>
                     <td><%= instance.org_name %></td>
                     <td><%= instance.staff_name %></td>
+                    <td><%= instance.trans_date.strftime('%F %T.%6N') %></td>
                     <td><%= instance.sale_value %></td>
                     <td>
                         <%= content_tag :span, instance.bill_count, class: instance.bill_count == 1 ? '' : 'text-bold text-danger' %>

@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-4">
     <h3 class="text-bold mt-4 ml-4">
         <span>奋战40天智慧大额存单销售</span><br>
-        <span>数据分析日报（<%= Time.parse(params[:trans_date]).strftime('%m.%d') %>）</span>
+        <span>数据分析日报（<%= Time.parse(@date).strftime('%m.%d') %>）</span>
     </h3>
     <%= image_pack_tag 'czbank_logo_tr.png', style: 'height: 90px; margin-top: -15px; margin-right: -15px;' %>
 </div>
@@ -19,7 +19,7 @@
     <div class="chart_section_title mt-4 mb-2">机构当日销售金额及占比</div>
 </div>
 <div class="text-center">
-    <div id="chart1-<%= params[:trans_date] %>" style="height: 450px;"></div>
+    <div id="chart1-<%= @date %>" style="height: 450px;"></div>
 </div>
 
 <div class="text-center">
@@ -27,12 +27,12 @@
 </div>
 
 <div class="text-center mb-4">
-    <div id="chart2-<%= params[:trans_date] %>" style="height: 300px;"></div>
+    <div id="chart2-<%= @date %>" style="height: 300px;"></div>
 </div>
 
 <script>
     $(function(){
-        let chart1 = echarts.init(document.getElementById('chart1-<%= params[:trans_date] %>'), 'default');
+        let chart1 = echarts.init(document.getElementById('chart1-<%= @date %>'), 'default');
         let option1 = {
             tooltip: {
                 trigger: 'item'
@@ -81,7 +81,7 @@
         };
         chart1.setOption(option1);
 
-        let chart2 = echarts.init(document.getElementById('chart2-<%= params[:trans_date] %>'), 'default');
+        let chart2 = echarts.init(document.getElementById('chart2-<%= @date %>'), 'default');
         let option2 = {
             grid: {
                 bottom: '25%',

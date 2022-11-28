@@ -1,3 +1,3 @@
-window.loadCzbankXibaoList = function(trans_date){
-    $.get('/czbank/xibao_list.js', { trans_date: trans_date });
+window.loadCzbankXibaoList = function(belong_date){
+    $.get('/czbank/xibao_list.js', { belong_date: belong_date });
 };
