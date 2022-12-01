@@ -51,6 +51,10 @@
                     <i class="fa fa-upload"></i> 导入文件
                 <% end %>
             </div>
+            <div class="col-lg-2 col-6 offset-lg-4 form-group">
+                <%= label_tag :space, '&nbsp;'.html_safe %><br>
+                <%= link_to '清空喜报数据', '#', class: 'btn btn-sm btn-dark w-100', data: { confirm: '危险操作!!确认要清空喜报数据吗?' } %>
+            </div>
         </div>
     <% end %>
 </div>
