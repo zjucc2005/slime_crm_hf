@@ -187,17 +187,18 @@ class Candidate < ApplicationRecord
 
   # 费率映射规则
   def _c_t_iqvia_rate_mapping_
-    case cpt
-    when 0 then 0
-    when 0..1000 then 2500 - cpt.to_i
-    when 1000..1500 then 3250 - cpt.to_i
-    when 1500..2000 then 4000 - cpt.to_i
-    when 2000..2500 then 4750 - cpt.to_i
-    when 2500..3000 then 5500 - cpt.to_i
-    when 3000..3500 then 6250 - cpt.to_i
-    when 3500..4000 then 7000 - cpt.to_i
-    else nil
-    end
+    # case cpt
+    # when 0 then 0
+    # when 0..1000 then 2500 - cpt.to_i
+    # when 1000..1500 then 3250 - cpt.to_i
+    # when 1500..2000 then 4000 - cpt.to_i
+    # when 2000..2500 then 4750 - cpt.to_i
+    # when 2500..3000 then 5500 - cpt.to_i
+    # when 3000..3500 then 6250 - cpt.to_i
+    # when 3500..4000 then 7000 - cpt.to_i
+    # else nil
+    # end
+    cpt.to_i.zero? ? 0 : (840 + 0.26 * cpt.to_i).ceil
   end
 
   def _c_t_iqvia_rate_
