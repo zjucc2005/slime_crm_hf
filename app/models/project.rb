@@ -168,7 +168,7 @@ class Project < ApplicationRecord
   end
 
   def premium_charge_duration_rate
-    project_task_query = ProjectTask.where(status: 'finished', currency: 'RMB')
+    project_task_query = project_tasks.where(status: 'finished', currency: 'RMB')
     total_charge_duration = project_task_query.sum(:charge_duration)
     if total_charge_duration.zero?
       0
