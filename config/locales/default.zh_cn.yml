@@ -158,6 +158,7 @@ zh_cn:
     total_expert_fee: "专家费用总计"
     total_expert_fee_unpaid: "专家费用总计 - 未支付"
     total_staffs: "员工总数"
+    premium_charge_rate: "Premium收费小时数占比"
     value: "数值"
 
   will_paginate:

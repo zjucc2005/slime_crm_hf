@@ -167,6 +167,16 @@ class Project < ApplicationRecord
     self.update(updated_at: Time.now)
   end
 
+  def premium_charge_duration_rate
+    project_task_query = ProjectTask.where(status: 'finished', currency: 'RMB')
+    total_charge_duration = project_task_query.sum(:charge_duration)
+    if total_charge_duration.zero?
+      0
+    else
+      project_task_query.where(expert_level: 'premium').sum(:charge_duration).to_f / total_charge_duration
+    end
+  end
+
   private
   def setup
     self.status ||= 'initialized'

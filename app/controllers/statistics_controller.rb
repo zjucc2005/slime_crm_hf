@@ -20,6 +20,11 @@ class StatisticsController < ApplicationController
     total_income_billed        = project_task_query.where('project_tasks.charge_status' => 'billed').sum(:actual_price)
     total_expert_fee           = project_task_cost_query.sum('project_task_costs.price')
     total_expert_fee_unpaid    = project_task_cost_query.where('project_tasks.payment_status' => 'unpaid').sum('project_task_costs.price')
+    if total_charge_duration_hour.zero?
+      premium_charge_rate = 0
+    else
+      premium_charge_rate = project_task_query.where(expert_level: 'premium').sum(:charge_duration).to_f / project_task_query.sum(:charge_duration)
+    end
 
     @current_month_count_infos = [
       { :name => t('dashboard.total_experts'),              :value => total_experts,              :url => nil },
@@ -29,7 +34,8 @@ class StatisticsController < ApplicationController
       { :name => t('dashboard.total_income_unbilled'),      :value => total_income_unbilled,      :url => nil },
       { :name => t('dashboard.total_income_billed'),        :value => total_income_billed,        :url => nil },
       { :name => t('dashboard.total_expert_fee'),           :value => total_expert_fee,           :url => finance_summary_statistics_path },
-      { :name => t('dashboard.total_expert_fee_unpaid'),    :value => total_expert_fee_unpaid,    :url => nil }
+      { :name => t('dashboard.total_expert_fee_unpaid'),    :value => total_expert_fee_unpaid,    :url => nil },
+      { name: t('dashboard.premium_charge_rate'), value: "#{(premium_charge_rate * 100).round(1)} %", url: nil }
     ]
 
     respond_to do |f|

@@ -23,6 +23,7 @@
                     <th><%= mt(:project_requirement, :demand_number) %></th>
                     <th><%= mt(:project, :total_project_tasks) %></th>
                     <th><%= mt(:project, :total_charge_duration) %></th>
+                    <th>Premium Rate</th>
                     <th><%= mt(:project, :status) %></th>
                     <th><%= mt(:project, :created_by) %></th>
                     <th><%= mt(:project, :created_at) %></th>
@@ -42,6 +43,9 @@
                         <td><%= project.project_requirements.sum(:demand_number) rescue 'ERROR' %></td>
                         <td><%= project.total_project_tasks %></td>
                         <td><%= project.total_charge_duration %> <%= t(:hour) %></td>
+                        <td>
+                            <%= content_tag :span, "#{(project.premium_charge_duration_rate * 100).round} %", class: project.premium_charge_duration_rate > 0.5 ? 'text-danger text-bold' : '' %>
+                        </td>
                         <td><%= project_status_badge(project.status) %></td>
                         <td><%= project.creator.name_cn rescue 'NA' %></td>
                         <td><%= project.created_at.strftime('%F %T') %></td>

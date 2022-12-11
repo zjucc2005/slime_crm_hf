@@ -158,6 +158,7 @@ en:
     total_expert_fee: "Total expert fee"
     total_expert_fee_unpaid: "Total expert fee(unpaid)"
     total_staffs: "Total Staffs"
+    premium_charge_rate: "Premium charge duration rate"
     value: "Value"
 
   will_paginate:
