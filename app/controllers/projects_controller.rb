@@ -667,7 +667,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_IQVIA项目执行订单-海鄞.xlsx"
+    file_path = "#{file_dir}/#{project.id}_IQVIA项目执行订单-海鄞.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -698,10 +698,10 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 10, task.duration)                                                  # K, 访谈时长
       sheet.add_cell(row, 11, task.charge_duration)                                           # L, 收费时长
       sheet.add_cell(row, 12, (2500 * task.expert_rate).round(2))                             # M, 访谈单价
-      sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
-      sheet.add_cell(row, 14, task.actual_price)                                              # O, 折后费用
-      sheet.add_cell(row, 15, task.costs.where(category: 'expert').sum(:price))               # P, 礼金费用
-      sheet.add_cell(row, 16, '银行卡转账（公对私）')                                             # Q, 礼金支付方式
+      # sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
+      sheet.add_cell(row, 13, task.actual_price)                                              # N, 折后费用
+      sheet.add_cell(row, 14, task.costs.where(category: 'expert').sum(:price))               # O, 礼金费用
+      sheet.add_cell(row, 15, '银行卡转账（公对私）')                                             # P, 礼金支付方式
     end
 
     ActiveRecord::Base.transaction do
@@ -713,7 +713,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_对账单.xlsx"
+    file_path = "#{file_dir}/#{project.id}_对账单.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -764,7 +764,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
+    file_path = "#{file_dir}/#{project.id}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -824,7 +824,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
+    file_path = "#{file_dir}/#{project.id}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -884,7 +884,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
+    file_path = "#{file_dir}/#{project.id}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
