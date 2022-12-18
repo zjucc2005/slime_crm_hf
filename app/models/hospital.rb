@@ -13,11 +13,15 @@ class Hospital < ApplicationRecord
 
   private
   def setup
-    if self.kwlist.is_a? String
-      self.kwlist = self.kwlist.split(',').map(&:strip)
+    if kwlist.is_a? String
+      self.kwlist = kwlist.split(',').map(&:strip)
       if self.kwlist.length > MAX_KWLIST_LENGTH
         errors.add(:kwlist, :less_than_or_equal_to, count: MAX_KWLIST_LENGTH)
       end
+    elsif kwlist.is_a? Array
+      self.kwlist = kwlist.map(&:to_s).map(&:strip)
+    elsif kwlist.nil?
+      self.kwlist = []
     else
       errors.add(:kwlist, :invalid_format)
     end

@@ -667,7 +667,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.id}_IQVIA项目执行订单-海鄞.xlsx"
+    file_path = "#{file_dir}/#{project.code}_IQVIA项目执行订单-海鄞.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -713,7 +713,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.id}_对账单.xlsx"
+    file_path = "#{file_dir}/#{project.code}_对账单.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -764,7 +764,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.id}_定性受访信息表.xlsx"
+    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -824,7 +824,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.id}_定性受访信息表.xlsx"
+    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -884,7 +884,7 @@ class ProjectsController < ApplicationController
 
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.id}_定性受访信息表.xlsx"
+    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
