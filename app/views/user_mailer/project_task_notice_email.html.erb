@@ -28,8 +28,7 @@
         <b>专家信息：</b><%= "#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@project_task.expert_name_for_external}" %><br>
         <% r_f = @project_task.recruitment_fee_for_iqvia %>
         <b>专家费率：</b>专家费<%= r_f ? (@project_task.charge_rate * @project_task.expert_rate / 0.84).round(0) - r_f : 'NA' %>+招募费<%= r_f || 'NA' %>/小时<br>
-        <b>访谈费用（折前）：</b><%= (actual_price / 0.84).round(2) %>元<br>
-        <b>访谈费用（折后）：</b><%= actual_price %>元<br>
+        <b>访谈费用：</b><%= actual_price %>元<br>
         <b>备注：</b><%= @project_task.memo %><br>
     </p>
 <% elsif @category == 'C' %>

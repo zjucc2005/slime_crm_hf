@@ -185,7 +185,8 @@ class Candidate < ApplicationRecord
     _rate_ == 0 ? '' : "电话-#{_rate_}/小时"
   end
 
-  # 费率映射规则
+  # 费率映射规则, 招募费
+  # ProjectTask#recruitment_fee_for_iqvia 有引用
   def _c_t_iqvia_rate_mapping_
     # case cpt
     # when 0 then 0
@@ -198,7 +199,7 @@ class Candidate < ApplicationRecord
     # when 3500..4000 then 7000 - cpt.to_i
     # else nil
     # end
-    cpt.to_i.zero? ? 0 : (840 + 0.26 * cpt.to_i).ceil
+    cpt.to_i.zero? ? 0 : (840 + 0.26 * cpt.to_i).ceil  # integer
   end
 
   def _c_t_iqvia_rate_
