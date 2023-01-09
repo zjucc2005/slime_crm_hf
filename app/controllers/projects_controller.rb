@@ -700,7 +700,7 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 12, (2100 * task.expert_rate).round(2))                             # M, 访谈单价
       # sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
       sheet.add_cell(row, 13, task.actual_price)                                              # N, 折后费用
-      sheet.add_cell(row, 14, task.costs.where(category: 'expert').sum(:price))               # O, 礼金费用
+      sheet.add_cell(row, 14, task.lijin_for_settlement)               # O, 礼金费用
       sheet.add_cell(row, 15, '银行卡转账（公对私）')                                             # P, 礼金支付方式
     end
 

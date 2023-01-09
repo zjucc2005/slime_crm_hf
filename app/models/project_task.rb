@@ -137,7 +137,8 @@ class ProjectTask < ApplicationRecord
       # else
       #   nil
       # end
-      expert._c_t_iqvia_rate_mapping_
+      # expert._c_t_iqvia_rate_mapping_
+      (charge_rate || 2100) * (expert_rate || 1 ) - expert.cpt
     end
   end
 

@@ -19,7 +19,7 @@
 收费时长：<%= @project_task.charge_duration %>分钟
 专家信息：<%= "#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@project_task.expert_name_for_external}" %>
 <% r_f = @project_task.recruitment_fee_for_iqvia %>
-专家费率：专家费<%= r_f ? (@project_task.charge_rate * @project_task.expert_rate / 0.84).round(0) - r_f : 'NA' %>+招募费<%= r_f || 'NA' %>/小时
+专家费率：专家费<%= r_f ? (@project_task.charge_rate * @project_task.expert_rate).round(0) - r_f : 'NA' %>+招募费<%= r_f || 'NA' %>/小时
 访谈费用：<%= actual_price %>元
 备注：<%= @project_task.memo %>
 <% elsif @category == 'C' %>
