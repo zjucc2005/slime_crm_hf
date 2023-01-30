@@ -6,7 +6,7 @@ class CardTemplatesController < ApplicationController
   # GET /card_templates
   def index
     query = user_channel_filter(CardTemplate.all)
-    @card_templates = query.order(:created_at => :desc).paginate(:page => params[:page], :per_page => 20)
+    @card_templates = query.order(group: :asc, created_at: :desc).paginate(page: params[:page], per_page: 20)
   end
 
   # GET /card_templates/:id
@@ -75,7 +75,7 @@ class CardTemplatesController < ApplicationController
 
   private
   def card_template_params
-    params.require(:card_template).permit(:name, :content)
+    params.require(:card_template).permit(:name, :content, :group)
   end
 
   def load_card_template

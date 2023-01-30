@@ -17,6 +17,7 @@
                 <th><%= mt(:card_template, :id) %></th>
                 <th><%= mt(:card_template, :name) %></th>
                 <th><%= mt(:card_template, :content) %></th>
+                <th><%= mt(:card_template, :group) %></th>
                 <th><%= mt(:card_template, :created_at) %></th>
             </tr>
             </thead>
@@ -26,6 +27,7 @@
                     <td><%= content_tag :span, "# #{template.uid}", :class => 'text-gray' %></td>
                     <td><%= link_to template.name, edit_card_template_path(template) %></td>
                     <td><%= truncate(template.content, length: 50) %></td>
+                    <td><%= template.group %></td>
                     <td><%= template.created_at.strftime('%F %T') %></td>
                 </tr>
             <% end %>

@@ -4,11 +4,13 @@ class CardTemplate < ApplicationRecord
 
   # ENUM
   CATEGORY = {
-    :Candidate => %w[uid name city phone description company department hospital_level title title2 expert_level rate gj_rate iqvia_rate iqvia_rate2]
+    :Candidate => %w[uid name city phone description company department hospital_level title title2 expert_level rate rate_2 gj_rate iqvia_rate iqvia_rate2]
   }.stringify_keys
   CATEGORY_DESC = {
     :Candidate => '专家'
   }.stringify_keys
+
+  GROUP = ['IQVIA', '投资客户', '其他'] # 分组/目录枚举值
 
   # Validations
   validates_inclusion_of :category, :in => CATEGORY.keys
@@ -44,10 +46,10 @@ class CardTemplate < ApplicationRecord
 
   # 文本解析分割
   def text_parser(text, &block)
-    m = text.match /(#{STAG}\s+\w+\s+#{ETAG})/  # {%[\s]keyword[\s]%}, \s is necessary
+    m = text.match /(#{STAG}\s*\w+\s*#{ETAG})/  # {%[\s]keyword[\s]%}, \s is optional
     if m.present?
       @container << m.pre_match
-      m.to_s.match(/#{STAG}\s+(\w+)\s+#{ETAG}/)
+      m.to_s.match(/#{STAG}\s*(\w+)\s*#{ETAG}/)
       field = $1
       if block_given?
         @container << yield(field)

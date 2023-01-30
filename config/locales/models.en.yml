@@ -165,6 +165,7 @@ en:
 
       card_template:
         category: "Category"
+        group: "Index"
         name: "Name"
         content: "Content"
 

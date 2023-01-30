@@ -3,9 +3,12 @@
     <%= fa_icon_tag('drivers-license-o') %> <%#= t(:expert_card) %>
 </button>
 <div class="dropdown-menu">
-    <div class="dropdown-header"><%= t(:expert_card) %></div>
-    <% card_template_options.each do |option| %>
-        <%= link_to option[0], 'javascript:void(0);', :class => 'dropdown-item', :onclick => "cardTemplate(#{option[1]}, #{uid});" %>
+    <% CardTemplate::GROUP.each do |group| %>
+        <% next if CardTemplate.where(group: group).count.zero? %>
+        <div class="dropdown-header"><%= group %></div>
+        <% CardTemplate.where(group: group).order(:id).pluck(:name, :id).each do |option| %>
+            <%= link_to option[0], 'javascript:void(0);', class: 'dropdown-item', onclick: "cardTemplate(#{option[1]}, #{uid});" %>
+        <% end %>
     <% end %>
 </div>
 <% end %>

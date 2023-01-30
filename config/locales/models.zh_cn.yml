@@ -195,6 +195,7 @@ zh_cn:
 
       card_template:
         category: "类型"
+        group: "目录"
         name: "名称"
         content: "内容"
 

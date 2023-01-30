@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_28_133225) do
+ActiveRecord::Schema.define(version: 2023_01_30_130445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 2022_11_28_133225) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_channel_id"
+    t.string "group"
     t.index ["user_channel_id"], name: "index_card_templates_on_user_channel_id"
   end
 

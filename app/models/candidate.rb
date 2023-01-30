@@ -149,6 +149,7 @@ class Candidate < ApplicationRecord
     when :title2       then latest_work_experience.try(:title1)
     when :expert_level then self._c_t_expert_level
     when :rate         then self.cpt.to_i
+    when :rate_2       then _c_t_rate_2_
     when :gj_rate      then self._c_t_gj_rate_
     when :iqvia_rate   then _c_t_iqvia_rate_
     when :iqvia_rate2  then _c_t_iqvia_rate2_
@@ -163,6 +164,21 @@ class Candidate < ApplicationRecord
       when 'USD' then cpt.to_i >= 200 ? 'Premium Expert' : 'Standard Expert'
       else 'Standard Expert'
     end
+  end
+
+  def _c_t_rate_2_
+    res = case cpt 
+      when (0..1200) then 1
+      when (1200..1500) then 1.25
+      when (1500..1800) then 1.5
+      when (1800..2100) then 1.75
+      when (2100..2500) then 2
+      when (2500..2800) then 2.25
+      when (2800..3000) then 2.5
+      else ((cpt - 3000) / 500.0).ceil * 0.25 + 2.5
+      end
+    res = 1 if res < 1
+    res
   end
 
   def _gj_rate_
