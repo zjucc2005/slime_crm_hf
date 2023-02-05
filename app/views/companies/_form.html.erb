@@ -44,6 +44,10 @@
         <%= f.label :project_task_notice_email %>
         <%= f.select :project_task_notice_email, ProjectTask::NOTICE_EMAIL.to_a.map(&:reverse), { include_blank: default_prompt }, class: 'form-control select2' %>
     </div>
+    <div class="col-lg-3 col-6 form-group">
+        <%= f.label :project_task_notice_email_cc %><span class="text-red text-smaller">(多个邮箱用半角逗号","隔开)</span>
+        <%= f.text_field :project_task_notice_email_cc, class: 'form-control' %>
+    </div>
     <div class="col-12 form-group">
         <%= f.label :description %>
         <%= f.text_area :description, :rows => 5, :class => 'form-control' %>

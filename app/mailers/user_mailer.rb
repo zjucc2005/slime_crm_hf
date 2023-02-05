@@ -20,6 +20,11 @@ class UserMailer < ApplicationMailer
     main_pc = @project.project_candidates.client.where(mark: 'main').where.not(candidate_id: @project_task.client_id).first
     to_email << main_pc.candidate.email if main_pc
     cc_email = [@project_task.creator.email, @project_task.pm.email]
+    company_cc = @project.company.project_task_notice_email_cc
+    if company_cc.present? && company_cc.is_a?(String)
+      company_cc_list = company_cc.split(',').map(&:strip)
+      cc_email += company_cc_list if company_cc_list.any?
+    end
     subject  = "【hci 专家访谈明细】 #{@project.code}-#{@project.name}-#{@project_task.expert_level.capitalize} Expert ##{@expert.uid} #{@project_task.expert_name_for_external}"
     mail(to: to_email, cc: cc_email, subject: subject)
   end

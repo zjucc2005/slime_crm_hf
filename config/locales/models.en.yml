@@ -184,6 +184,7 @@ en:
         compliance_file: "Compliance file"
         is_signed: "Signed"
         project_task_notice_email: "Project task notice email"
+        project_task_notice_email_cc: "Project task notice emall cc"
 
       contract:
         file: "File"

@@ -214,6 +214,7 @@ zh_cn:
         compliance_file: "合规文件"
         is_signed: "是否签约"
         project_task_notice_email: "项目任务通知邮件"
+        project_task_notice_email_cc: "项目任务通知邮件抄送"
 
       contract:
         file: "文件"
