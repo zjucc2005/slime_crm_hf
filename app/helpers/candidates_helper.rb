@@ -55,6 +55,14 @@ module CandidatesHelper
     Candidate::DATA_CHANNEL.to_a.map(&:reverse)
   end
 
+  def yibaotanpan_year_options(cur_value=nil)
+    cur_year = Time.now.year
+    options = (cur_year-4..cur_year).to_a
+    cur_value = Integer(cur_value) rescue nil
+    options << cur_value if cur_value
+    options.sort.reverse
+  end
+
   def candidate_job_status_badge(status)
     dict = { on: 'success', off: 'secondary' }.stringify_keys
     content_tag :span, Candidate::JOB_STATUS[status] || status, :class => "badge badge-#{dict[status] || 'secondary'}"

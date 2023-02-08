@@ -17,6 +17,9 @@ class DoctorsController < ApplicationController
     %w[id user_channel_id category2].each do |field|
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
+    if params[:yibaotanpan_year].present?
+      query = query.where("property->>'yibaotanpan_year' = ?", params[:yibaotanpan_year].strip)
+    end
     # -- 省份/城市 --
     if params[:city_level].present?
       query = query.joins(:experiences).where('candidates.city ~* ?', LocationDatum::CITY_TIER[params[:city_level]].join('|'))
@@ -224,7 +227,7 @@ class DoctorsController < ApplicationController
   def doctor_params
     params.require(:candidate).permit(:first_name, :last_name, :nickname, :category2, :date_of_birth, :gender, :city,
                                       :phone, :phone1, :email, :wechat, :file, :sign_file, :expertise, :description,
-                                      :recommender_id, :is_available, :is_kol, :cpt, :currency)
+                                      :recommender_id, :is_available, :is_kol, :cpt, :currency, :yibaotanpan_year)
   end
 
   def exp_params
