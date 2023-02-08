@@ -114,9 +114,8 @@
 
 <div class="row">
     <div class="col-lg-3 col-6 form-group">
-        <%= f.label :yibaotanpan_year %>
-        <%#= f.text_field :yibaotanpan_year, type: 'year', class: 'form-control' %>
-        <%= f.select :yibaotanpan_year, yibaotanpan_year_options(@doctor.yibaotanpan_year), { include_blank: default_prompt }, class: 'form-control select2' %>
+        <%= f.label :yibaotanpan_year %><span class="text-red text-smaller">(按住Ctrl可连续选择)</span>
+        <%= f.select :yibaotanpan_year, yibaotanpan_year_options, { include_blank: default_prompt }, multiple:true, class: 'form-control select2' %>
     </div>
 </div>
 

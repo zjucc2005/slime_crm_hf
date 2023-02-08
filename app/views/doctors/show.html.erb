@@ -234,7 +234,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><%= mt(:candidate, :yibaotanpan_year) %></span>
                 </div>
-                <%= content_tag :span, @doctor.yibaotanpan_year, class: 'form-control' %>
+                <%= content_tag :span, (@doctor.yibaotanpan_year.join(',') rescue nil), class: 'form-control' %>
             </div>
         </div>
     </div>

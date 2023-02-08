@@ -18,7 +18,7 @@ class DoctorsController < ApplicationController
       query = query.where(field.to_sym => params[field].strip) if params[field].present?
     end
     if params[:yibaotanpan_year].present?
-      query = query.where("property->>'yibaotanpan_year' = ?", params[:yibaotanpan_year].strip)
+      query = query.where("property->'yibaotanpan_year' @> ?", [params[:yibaotanpan_year]].to_json)
     end
     # -- 省份/城市 --
     if params[:city_level].present?
@@ -114,6 +114,9 @@ class DoctorsController < ApplicationController
   def create
     begin
       @doctor = Candidate.doctor.new(doctor_params.merge(created_by: current_user.id, user_channel_id: current_user.user_channel_id))
+      if params[:candidate][:yibaotanpan_year].present?
+        @doctor.yibaotanpan_year = params[:candidate][:yibaotanpan_year] - ['']
+      end
       if @doctor.valid?
         ActiveRecord::Base.transaction do
           @doctor.save!
@@ -156,6 +159,10 @@ class DoctorsController < ApplicationController
 
       ActiveRecord::Base.transaction do
         @doctor.update!(doctor_params)
+        if params[:candidate][:yibaotanpan_year].present?
+          @doctor.yibaotanpan_year = params[:candidate][:yibaotanpan_year] - ['']
+          @doctor.save!
+        end
         org = Hospital.where(id: exp_params[:org_id]).first
         dep = HospitalDepartment.where(id: exp_params[:dep_id]).first
         @exp ? @exp.update!(exp_params.merge(org_cn: org.name, department: dep.name)) :
@@ -227,7 +234,7 @@ class DoctorsController < ApplicationController
   def doctor_params
     params.require(:candidate).permit(:first_name, :last_name, :nickname, :category2, :date_of_birth, :gender, :city,
                                       :phone, :phone1, :email, :wechat, :file, :sign_file, :expertise, :description,
-                                      :recommender_id, :is_available, :is_kol, :cpt, :currency, :yibaotanpan_year)
+                                      :recommender_id, :is_available, :is_kol, :cpt, :currency)
   end
 
   def exp_params

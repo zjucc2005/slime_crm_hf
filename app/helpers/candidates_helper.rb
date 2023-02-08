@@ -55,11 +55,9 @@ module CandidatesHelper
     Candidate::DATA_CHANNEL.to_a.map(&:reverse)
   end
 
-  def yibaotanpan_year_options(cur_value=nil)
+  def yibaotanpan_year_options
     cur_year = Time.now.year
-    options = (cur_year-4..cur_year).to_a
-    cur_value = Integer(cur_value) rescue nil
-    options << cur_value if cur_value
+    options = (2019..cur_year).to_a
     options.sort.reverse
   end
 
