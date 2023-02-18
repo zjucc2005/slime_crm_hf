@@ -66,11 +66,10 @@ module ProjectsHelper
   def project_export_billing_template_options
     [
       ['对账单', 'settlement_20210604_1'],
-      # ['定性受访信息表', 'settlement_20210604_2'],
       # ['定性受访信息表20220509', 'settlement_20220509'],
       ['定性受访信息表202206 (new)', 'settlement_202206'],
       # ['IQVIA结算模板', 'iqvia_settlement']，
-      ['信息表', 'settlement_230217']
+      ['信息表', 'settlement_20230217']
     ]
   end
 
