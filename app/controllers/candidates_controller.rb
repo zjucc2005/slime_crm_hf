@@ -27,7 +27,7 @@ class CandidatesController < ApplicationController
       end
       and_conditions = []
       # or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_experiences.description]
-      or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title]
+      or_fields = %w[candidates.description candidate_experiences.org_cn candidate_experiences.org_en candidate_experiences.title candidate_comments.content]
       @terms.each do |term|
         sa = SearchAlias.where('kwlist @> ?', term.to_json).first
         if sa
@@ -48,7 +48,7 @@ class CandidatesController < ApplicationController
         query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id AND candidate_experiences.ended_at IS NULL')
       end
       # query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
-      query = query.where(and_conditions.join(' AND '))
+      query = query.joins(:comments).where(and_conditions.join(' AND '))
       query = query.distinct  # 去重
     end
     @candidates = query.order(coef: :desc, id: :desc).paginate(page: params[:page], per_page: @per_page)

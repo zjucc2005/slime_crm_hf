@@ -435,9 +435,9 @@ class ProjectsController < ApplicationController
       case params[:template]
       when 'settlement_20210604_1' then export_settlement_20210604_1(@project)
       # when 'settlement_20210604_2' then export_settlement_20210604_2(@project)
-      when 'settlement_20220509'   then export_settlement_20220509(@project)
+      # when 'settlement_20220509'   then export_settlement_20220509(@project)
       when 'settlement_202206'     then export_settlement_202206(@project)
-      when 'iqvia_settlement'      then export_iqvia_settlement_template(@project)
+      # when 'iqvia_settlement'      then export_iqvia_settlement_template(@project)
       else raise('template not found')
       end
     rescue Exception => e
@@ -583,6 +583,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # DEPRECATED 20230217
   def export_iqvia_settlement_template(project)
     template_path = 'public/templates/iqvia_settlement_template.xlsx'
     raise 'template file not found' unless File.exist?(template_path)
@@ -718,7 +719,7 @@ class ProjectsController < ApplicationController
     send_file file_path
   end
 
-  # DEPRECATED
+  # DEPRECATED 20220714
   def export_settlement_20210604_2(project)
     template_path = 'public/templates/settlement_template_20210604_2.xlsx'
     raise 'template file not found' unless File.exist?(template_path)
@@ -769,6 +770,7 @@ class ProjectsController < ApplicationController
     send_file file_path
   end
 
+  # DEPRECATED 20230217
   def export_settlement_20220509(project)
     template_path = 'public/templates/settlement_template_20220509.xlsx'
     raise 'template file not found' unless File.exist?(template_path)
