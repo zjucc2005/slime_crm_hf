@@ -25,7 +25,7 @@
                     <th><%= mt(:project, :total_charge_duration) %></th>
                     <th>Premium Rate</th>
                     <th><%= mt(:project, :status) %></th>
-                    <th><%= mt(:project, :total_actual_price) %></th>
+                    <th><%= mt(:project, :total_price) %></th>
                     <th><%= mt(:project, :created_by) %></th>
                     <th><%= mt(:project, :created_at) %></th>
                     <th><%= mt(:project, :updated_at) %></th>
@@ -48,7 +48,7 @@
                             <%= content_tag :span, "#{(project.premium_charge_duration_rate * 100).round} %", class: project.premium_charge_duration_rate > 0.5 ? 'text-danger text-bold' : '' %>
                         </td>
                         <td><%= project_status_badge(project.status) %></td>
-                        <td><%= project.total_actual_price %></td>
+                        <td><%= project.total_price %></td>
                         <td><%= project.creator.name_cn rescue 'NA' %></td>
                         <td><%= project.created_at.strftime('%F %T') %></td>
                         <td><%= project.updated_at.strftime('%F %T') %></td>
