@@ -47,8 +47,8 @@ class CandidatesController < ApplicationController
       else
         query = query.joins('LEFT JOIN candidate_experiences on candidates.id = candidate_experiences.candidate_id AND candidate_experiences.ended_at IS NULL')
       end
-      # query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
-      query = query.joins(:comments).where(and_conditions.join(' AND '))
+      query = query.joins('LEFT JOIN candidate_comments ON candidates.id = candidate_comments.candidate_id')  # 加入搜索备注
+      query = query.where(and_conditions.join(' AND '))
       query = query.distinct  # 去重
     end
     @candidates = query.order(coef: :desc, id: :desc).paginate(page: params[:page], per_page: @per_page)

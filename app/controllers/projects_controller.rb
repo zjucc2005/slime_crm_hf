@@ -861,10 +861,10 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 6, exp.title)                                                       # G, 职位/职称
       sheet.add_cell(row, 7, (task.started_at.strftime('%Y/%m/%d') rescue ''))                # H, 访谈日期
       sheet.add_cell(row, 8, 2100)                                                            # I, 标准费率/RMB/元
-      sheet.add_cell(row, 9, task.duration)                                                   # J, 访问时长/分钟
+      sheet.add_cell(row, 9, task.charge_duration)                                            # J, 访问时长/分钟
       sheet.add_cell(row, 10, task.total_price - task.lijin_for_settlement)                   # K, 招募费用
       sheet.add_cell(row, 11, task.lijin_for_settlement)                                      # L, 礼金（专家实际领取费用）
-      sheet.add_cell(row, 12, (task.base_price / 2100).round(2))                              # M, 专家倍率
+      sheet.add_cell(row, 12, task.expert_rate)                                               # M, 专家倍率
       sheet.add_cell(row, 13, task.total_price)                                               # N, 总费用RMB/元
       sheet.add_cell(row, 14, 0)                                                              # O, 招募费用-未超时部分
       sheet.add_cell(row, 15, 0)                                                              # P, 时长超出90分钟后招募费5折减免金额
