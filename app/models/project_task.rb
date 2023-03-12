@@ -90,6 +90,16 @@ class ProjectTask < ApplicationRecord
     (charge_duration / 60.0).round(2)
   end
 
+  def charge_rate_realtime
+    contract = active_contract
+    contract ? contract.charge_rate : charge_rate
+  end
+
+  # 实际费率，精确到1
+  def charge_rate_mod
+    ((charge_rate || 0) * (expert_rate || 1)).round.to_f
+  end
+
   def set_charge_timestamp
     case charge_status
       when 'billed' then
@@ -212,7 +222,8 @@ class ProjectTask < ApplicationRecord
     self.payment_status ||= 'unpaid'    # init
     contract = active_contract
     self.charge_rate    = contract.charge_rate                                                         # 收费倍率
-    self.charge_days    = contract.payment_days                                                      # 账期(天数)
+    self.currency       = contract.currency                                                            # 货币
+    self.charge_days    = contract.payment_days                                                        # 账期(天数)
 
     if charge_duration.present?
       self.ended_at       = started_at + duration.to_i * 60                                            # 结束时间 = 开始时间 + 时长
