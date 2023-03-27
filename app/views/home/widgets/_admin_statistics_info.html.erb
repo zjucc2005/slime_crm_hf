@@ -33,6 +33,18 @@
     <div class="card mb-3">
         <div class="card-header">
             <h6 class="mb-0">
+                <i class="fa fa-bell-o text-red text-wobble"></i>
+                <%= t('dashboard.wait_to_bill_projects') %>
+            </h6>
+        </div>
+        <div class="card-body p-0">
+            <div id="wait_to_bill_projects_wrapper"></div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h6 class="mb-0">
                 <%= t('dashboard.ongoing_project_requirements') %>
             </h6>
         </div>
@@ -64,6 +76,7 @@
     $(document).ready(function(){
         $.get('statistics/current_month_count_infos.js');
         $.get('statistics/current_month_task_ranking.js?limit=10&mode=1');
+        $.get('statistics/wait_to_bill_projects.js?');
         $.get('statistics/ongoing_project_requirements.js?limit=10');
         $.get('statistics/ongoing_project_tasks.js?limit=10');
     });

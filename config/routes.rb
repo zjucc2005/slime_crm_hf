@@ -191,6 +191,7 @@ Rails.application.routes.draw do
     get :current_month_count_infos,  on: :collection
     get :current_month_task_ranking, on: :collection
     # get :unscheduled_projects,       on: :collection
+    get :wait_to_bill_projects,      on: :collection
     get :ongoing_project_requirements, on: :collection
     get :ongoing_project_tasks,      on: :collection
 

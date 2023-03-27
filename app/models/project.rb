@@ -132,7 +132,7 @@ class Project < ApplicationRecord
   end
 
   def close!
-    self.status = 'finished'
+    # self.status = 'finished'
     self.ended_at ||= Time.now
     self.save!
   end

@@ -160,6 +160,7 @@ zh_cn:
     total_staffs: "员工总数"
     premium_charge_rate: "Premium收费小时数占比"
     value: "数值"
+    wait_to_bill_projects: "待出账项目（项目结+逾60天）"
 
   will_paginate:
     previous_label: "上一页"

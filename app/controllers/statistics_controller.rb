@@ -98,6 +98,19 @@ class StatisticsController < ApplicationController
   #   end
   # end
 
+  def wait_to_bill_projects
+    company_ids = Contract.available.where(payment_way: 'by_project').pluck(:company_id)
+    query = Project.joins(:project_tasks).where(
+      'projects.company_id': company_ids, 
+      'projects.status': 'ongoing', 
+      'project_tasks.status': 'finished', 
+      'project_tasks.charge_status': 'unbilled'
+      ).where('projects.updated_at <= ?', Time.now - 60.days).distinct
+    @projects = query.order(:id)
+
+    respond_to { |f| f.js }
+  end
+
   # GET /statistics/ongoing_project_requirements.js
   def ongoing_project_requirements
     query = ProjectRequirement.joins(:project).where('project_requirements.status': 'ongoing').order(:created_at => :desc)
