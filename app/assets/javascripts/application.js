@@ -5,3 +5,4 @@
 //= require jquery.datetimepicker.full
 //= require clipboard.min
 //= require vue
+//= require element-ui

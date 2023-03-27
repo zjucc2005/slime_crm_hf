@@ -20,3 +20,6 @@ import 'styles/application'
 import 'bootstrap'
 import 'jquery'
 import 'js/custom'
+
+
+// Vue.use(ElementUI);

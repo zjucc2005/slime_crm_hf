@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_09_135605) do
+ActiveRecord::Schema.define(version: 2023_03_13_131204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,17 @@ ActiveRecord::Schema.define(version: 2023_03_09_135605) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "c_tags", force: :cascade do |t|
+    t.string "name"
+    t.string "path"
+    t.integer "parent_id"
+    t.boolean "is_parent", default: false
+    t.boolean "disabled", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["parent_id"], name: "index_c_tags_on_parent_id"
   end
 
   create_table "call_records", force: :cascade do |t|

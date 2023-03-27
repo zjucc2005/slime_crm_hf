@@ -280,7 +280,7 @@ class Candidate < ApplicationRecord
         errors.add(:phone1, :taken) if query.exists?(phone: phone1) || query.exists?(phone1: phone1)
       end
       if email.present?
-        errors.add(:email, :taken) if query.where('email ~* ?', email.shellescape).count > 0
+        errors.add(:email, :taken) if query.where('email ILIKE ?', email.shellescape).count > 0
       end
     else
       true

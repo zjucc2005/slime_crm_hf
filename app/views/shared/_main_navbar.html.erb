@@ -109,6 +109,9 @@
                         <%= link_to search_aliases_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('font') %> <%= mt(:search_alias) %>
                         <% end if can?(:index, SearchAlias) %>
+                        <%= link_to c_tags_path, class: 'dropdown-item' do %>
+                            <i class="fa fa-tags text-info"></i> 标签数据
+                        <% end if can?(:index, CTag) %>
                         <%= link_to import_gllue_candidates_extras_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('wrench') %> <%= t(:import_gllue_candidates) %>
                         <% end if can?(:import_gllue_candidates, Extra) %>

@@ -202,6 +202,9 @@ Rails.application.routes.draw do
     post :import_gllue_candidates, on: :collection
   end
 
+  resources :c_tags do
+  end
+
   # tmp utils for czbank
   resources :czbank do
     get :xibao, on: :collection
