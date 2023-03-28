@@ -8,13 +8,10 @@
             <th><%= t(:client_contact) %></th>
             <th><%= mt(:project, :code) %></th>
             <th><%= mt(:company, :name_abbr) %></th>
-            <th><%= mt(:project_requirement, :demand_number) %></th>
             <th><%= mt(:project, :total_project_tasks) %></th>
             <th><%= mt(:project, :total_charge_duration) %></th>
-            <th>Premium Rate</th>
             <th><%= mt(:project, :status) %></th>
             <th><%= mt(:project, :total_price) %></th>
-            <th><%= mt(:project, :created_by) %></th>
             <th><%= mt(:project, :created_at) %></th>
             <th><%= mt(:project, :updated_at) %></th>
         </tr>
@@ -28,25 +25,20 @@
                 <td><%= project.main_client.name rescue '' %></td>
                 <td><%= project.code %></td>
                 <td><%= project.company.name_abbr %></td>
-                <td><%= project.project_requirements.sum(:demand_number) rescue 'ERROR' %></td>
                 <td><%= project.total_project_tasks %></td>
                 <td><%= project.total_charge_duration %> <%= t(:hour) %></td>
-                <td>
-                    <%= content_tag :span, "#{(project.premium_charge_duration_rate * 100).round} %", class: project.premium_charge_duration_rate > 0.5 ? 'text-danger text-bold' : '' %>
-                </td>
                 <td><%= project_status_badge(project.status) %></td>
                 <td><%= project.total_price %></td>
-                <td><%= project.creator.name_cn rescue 'NA' %></td>
-                <td><%= project.created_at.strftime('%F %T') %></td>
-                <td><%= project.updated_at.strftime('%F %T') %></td>
+                <td><%= project.created_at.strftime('%F') %></td>
+                <td><%= project.updated_at.strftime('%F') %></td>
             </tr>
         <% end %>
         </tbody>
     </table>
 <% else %>
-    <div class="card p-2">
+<!--     <div class="card p-2">
         <div class="text-center">
             <h5 class="text-gray mb-0">无</h5>
         </div>
-    </div>
+    </div> -->
 <% end %>

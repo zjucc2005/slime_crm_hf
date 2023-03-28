@@ -39,6 +39,9 @@
         </div>
         <div class="card-body p-0">
             <div id="wait_to_bill_projects_wrapper"></div>
+            <div class="text-center text-bold">
+                <%= link_to '···', wait_to_bill_projects_statistics_path, :title => t(:show_all) %>
+            </div>
         </div>
     </div>
 
@@ -76,7 +79,7 @@
     $(document).ready(function(){
         $.get('statistics/current_month_count_infos.js');
         $.get('statistics/current_month_task_ranking.js?limit=10&mode=1');
-        $.get('statistics/wait_to_bill_projects.js?');
+        $.get('statistics/wait_to_bill_projects.js?limit=10');
         $.get('statistics/ongoing_project_requirements.js?limit=10');
         $.get('statistics/ongoing_project_tasks.js?limit=10');
     });
