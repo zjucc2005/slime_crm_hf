@@ -107,6 +107,7 @@ class StatisticsController < ApplicationController
       'project_tasks.charge_status': 'unbilled'
       ).where('projects.updated_at <= ?', Time.now - 60.days).distinct
     query = user_channel_filter(query, 'projects.user_channel_id')
+    @count = query.count
     query = query.limit(params[:limit]) if params[:limit].present?
     @projects = query.order(:id)
   end
