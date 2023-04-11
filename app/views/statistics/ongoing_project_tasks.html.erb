@@ -47,7 +47,7 @@
                         <td><%= task.duration %></td>
                         <td><%= task.charge_duration %></td>
                         <td><%= ProjectTask::EXPERT_LEVEL[task.expert_level] %></td>
-                        <td><%= task.expert_rate %></td>
+                        <td><%= task.expert_rate.round(3) rescue nil %></td>
                         <td><%= boolean_display(task.f_flag) %></td>
                         <td><%= boolean_display(task.is_shorthand) %></td>
                         <td><%= boolean_display(task.is_recorded) %></td>

@@ -191,7 +191,7 @@ class FinanceController < ApplicationController
       sheet.add_cell(row, 0, task.project.company.name_abbr)          # 客户(公司)/Client
       sheet.add_cell(row, 1, task.project.name)                       # 项目名称/Project
       sheet.add_cell(row, 2, task.project.code)                       # 项目代码/Project code
-      sheet.add_cell(row, 3, task.project.main_client.try(:name))   # 负责人/Seat
+      sheet.add_cell(row, 3, [task.project.main_client.try(:name), task.project.main_client.try(:name)].join(' '))   # 负责人/Seat
       sheet.add_cell(row, 4, task.started_at.strftime('%F %H:%M'))  # 日期/Date
       interview_form = case category
                          when 'cn' then ProjectTask::INTERVIEW_FORM[task.interview_form]
