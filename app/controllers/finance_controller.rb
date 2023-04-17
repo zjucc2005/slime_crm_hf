@@ -275,8 +275,8 @@ class FinanceController < ApplicationController
         row += 1
       end
     end
-    sheet.add_cell(row, 8, sum_price)                                                          # 金额汇总
-    sheet.add_cell(row, 9, (sum_price / 0.95).round(2))                                        # 金额汇总 / 0.95
+    sheet.add_cell(row, 10, sum_price)                                                          # 金额汇总
+    sheet.add_cell(row, 11, (sum_price / 0.95).round(2))                                        # 金额汇总 / 0.95
   end
 
   def set_sheet_bda_fee(sheet, query)
