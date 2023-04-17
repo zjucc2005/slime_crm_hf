@@ -13,10 +13,10 @@ class ProjectsController < ApplicationController
     query = query.where('projects.created_at >= ?', params[:created_at_ge]) if params[:created_at_ge].present?
     query = query.where('projects.created_at <= ?', params[:created_at_le]) if params[:created_at_le].present?
     %w[name code].each do |field|
-      query = query.where("#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
+      query = query.where("projects.#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
     end
     %w[id status user_channel_id].each do |field|
-      query = query.where(field.to_sym => params[field]) if params[field].present?
+      query = query.where("projects.#{field}" => params[field]) if params[field].present?
     end
     if params[:company].present?
       query = query.joins(:company).where('companies.name ILIKE :company OR companies.name_abbr ILIKE :company', { company: "%#{params[:company].strip}%" })

@@ -264,10 +264,12 @@ class FinanceController < ApplicationController
         if cost.payment_info['category'] == 'unionpay'
           sheet.add_cell(row, 5, [cost.payment_info['bank'], cost.payment_info['sub_branch']].join)  # 收款银行及营业网点
         end
-        sheet.add_cell(row, 6, '')                                                             # 是否同城
-        sheet.add_cell(row, 7, '')                                                             # 汇入地址
-        sheet.add_cell(row, 8, cost.price)                                                     # 转账金额
-        sheet.add_cell(row, 9, '')                                                             # 转账用途
+        sheet.add_cell(row, 6, task.expert.phone)
+        sheet.add_cell(row, 7, cost.payment_info['id_number'])
+        sheet.add_cell(row, 8, '')                                                              # 是否同城
+        sheet.add_cell(row, 9, '')                                                              # 汇入地址
+        sheet.add_cell(row, 10, cost.price)                                                     # 转账金额
+        sheet.add_cell(row, 11, '')                                                             # 转账用途
 
         sum_price += cost.price
         row += 1
