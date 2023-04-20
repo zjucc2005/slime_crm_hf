@@ -685,24 +685,25 @@ class ProjectsController < ApplicationController
 
     query.each_with_index do |task, index|
       row = index + 2
-      sheet.add_cell(row, 0, task.project.name)                                               # A, 项目名称
-      sheet.add_cell(row, 1, task.project.code)                                               # B, 项目号
-      sheet.add_cell(row, 2, '')                                                              # C, 访谈人
-      sheet.add_cell(row, 3, ProjectTask::INTERVIEW_FORM[task.interview_form])                # D, 访问类型
-      sheet.add_cell(row, 4, "# #{task.expert.uid}")                                          # E, 专家编号
-      sheet.add_cell(row, 5, task.expert_name_for_external)                                   # F, 专家称呼
+      sheet.add_cell(row, 0, task.memo)
+      sheet.add_cell(row, 1, task.project.name)                                               # A, 项目名称
+      sheet.add_cell(row, 2, task.project.code)                                               # B, 项目号
+      sheet.add_cell(row, 3, '')                                                              # C, 访谈人
+      sheet.add_cell(row, 4, ProjectTask::INTERVIEW_FORM[task.interview_form])                # D, 访问类型
+      sheet.add_cell(row, 5, "# #{task.expert.uid}")                                          # E, 专家编号
+      sheet.add_cell(row, 6, task.expert_name_for_external)                                   # F, 专家称呼
       exp = task.expert.latest_work_experience
-      exp ? sheet.add_cell(row, 6, "#{exp.org_cn}#{exp.title}") : sheet.add_cell(row, 6, '')  # G, 专家信息
-      sheet.add_cell(row, 7, (task.started_at.strftime('%F') rescue ''))                      # H, 访谈日期
-      sheet.add_cell(row, 8, (task.started_at.strftime('%H:%M') rescue ''))                   # I, 开始时间
-      sheet.add_cell(row, 9, (task.ended_at.strftime('%H:%M') rescue '' ))                    # J, 结束时间
-      sheet.add_cell(row, 10, task.duration)                                                  # K, 访谈时长
-      sheet.add_cell(row, 11, task.charge_duration)                                           # L, 收费时长
-      sheet.add_cell(row, 12, (2100 * task.expert_rate).round(2))                             # M, 访谈单价
+      exp ? sheet.add_cell(row, 7, "#{exp.org_cn}#{exp.title}") : sheet.add_cell(row, 6, '')  # G, 专家信息
+      sheet.add_cell(row, 8, (task.started_at.strftime('%F') rescue ''))                      # H, 访谈日期
+      sheet.add_cell(row, 9, (task.started_at.strftime('%H:%M') rescue ''))                   # I, 开始时间
+      sheet.add_cell(row, 10, (task.ended_at.strftime('%H:%M') rescue '' ))                    # J, 结束时间
+      sheet.add_cell(row, 11, task.duration)                                                  # K, 访谈时长
+      sheet.add_cell(row, 12, task.charge_duration)                                           # L, 收费时长
+      sheet.add_cell(row, 13, (2100 * task.expert_rate).round(2))                             # M, 访谈单价
       # sheet.add_cell(row, 13, (task.actual_price / 0.84).round(2))                            # N, 折前费用
-      sheet.add_cell(row, 13, task.actual_price)                                              # N, 折后费用
-      sheet.add_cell(row, 14, task.lijin_for_settlement)               # O, 礼金费用
-      sheet.add_cell(row, 15, '银行卡转账（公对私）')                                             # P, 礼金支付方式
+      sheet.add_cell(row, 14, task.actual_price)                                              # N, 折后费用
+      sheet.add_cell(row, 15, task.lijin_for_settlement)               # O, 礼金费用
+      sheet.add_cell(row, 16, '银行卡转账（公对私）')                                             # P, 礼金支付方式
     end
 
     ActiveRecord::Base.transaction do
