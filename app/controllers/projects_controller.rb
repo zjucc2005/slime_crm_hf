@@ -681,7 +681,7 @@ class ProjectsController < ApplicationController
 
     book = ::RubyXL::Parser.parse(template_path)  # read from template file
     sheet = book[0]
-    sheet.add_cell(0, 1, query.count)  # B1, 访谈个数
+    sheet.add_cell(0, 2, query.count)  # B1, 访谈个数
 
     query.each_with_index do |task, index|
       row = index + 2
