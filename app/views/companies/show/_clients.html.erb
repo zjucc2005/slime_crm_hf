@@ -4,7 +4,7 @@
         <div>
         <%= link_to new_client_path(company_id: @company.id, return_to: request.path), class: 'btn btn-primary btn-xs' do %>
             <%= fa_icon_tag('plus') %> <%= "#{t('action.new', model: mt(:candidate, :seat))}" %>
-        <% end %>
+        <% end if can?(:new, Client) %>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
                         <td class="action">
                             <%= link_to edit_client_path(client, return_to: request.url), class:'btn btn-edit btn-xs' do %>
                                 <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
-                            <% end %>
+                            <% end if can?(:edit, Client) %>
                             <%= link_to candidate_path(client, return_to: request.url), method: :delete, class:'btn btn-danger btn-xs', data: { confirm: t(:sure_to_delete) } do %>
                                 <%= fa_icon_tag('trash') %> <%= t('action.delete') %>
                             <% end if can?(:destroy, Candidate) && client.can_delete? %>

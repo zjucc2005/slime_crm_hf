@@ -81,10 +81,11 @@ class Ability
     can :manage, CandidatePaymentInfo
     can :manage, Doctor
     cannot :import_haodf, Doctor
+    can :read, Company
     can :manage, Client
     # can [:new_client], Company
     can :manage, Project
-    cannot [:billing, :billed], Project
+    cannot [:add_users, :billing, :billed], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
     can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel], ProjectTask
@@ -107,7 +108,7 @@ class Ability
     cannot :import_haodf, Doctor
     can :manage, Client
     # can [:new_client], Company
-    can [:index, :show, :add_users, :delete_user, :add_clients, :delete_client, :add_experts, :delete_expert,
+    can [:index, :show, :add_clients, :delete_client, :add_experts, :delete_expert,
          :add_project_task, :project_tasks, :experts, :work_board, :user_options], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement

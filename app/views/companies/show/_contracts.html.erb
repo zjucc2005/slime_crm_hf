@@ -3,7 +3,7 @@
         <h5><%= fa_icon_tag('file-text') %> <%= mt(:contract) %></h5>
         <%= link_to new_contract_company_path(@company), :class => 'btn btn-primary btn-xs' do %>
           <%= fa_icon_tag('plus') %> <%= "#{t('action.new', :model => mt(:contract))}" %>
-        <% end %>
+        <% end if can?(:new_contract, Company) %>
     </div>
 
     <div class="card-body table-responsive">
@@ -46,7 +46,7 @@
                         <td class="action">
                             <%= link_to edit_contract_path(contract), :class => 'btn btn-edit btn-xs' do %>
                                 <%= fa_icon_tag('edit') %> <%= t('action.edit', :model => nil) %>
-                            <% end %>
+                            <% end if can?(:edit_contract, Company) %>
                         </td>
                     </tr>
                 <% end %>

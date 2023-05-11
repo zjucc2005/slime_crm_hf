@@ -2,7 +2,7 @@
     <div>
         <%= link_to new_company_path, :class => 'btn btn-primary' do %>
             <%= fa_icon_tag('plus') %> <%= t('action.new_model', :model => mt(:company)) %>
-        <% end %>
+        <% end if can?(:new, Company) %>
     </div>
     <%= render :partial => 'companies/widgets/search_modal' %>
 </div>

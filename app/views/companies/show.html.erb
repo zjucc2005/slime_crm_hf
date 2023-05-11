@@ -17,7 +17,7 @@
                     <% end %>
                     <%= link_to edit_company_path(@company), :class => 'btn btn-dark' do %>
                         <%= fa_icon_tag('edit') %> <%= "#{t('action.edit_model', :model => mt(:company))}" %>
-                    <% end %>
+                    <% end if can?(:edit, Company) %>
                 </div>
             </div>
         </div>

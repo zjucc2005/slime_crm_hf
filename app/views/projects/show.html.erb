@@ -88,7 +88,7 @@
                 <%= render :partial => 'projects/show/project_requirements', :locals => { :project_requirements => @project.project_requirements.where.not(status: 'cancelled').order(id: :asc) } %>
             </div>
             <div class="col-lg-6 col-12">
-                <%= render :partial => 'projects/show/users', :locals => { :users => @project.users.order(:role => :desc) } %>
+                <%= render :partial => 'projects/show/users', :locals => { :users => @project.users.order(:role => :desc) } if can?(:add_users, Project) %>
                 <%= render :partial => 'projects/show/clients', :locals => { :project_clients => @project.project_candidates.client.order(created_at: :asc) } %>
                 <%= render :partial => 'projects/show/experts', :locals => { :experts => @project.experts.limit(10) } %>
             </div>
