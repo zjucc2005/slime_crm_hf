@@ -19,7 +19,11 @@
         <%= hidden_field_tag :from_source, params[:from_source] %>
         <%= hidden_field_tag :project_id, params[:project_id] %>
         <div class="row">
-            <div class="col-lg-10 col-6 form-group">
+            <div class="col-lg-2 col-6 form-group">
+                <%= label_tag :logical_operator, '逻辑运算符(专家说明)' %>
+                <%= select_tag :logical_operator, options_for_select(['AND', 'OR'], params[:logical_operator]), class: 'form-control select2' %>
+            </div>
+            <div class="col-lg-8 col-6 form-group">
                 <%= label_tag :description, t(:expert_description) %>
                 <%= text_field_tag :description, params[:description], class: 'form-control', placeholder: '关键词之间用空格隔开, 最多5个关键词' %>
             </div>

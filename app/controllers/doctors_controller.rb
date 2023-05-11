@@ -66,7 +66,7 @@ class DoctorsController < ApplicationController
 
       and_conditions = []
       or_fields = %w[candidates.description candidates.expertise candidate_experiences.org_cn candidate_experiences.department candidate_experiences.title]
-      @terms.each do |term|
+      @terms.uniq.each do |term|
         sa = SearchAlias.where('kwlist @> ?', term.to_json).first
         if sa
           term_plus = sa.kwlist.join('|')
@@ -78,7 +78,8 @@ class DoctorsController < ApplicationController
         and_conditions << "(#{or_fields.map{|f| "coalesce(#{f},'')" }.join(' || ')} ~* '#{term_plus}')"
       end
       @hl_words.uniq!
-      query = query.joins(:experiences).where(and_conditions.join(' AND '))
+      @logical_operator = params[:logical_operator] == 'OR' ? 'OR' : 'AND'
+      query = query.joins(:experiences).where(and_conditions.join(" #{@logical_operator} "))
     end
 
     # 保留动态搜索条件
