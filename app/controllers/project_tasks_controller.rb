@@ -29,9 +29,17 @@ class ProjectTasksController < ApplicationController
       if @project_task.update(project_task_params)
         if params[:commit] == t('action.preview')
           respond_to { |f| f.js }
+        elsif params[:commit] == t('action.send_out')
+          if ProjectTask::NOTICE_EMAIL.keys.include? @project_task.notice_email
+            @project_task.send_notice_email
+            flash[:success] = t(:operation_succeeded)
+            redirect_to edit_project_task_path(@project_task)
+          else
+            respond_to { |f| f.js }
+          end
         else
           if params[:commit] == t('action.submit_and_confirm')
-            @project_task.finished!
+            @project_task.finish!
           end
           flash[:success] = t(:operation_succeeded)
           redirect_to project_path(@project_task.project)
@@ -197,7 +205,7 @@ class ProjectTasksController < ApplicationController
   end
 
   def project_task_params
-    params.require(:project_task).permit(:pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :duration,
+    params.require(:project_task).permit(:client_id, :pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :duration,
                                          :charge_duration, :actual_price, :is_shorthand, :is_recorded, :memo, :f_flag,
                                          :interview_no, :recruitment_fee, :notice_email, :expert_alias)
   end

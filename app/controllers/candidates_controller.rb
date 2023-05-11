@@ -346,6 +346,17 @@ class CandidatesController < ApplicationController
     end
   end
 
+  def call_records
+    begin
+      load_candidate
+      @call_records = @candidate.call_records.order(id: :desc)
+      @candidate_comments = @candidate.comments.order(is_top: :desc, created_at: :desc)
+    rescue Exception => e
+      flash[:error] = e.message
+      redirect_to candidates_path
+    end
+  end
+
   # GET /candidates/:id/comments
   def comments
     begin
@@ -386,7 +397,20 @@ class CandidatesController < ApplicationController
     if @category == 'newCallRecord'
       @candidate = Candidate.find(params[:reference_id])
       exp = @candidate.latest_work_experience
-      @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), department: exp.try(:department), title: exp.try(:title), category: @candidate.category)
+      @call_record = CallRecord.new(
+        candidate_id: @candidate.id, 
+        name: @candidate.name, 
+        phone: @candidate.phone, 
+        company: exp.try(:org_cn), 
+        department: exp.try(:department), 
+        title: exp.try(:title), 
+        category: @candidate.category
+      )
+      # 查询candidate最近的通话记录
+      @latest_cr = @candidate.call_records.order(id: :desc).first
+      if @latest_cr && @latest_cr.project_id
+        @call_record.project_id = @latest_cr.project_id
+      end
       @return_to = @candidate.category == 'doctor' ? doctors_path : candidates_path
       @modal_title = t('action.new_model', :model => t('activerecord.models.call_record'))
       @modal_body_form = 'candidates/loading_modal/new_call_record_form'

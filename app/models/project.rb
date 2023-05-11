@@ -62,7 +62,7 @@ class Project < ApplicationRecord
   end
 
   def can_edit?
-    %w[initialized ongoing billing].include?(status)
+    %w[initialized ongoing billing billed].include?(status)
   end
 
   def can_destroy?

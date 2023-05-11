@@ -8,9 +8,15 @@
         <%= f.label :expert, mt(:expert) %><span class="text-red">*</span>
         <%= f.text_field :expert_id, :value => @project_task.expert.uid_name, :disabled => true, :class => 'form-control' %>
     </div>
+    <!--
     <div class="col-lg-3 col-12 form-group">
         <%= f.label :client, t(:client_contact) %><span class="text-red">*</span>
         <%= f.text_field :client_id, :value => @project_task.client.uid_name, :disabled => true, :class => 'form-control' %>
+    </div>
+    -->
+    <div class="col-lg-3 col-12 form-group">
+        <%= f.label :client, t(:client_contact) %><span class="text-red">*</span>
+        <%= f.select :client_id, project_task_client_options, { :include_blank => false }, :class => 'form-control select2' %>
     </div>
     <!--
     <div class="col-lg-3 col-12 form-group">
@@ -117,8 +123,15 @@
         <%= f.number_field :recruitment_fee, class: 'form-control' %>
     </div>
     <div class="col-lg-3 col-12 form-group">
-        <%= f.label :notice_email %><%= submit_tag t('action.preview'), class: 'btn btn-link btn-xs' %>
-        <%= f.select :notice_email, ProjectTask::NOTICE_EMAIL.to_a.map(&:reverse), { include_blank: default_prompt }, class: 'form-control select2' %>
+        <%= f.label :notice_email %>
+        <%= submit_tag t('action.preview'), class: 'btn btn-link btn-xs' %>
+        <% if @project_task.notice_email_sent_at.nil? %>
+            <%= submit_tag t('action.send_out'), class: 'btn btn-link btn-xs', data: { confirm: '确认发送吗?' } %>
+            <%= f.select :notice_email, ProjectTask::NOTICE_EMAIL.to_a.map(&:reverse), { include_blank: default_prompt }, class: 'form-control select2' %>
+        <% else %>
+            <%= content_tag :span, t('action.sent_out'), class: 'text-gray text-smaller' %>
+            <%= f.text_field :notice_email, value: ProjectTask::NOTICE_EMAIL[@project_task.notice_email], disabled: true, class: 'form-control' %>
+        <% end %>
     </div>
     <div class="col-12 form-group">
         <%= f.label :memo %>

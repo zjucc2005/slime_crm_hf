@@ -1,3 +1,5 @@
+<%= render partial: 'shared/loading_modal' %>
+
 <div class="card">
     <div class="card-header">
         <h5><%= fa_icon_tag('user-circle') %> <%= mt(:expert) %></h5>
@@ -34,10 +36,13 @@
                     <div class="btn-group btn-group-sm">
                         <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => @candidate.id } %>
                     </div>
+                    <div class="btn-group btn-group-sm">
+                        <%= render partial: 'candidates/widgets/call_records', locals: { candidate: @candidate } %>
+                    </div>
                     <%= link_to comments_candidate_path(@candidate), :class => 'btn btn-default' do %>
                         <%= fa_icon_tag('commenting') %> <%= t(:candidate_comment) %>
-                        <%= count_badge(@candidate.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).count) %>
-                    <% end if can?(:comments, Candidate) %>
+                        <%= count_badge(@candidate.comments.count) %>
+                    <% end if false # can?(:comments, Candidate) %>
                     <%= link_to project_tasks_candidate_path(@candidate), :class => 'btn btn-default' do %>
                         <%= fa_icon_tag('tags') %> <%= mt(:candidate, :interview_task) %>
                         <%= count_badge(normal_project_task_count(@candidate)) %>

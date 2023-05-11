@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     post :create_payment_info, on: :member
     get :project_tasks,        on: :member
     get :comments,             on: :member
+    get :call_records,         on: :member
 
     get :expert_info_for_clipboard, on: :member
     get :recommender_info, on: :collection

@@ -73,12 +73,12 @@ class Candidate < ApplicationRecord
   end
 
   def can_delete?
-    if self.category == 'client'
-      self.projects.count == 0  # 未参与项目
-    elsif self.category == 'expert'
-      self.projects.count == 0 && self.recommended_experts.count == 0  # 未参与项目 & 未推荐过其他专家
-    elsif self.category == 'doctor'
-      self.projects.count == 0
+    if category == 'client'
+      projects.count.zero?  # 未参与项目
+    elsif category == 'expert'
+      projects.count.zero? && call_records.count.zero? && recommended_experts.count.zero?  # 未参与项目 & 未推荐过其他专家
+    elsif category == 'doctor'
+      projects.count.zero? && call_records.count.zero?
     end
   end
 
@@ -140,6 +140,8 @@ class Candidate < ApplicationRecord
     case field.to_sym
     when :uid          then self.uid
     when :name         then self.name
+    when :first_name   then first_name
+    when :last_name    then last_name
     when :city         then self.city
     when :phone        then self.phone
     when :description  then self.description

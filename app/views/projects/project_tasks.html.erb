@@ -37,6 +37,7 @@
                         <th><%= mt(:project_task, :category) %></th>
                         <th><%= mt(:project_task, :interview_form) %></th>
                         <th><%= mt(:expert) %></th>
+                        <th><%= mt(:project_task, :expert_alias) %></th>
                         <th><%= mt(:project_task, :started_at) %></th>
                         <th><%= mt(:project_task, :duration) %></th>
                         <th><%= mt(:project_task, :charge_duration) %></th>
@@ -56,6 +57,7 @@
                                 <td><%= project_task_category_badge(task.category) %></td>
                                 <td><%= project_task_interview_form_badge(task.interview_form) %></td>
                                 <td><%= task.expert.name %></td>
+                                <td><%= task.expert_alias %></td>
                                 <td><%= task.started_at.strftime('%F %H:%M') %></td>
                                 <td><%= task.duration %></td>
                                 <td><%= task.charge_duration %></td>

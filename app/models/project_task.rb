@@ -45,7 +45,14 @@ class ProjectTask < ApplicationRecord
     define_method(:"#{k}="){ |v| self.property[k] = v }
   end
 
-  def finished!
+  def send_notice_email
+    if notice_email_sent_at.nil? && NOTICE_EMAIL.keys.include?(notice_email)
+      UserMailer.project_task_notice_email(id, notice_email).deliver  # 发送通知邮件,仅1次
+      self.update!(notice_email_sent_at: Time.now)
+    end
+  end
+
+  def finish!
     ActiveRecord::Base.transaction do
       contract = active_contract
       self.status = 'finished'
@@ -58,10 +65,7 @@ class ProjectTask < ApplicationRecord
       expert.save # 触发更新搜索权重
     end
 
-    if notice_email_sent_at.nil? && NOTICE_EMAIL.keys.include?(notice_email)
-      UserMailer.project_task_notice_email(id, notice_email).deliver  # 发送通知邮件,仅1次
-      self.update!(notice_email_sent_at: Time.now)
-    end
+    send_notice_email
   end
 
   def can_show?
