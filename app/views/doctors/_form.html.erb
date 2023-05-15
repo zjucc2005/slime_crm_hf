@@ -100,7 +100,7 @@
         <%= f.select :currency, currency_options, { include_blank: false }, class: 'form-control select2' %>
     </div><div class="col-lg-3 col-6 form-group">
         <%= f.label :is_kol %><span class="text-red">*</span>
-        <%= f.select :is_kol, boolean_options, { include_blank: false }, class: 'form-control select2' %>
+        <%= f.select :is_kol, boolean_options, { include_blank: false }, class: 'form-control select2-boolean-with-icon' %>
     </div>
     <div class="col-12 form-group">
         <%= f.label :expertise %>
@@ -116,6 +116,10 @@
     <div class="col-lg-3 col-6 form-group">
         <%= f.label :yibaotanpan_year %><span class="text-red text-smaller">(按住Ctrl可连续选择)</span>
         <%= f.select :yibaotanpan_year, yibaotanpan_year_options, { include_blank: default_prompt }, multiple:true, class: 'form-control select2' %>
+    </div>
+    <div class="col-lg-3 col-6 form-group">
+        <%= f.label :is_yibao, '加入医保列表' %>
+        <%= f.select :is_yibao, boolean_options, { include_blank: false }, class: 'form-control select2-boolean-with-icon' %>
     </div>
 </div>
 

@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     get :loading_modal, on: :collection
     post :batch_update_file, on: :collection  # 批量更新附件
     get :new_call_record, on: :member
+    get :yibao, on: :collection
   end
 
   resources :candidate_payment_infos

@@ -57,6 +57,10 @@ $(document).on('turbolinks:load', function(){
         templateResult: genderFormat,
         templateSelection: genderFormat
     })
+    $('select.select2-boolean-with-icon').select2({
+        templateResult: booleanFormat,
+        templateSelection: booleanFormat
+    })
 });
 
 function genderFormat(state){
@@ -66,6 +70,19 @@ function genderFormat(state){
         $state = $('<span><i class="fa fa-male text-primary mr-2"></i>' + state.text + '</span>');
     } else if ( state.id === 'female') {
         $state = $('<span><i class="fa fa-female text-danger mr-2"></i>' + state.text + '</span>');
+    }
+    return $state;
+}
+
+function booleanFormat(state){
+    if (!state.id) { return state.text; }
+    var $state = $('<span>' + state.text + '</span>');
+    if(state.id === 'true') {
+        $state = $('<span><i class="fa fa-circle-o text-success mr-2"></i>' + state.text + '</span>');
+    } else if ( state.id === 'false') {
+        $state = $('<span><i class="fa fa-times text-danger mr-2"></i>' + state.text + '</span>');
+    } else {
+        $state = $('<span><i class="fa fa-question text-secondary mr-2"></i>' + state.text + '</span>');
     }
     return $state;
 }

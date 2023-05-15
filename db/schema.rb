@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_13_131204) do
+ActiveRecord::Schema.define(version: 2023_05_15_074055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 2023_03_13_131204) do
     t.boolean "is_kol", default: false
     t.decimal "coef", precision: 4, scale: 2, default: "0.0"
     t.string "sign_file"
+    t.boolean "is_yibao", default: false
     t.index ["coef"], name: "index_candidates_on_coef"
     t.index ["company_id"], name: "index_candidates_on_company_id"
     t.index ["recommender_id"], name: "index_candidates_on_recommender_id"
@@ -278,6 +279,8 @@ ActiveRecord::Schema.define(version: 2023_03_13_131204) do
     t.string "file"
     t.bigint "operator_id"
     t.string "title"
+    t.string "file1"
+    t.string "file2"
     t.index ["project_id"], name: "index_project_requirements_on_project_id"
   end
 

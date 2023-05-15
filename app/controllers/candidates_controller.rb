@@ -55,6 +55,12 @@ class CandidatesController < ApplicationController
     @candidates = query.order(coef: :desc, id: :desc).paginate(page: params[:page], per_page: @per_page)
   end
 
+  def yibao
+    query = Candidate.where(category: %w[expert doctor], is_yibao: true)
+    query = user_channel_filter(query)
+    @candidates = query.order(id: :desc).paginate(page: params[:page], per_page: 20)
+  end
+
   # GET /candidates/:id
   def show
     begin

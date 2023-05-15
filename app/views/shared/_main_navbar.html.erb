@@ -23,6 +23,11 @@
                         <%= link_to mt(:doctor), doctors_path, class:"nav-link #{yield :nav_doctors}" %>
                     </li>
                 <% end %>
+                <% if can? :yibao, Candidate %>
+                    <li class="nav-item">
+                        <%= link_to '医保', yibao_candidates_path, class:"nav-link #{yield :nav_yibao}" %>
+                    </li>
+                <% end %>
                 <% if can? :index, Company %>
                     <li class="nav-item">
                         <%= link_to mt(:company), companies_path, class:"nav-link #{yield :nav_companies}" %>

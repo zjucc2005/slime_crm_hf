@@ -17,11 +17,23 @@ class ProjectRequirement < ApplicationRecord
   validates_inclusion_of :status, :in => STATUS.keys
 
   mount_uploader :file, FileUploader
+  mount_uploader :file1, FileUploader
+  mount_uploader :file2, FileUploader
 
   before_validation :setup, :on => :create
 
   after_save do
     project.last_update
+  end
+
+  # @return [Array, FileUploader]
+  def files
+    _files_ = []
+    [:file, :file1, :file2].each do |attr|
+      _file_ = self.send(attr)
+      _files_ << _file_ if _file_.present?
+    end
+    _files_
   end
 
   def can_edit?

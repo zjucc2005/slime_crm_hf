@@ -32,7 +32,7 @@
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :is_available, mt(:candidate, :is_available) %>
-                <%= select_tag :is_available, options_for_select(candidate_is_available_search_options, params[:is_available]), prompt: default_prompt, class: 'form-control select2' %>
+                <%= select_tag :is_available, options_for_select(candidate_is_available_search_options, params[:is_available]), prompt: default_prompt, class: 'form-control select2-boolean-with-icon' %>
             </div>
         </div>
         <div class="row">
@@ -58,7 +58,7 @@
             </div>
             <div class="col-lg-2 col-6 form-group">
                 <%= label_tag :current_company, mt(:candidate_experience, :current_company) %>
-                <%= select_tag :current_company, options_for_select(boolean_options, params[:current_company]), class: 'form-control select2' %>
+                <%= select_tag :current_company, options_for_select(boolean_options, params[:current_company]), class: 'form-control select2-boolean-with-icon' %>
             </div>
         </div>
         <%= button_tag type: 'submit', class: 'btn btn-submit' do %>

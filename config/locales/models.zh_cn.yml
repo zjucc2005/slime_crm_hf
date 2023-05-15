@@ -297,7 +297,9 @@ zh_cn:
         status: "状态"
         content: "内容"
         demand_number: "需求人数"
-        file: "文件"
+        file: "文件1"
+        file1: "文件2"
+        file2: "文件3"
         operator: "操作员"
         title: "标题"
 

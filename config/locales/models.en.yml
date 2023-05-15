@@ -267,7 +267,9 @@ en:
         status: "Status"
         content: "Content"
         demand_number: "Demand number"
-        file: "File"
+        file: "File 1"
+        file1: "File 2"
+        file2: "File 3"
         operator: "Operator"
         title: "Title"
 

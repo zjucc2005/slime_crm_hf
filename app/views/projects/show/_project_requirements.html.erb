@@ -14,7 +14,7 @@
                     <th><%= mt(:project_requirement, :id) %></th>
                     <th><%= mt(:project_requirement, :title) %> / <%= mt(:project_requirement, :content) %></th>
                     <th><%= mt(:project_requirement, :demand_number) %></th>
-                    <th><%= mt(:project_requirement, :file) %></th>
+                    <th><%= t(:file)%> <i class="fa fa-download"></i></th>
                     <th><%= mt(:project_requirement, :status) %></th>
                     <th><%= mt(:project_requirement, :created_by) %></th>
                     <th><%= mt(:project_requirement, :created_at) %></th>
@@ -22,33 +22,44 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% project_requirements.each do |requirement| %>
+                <% project_requirements.each do |instance| %>
                     <tr>
-                        <td><%= content_tag :span, "# #{requirement.uid}", class: 'text-gray' %></td>
+                        <td><%= content_tag :span, "# #{instance.uid}", class: 'text-gray' %></td>
                         <td>
-                            <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= requirement.uid %>" data-html="true" data-content="<%= requirement.content.gsub("\n", '<br>') %>">
-                                <%= truncate(requirement.title, length: 45) %>
+                            <a data-toggle="popover" data-trigger="hover" data-placement="right" title="# <%= instance.uid %>" data-html="true" data-content="<%= instance.content.gsub("\n", '<br>') %>">
+                                <%= truncate(instance.title, length: 45) %>
                             </a>
                         </td>
-<!--                        <td style="white-space: pre-line;"><%##= requirement.content %></td>-->
-                        <td><%= requirement.demand_number %></td>
-                        <td><%= link_to requirement.file.url, :title => requirement.file.identifier do %><%= fa_icon_tag('download') %><% end if requirement.file.present? %></td>
-                        <td><%= project_requirement_status_badge(requirement.status) %></td>
-                        <td><%= requirement.creator.name_cn %></td>
-                        <td class="text-nowrap"><%= requirement.created_at.strftime('%F %H:%M') %></td>
+                        <td><%= instance.demand_number %></td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <%= t(:file) %>
+                                    <%= count_badge(instance.files.length) %>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <% instance.files.each do |file| %>
+                                        <%= link_to file.identifier, file.url, target: '_blank', class: 'dropdown-item text-smaller' %>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </td>
+                        <td><%= project_requirement_status_badge(instance.status) %></td>
+                        <td><%= instance.creator.name_cn %></td>
+                        <td class="text-nowrap"><%= instance.created_at.strftime('%F %H:%M') %></td>
                         <td class="action">
                             <div class="btn-group">
-                                <%= link_to edit_project_requirement_path(requirement), :class => 'btn btn-edit btn-xs' do %>
+                                <%= link_to edit_project_requirement_path(instance), :class => 'btn btn-edit btn-xs' do %>
                                     <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
-                                <% end if can?(:edit, ProjectRequirement) && @can_operate && requirement.can_edit? %>
-                                <%= link_to finish_project_requirement_path(requirement), :method => :put, :class => 'btn btn-warning btn-xs',
+                                <% end if can?(:edit, ProjectRequirement) && @can_operate && instance.can_edit? %>
+                                <%= link_to finish_project_requirement_path(instance), :method => :put, :class => 'btn btn-warning btn-xs',
                                             :data => { :confirm => t(:sure_to_finish)} do %>
                                     <%= fa_icon_tag('check') %> <%= t('action.finish') %>
-                                <% end if false && can?(:finish, ProjectRequirement) && @can_operate && requirement.can_edit? %>
-                                <%= link_to unfinish_project_requirement_path(requirement), :method => :put, :class => 'btn btn-danger btn-xs',
+                                <% end if false && can?(:finish, ProjectRequirement) && @can_operate && instance.can_edit? %>
+                                <%= link_to unfinish_project_requirement_path(instance), :method => :put, :class => 'btn btn-danger btn-xs',
                                             :data => { :confirm => t(:sure_to_unfinish)} do %>
                                     <%= fa_icon_tag('remove') %> <%= t('action.unfinish') %>
-                                <% end if false && can?(:cancel, ProjectRequirement) && @can_operate && requirement.can_edit? %>
+                                <% end if false && can?(:cancel, ProjectRequirement) && @can_operate && instance.can_edit? %>
                             </div>
                         </td>
                     </tr>

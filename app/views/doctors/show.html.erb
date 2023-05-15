@@ -1,3 +1,5 @@
+<%= render partial: 'shared/loading_modal' %>
+
 <div class="card">
     <div class="card-header">
         <h5><%= model_icon('Doctor') %> <%= mt(:doctor) %></h5>
@@ -9,14 +11,8 @@
             <div class="col-12 d-flex flex-column flex-lg-row justify-content-between">
                 <h6>
                     <span class="text-gray mr-3"><%= "# #{@doctor.uid}" %></span>
-                    <span class="dropdown mr-2" style="line-height: 1.5;">
-                        <a class="status <%= candidate_is_available_status(@doctor.is_available) %>" href="#" role="button" id="cia_<%= @doctor.id %>" data-toggle="dropdown"></a>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-header"><%= mt(:candidate, :is_available) %></div>
-                            <%= link_to t(:true),    update_is_available_candidate_path(@doctor, is_available: true),  :method => :put, :remote => true, class: 'dropdown-item status valid' %>
-                            <%= link_to t(:pending), update_is_available_candidate_path(@doctor, is_available: nil),   :method => :put, :remote => true, class: 'dropdown-item status pending' %>
-                            <%= link_to t(:false),   update_is_available_candidate_path(@doctor, is_available: false), :method => :put, :remote => true, class: 'dropdown-item status invalid' %>
-                        </div>
+                    <span class="mr-2" style="line-height: 1.5;">
+                        <%= render partial: 'candidates/widgets/is_available_dropdown', locals: { candidate: @doctor } %>
                     </span>
                     <span><%= @doctor.last_name %> <%= @doctor.first_name %></span>
                 </h6>
@@ -31,10 +27,13 @@
                     <div class="btn-group btn-group-sm">
                         <%= render :partial => 'candidates/widgets/add_to_project_modal', :locals => { :uid => @doctor.id } %>
                     </div>
+                    <div class="btn-group btn-group-sm">
+                        <%= render partial: 'candidates/widgets/call_records', locals: { candidate: @doctor } %>
+                    </div>
                     <%= link_to comments_candidate_path(@doctor), class: 'btn btn-default' do %>
                         <%= fa_icon_tag('commenting') %> <%= t(:candidate_comment) %>
                         <%= count_badge(@doctor.comments.joins(:creator).where('users.user_channel_id': current_user.user_channel_id).count) %>
-                    <% end if can?(:comments, Candidate) %>
+                    <% end if false # can?(:comments, Candidate) %>
                     <%= link_to project_tasks_candidate_path(@doctor), class: 'btn btn-default' do %>
                         <%= fa_icon_tag('tags') %> <%= mt(:candidate, :interview_task) %>
                         <%= count_badge(normal_project_task_count(@doctor)) %>
@@ -235,6 +234,12 @@
                     <span class="input-group-text"><%= mt(:candidate, :yibaotanpan_year) %></span>
                 </div>
                 <%= content_tag :span, (@doctor.yibaotanpan_year.join(',') rescue nil), class: 'form-control' %>
+            </div>
+            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><%= '加入医保列表' %></span>
+                </div>
+                <%= content_tag :span, boolean_display(@doctor.is_yibao), class: 'form-control' %>
             </div>
         </div>
     </div>

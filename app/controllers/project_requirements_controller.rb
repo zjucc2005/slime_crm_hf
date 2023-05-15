@@ -126,7 +126,7 @@ class ProjectRequirementsController < ApplicationController
 
   private
   def project_requirement_params
-    params.require(:project_requirement).permit(:title, :content, :demand_number, :file, :project_id, :operator_id)
+    params.require(:project_requirement).permit(:title, :content, :demand_number, :file, :file1, :file2, :project_id, :operator_id)
   end
 
   def load_project_requirement

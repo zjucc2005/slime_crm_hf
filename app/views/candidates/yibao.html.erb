@@ -1,0 +1,56 @@
+<% if @candidates.present? %>
+    <div class="card p-2 mb-2">
+        <div class="">
+            <table class="table table-sm table-striped nowrap card-text">
+                <thead>
+                <tr>
+                    <th><%= check_box_tag :selectAll, nil, nil, :onclick => 'selectAll(this);' %></th>
+                    <th><%= mt(:candidate, :id) %></th>
+                    <th><%= mt(:candidate, :is_available) %></th>
+                    <th><%= mt(:candidate, :category) %></th>
+                    <th><%= mt(:candidate, :name) %></th>
+                    <th><%= mt(:candidate, :cpt) %></th>
+                    <th><%= mt(:candidate, :city) %></th>
+                    <th><%= mt(:candidate_experience, :company) %></th>
+                    <th><%= mt(:candidate_experience, :department) %></th>
+                    <th><%= mt(:candidate_experience, :title) %></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @candidates.each do |candidate| %>
+                    <% exp = candidate.latest_work_experience %>
+                    <tr>
+                        <td><%= check_box_tag :'uids[]', candidate.id, false %></td>
+                        <td><%= content_tag :span, "# #{candidate.uid}", class: 'text-gray' %></td>
+                        <td><%= render partial: 'candidates/widgets/is_available_dropdown', locals: { candidate: candidate } %></td>
+                        <td><%= call_record_category_badge(candidate.category) %></td>
+                        <td>
+                            <%= link_to candidate.name, candidate.category == 'doctor' ? doctor_path(candidate) : candidate_path(candidate), target: '_blank' %>
+                        </td>
+                        <td>
+                            <span class="text-light roundy px-1 py-0 <%= cps_bg(candidate.cpt) %>"><%= "#{currency_symbol(candidate.currency)}#{candidate.cpt}" %></span>
+                        </td>
+                        <td><%= candidate.city %></td>
+                        <td><%= exp.try(:org_cn) %></td>
+                        <td><%= exp.try(:department) %></td>
+                        <td><%= exp.try(:title) %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%= will_paginate @candidates %>
+<% else %>
+    <div class="card p-2">
+        <div class="p-4 text-center">
+            <h5 class="text-gray mb-0"><%= t(:not_found) %></h5>
+        </div>
+    </div>
+<% end %>
+
+<script>
+    $(() => {
+        alert('该模块正在建设中')
+    })
+</script>
