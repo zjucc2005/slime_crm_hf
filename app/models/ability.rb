@@ -85,7 +85,7 @@ class Ability
     can :manage, Client
     # can [:new_client], Company
     can :manage, Project
-    cannot [:add_users, :billing, :billed], Project
+    cannot [:billing, :billed], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
     can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel], ProjectTask
