@@ -219,6 +219,15 @@ class ProjectTask < ApplicationRecord
     save_file # return
   end
 
+  # 当前选择的专家公司
+  def active_exp
+    if candidate_experience_id
+      expert.work_experiences.find_by(id: candidate_experience_id) || expert.latest_work_experience
+    else
+      expert.latest_work_experience
+    end
+  end
+
   private
   def setup
     self.status         ||= 'ongoing'   # init

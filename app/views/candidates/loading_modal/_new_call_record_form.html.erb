@@ -1,4 +1,4 @@
-<%= form_for @call_record, url: remote_create_for_candidate_call_records_path(return_to: @return_to || candidates_path), remote: true do |f| %>
+<%= form_for @call_record, url: remote_create_for_candidate_call_records_path(return_to: @return_to || candidates_path), remote: @remote do |f| %>
     <%= render partial: 'call_records/form', locals: { f: f } %>
 
     <div class="form-group mb-0">

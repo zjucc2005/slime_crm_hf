@@ -123,6 +123,10 @@
         <%= f.number_field :recruitment_fee, class: 'form-control' %>
     </div>
     <div class="col-lg-3 col-12 form-group">
+        <%= f.label :candidate_experience_id, '前任公司' %>
+        <%= f.select :candidate_experience_id, @project_task.expert.work_experiences.pluck(:org_cn, :id), { include_blank: default_prompt }, class: 'form-control select2' %>
+    </div>
+    <div class="col-lg-3 col-12 form-group">
         <%= f.label :notice_email %>
         <%= submit_tag t('action.preview'), class: 'btn btn-link btn-xs' %>
         <% if @project_task.notice_email_sent_at.nil? %>
@@ -133,7 +137,7 @@
             <%= f.text_field :notice_email, value: ProjectTask::NOTICE_EMAIL[@project_task.notice_email], disabled: true, class: 'form-control' %>
         <% end %>
     </div>
-    <div class="col-12 form-group">
+    <div class="col-lg-9 col-12 form-group">
         <%= f.label :memo %>
         <%= f.text_field :memo, :class => 'form-control' %>
     </div>

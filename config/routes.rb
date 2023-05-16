@@ -63,6 +63,7 @@ Rails.application.routes.draw do
     post :batch_update_file, on: :collection  # 批量更新附件
     get :new_call_record, on: :member
     get :yibao, on: :collection
+    get :load_work_experiences_for_project_task, on: :member
   end
 
   resources :candidate_payment_infos
@@ -136,6 +137,8 @@ Rails.application.routes.draw do
     get :get_base_price, on: :member  # 计算基础价格(实时)
     post :add_cost,      on: :member  # 添加支出信息
     delete :remove_cost, on: :member  # 删除支出信息
+    get :edit_cost,      on: :member
+    patch :update_cost,   on: :member
     get :draw_consent,   on: :member  # 生成知情同意书
 
     put :cancel,         on: :member  # 取消任务

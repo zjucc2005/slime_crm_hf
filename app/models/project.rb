@@ -106,7 +106,7 @@ class Project < ApplicationRecord
     if self.created_by == user.id
       operator.admin?                   # 创建者PM只能被ADMIN移除
     else
-      operator.is_role?('admin', 'pm')  # PM/PA可以被ADMIN/PM移除
+      operator.is_role?('su', 'admin', 'pm')  # PM/PA可以被ADMIN/PM移除
     end
   end
 

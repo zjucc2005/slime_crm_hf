@@ -20,8 +20,9 @@
                 </div>
                 <div class="col-lg-3 col-12 form-group">
                     <%= f.label :expert, mt(:expert) %><span class="text-red">*</span>
-                    <%= f.select :expert_id, project_task_expert_options, { :prompt => default_prompt },
-                                 :required => true, :class => 'form-control select2' %>
+                    <%= f.select :expert_id, project_task_expert_options, { prompt: default_prompt },
+                                onchange: "loadWorkExperiencesForProjectTask(this.value);",
+                                required: true, class: 'form-control select2' %>
                     <%= hidden_field_tag :expert_info, nil %>
                 </div>
                 <div class="col-lg-3 col-12 form-group">
@@ -53,6 +54,10 @@
                 <div class="col-lg-3 col-12 form-group">
                     <%= f.label :expert_alias %>
                     <%= f.text_field :expert_alias, class: 'form-control' %>
+                </div>
+                <div class="col-lg-3 col-12 form-group">
+                    <%= f.label :candidate_experience_id, '前任公司' %>
+                    <%= f.select :candidate_experience_id, [], { include_blank: default_prompt }, class: 'form-control select2' %>
                 </div>
             </div>
 

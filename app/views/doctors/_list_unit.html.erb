@@ -88,7 +88,7 @@
                         <%= fa_icon_tag('cog') %> <%= t(:operation) %>
                     </button>
                     <div class="dropdown-menu">
-                        <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id})", :class => 'dropdown-item text-smaller' do %>
+                        <%= link_to 'javascript:void(0);', :onclick => "loadingModal('newCallRecord',#{candidate.id}, '')", :class => 'dropdown-item text-smaller' do %>
                             <i class="fa fa-phone"></i> <%= t('action.add_model', model: mt(:call_record)) %>
                         <% end %>
                         <%= link_to edit_doctor_path(candidate), target: '_blank', class: 'dropdown-item text-smaller' do %>

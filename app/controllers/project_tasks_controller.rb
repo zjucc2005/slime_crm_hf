@@ -140,7 +140,19 @@ class ProjectTasksController < ApplicationController
     cost = @project_task.costs.where(id: params[:project_task_cost_id]).first
     cost.try(:destroy!)
     respond_to{|f| f.js }
+  end
 
+  def edit_cost
+    load_project_task
+    @project_task_cost = @project_task.costs.find(params[:project_task_cost_id])
+  end
+
+  def update_cost
+    load_project_task
+    @project_task_cost = @project_task.costs.find(params[:project_task_cost_id])
+    @project_task_cost.update(project_task_cost_params)
+    flash[:success] = t(:operation_succeeded)
+    redirect_to edit_project_task_path(@project_task)
   end
 
   # GET /project_tasks/:id/get_base_price.json
@@ -207,7 +219,11 @@ class ProjectTasksController < ApplicationController
   def project_task_params
     params.require(:project_task).permit(:client_id, :pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :duration,
                                          :charge_duration, :actual_price, :is_shorthand, :is_recorded, :memo, :f_flag,
-                                         :interview_no, :recruitment_fee, :notice_email, :expert_alias)
+                                         :interview_no, :recruitment_fee, :notice_email, :expert_alias, :candidate_experience_id)
+  end
+
+  def project_task_cost_params
+    params.require(:project_task_cost).permit(:price, :lijin)
   end
 
 end

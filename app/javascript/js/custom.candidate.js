@@ -84,8 +84,9 @@ window.showRecommenderName = function(obj_id){
     })
 };
 
-window.loadingModal = function(category, reference_id){
-    $.get('/candidates/loading_modal.js?category=' + category + '&reference_id=' + reference_id);
+window.loadingModal = function(category, reference_id, return_to=''){
+    // $.get('/candidates/loading_modal.js?category=' + category + '&reference_id=' + reference_id );
+    $.get(`/candidates/loading_modal.js?category=${category}&reference_id=${reference_id}&return_to=${return_to}`);
 };
 
 window.loadChildrenForProvince = function(ld_province_id, ld_city_id){
@@ -108,6 +109,14 @@ window.loadChildrenForHospital = function(hospital_id, hospital_department_id) {
         $('select#hospital_department_id').html('<option value>Please select</option>');
     }
 };
+
+window.loadWorkExperiencesForProjectTask = (candidate_id) => {
+    if (candidate_id) {
+        $.get(`/candidates/${candidate_id}/load_work_experiences_for_project_task.js`);
+    } else {
+        $('select#project_task_candidate_experience_id').html('<option value>Please select</option>');
+    }
+}
 
 window.clipboard = function(element){
     selectText(element);

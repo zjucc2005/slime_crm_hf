@@ -28,6 +28,9 @@
         <td><%= cost.memo %></td>
         <td><%= cost.lijin %></td>
         <td class="action">
+            <%= link_to edit_cost_project_task_path(project_task, project_task_cost_id: cost.id), class: 'btn btn-edit btn-xs' do %>
+                <i class="fa fa-edit"></i> 编辑价格
+            <% end %>
             <%= link_to remove_cost_project_task_path(project_task, project_task_cost_id: cost.id), :method => :delete, :remote => true,
                         :data => { :confirm => t(:sure_to_remove) }, :class => 'btn btn-danger btn-xs' do %>
                 <%= fa_icon_tag('trash') %> <%= t('action.remove') %>
@@ -36,7 +39,7 @@
     </tr>
     <% end %>
     <tr>
-        <td colspan="10" align="center">
+        <td colspan="11" align="center">
             <%= button_tag :type => 'button', :class => 'btn btn-primary btn-xs', :data => { :toggle => 'modal', :target => '#addCostModal'} do %>
                 <%= fa_icon_tag('plus') %> <%= t('action.add_model', :model => t(:payment_info)) %>
             <% end %>

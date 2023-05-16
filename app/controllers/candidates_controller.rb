@@ -65,6 +65,8 @@ class CandidatesController < ApplicationController
   def show
     begin
       load_candidate
+      @call_records = @candidate.call_records.order(id: :desc).limit(6)
+      @candidate_comments = @candidate.comments.order(id: :desc).limit(6)
       session_cache_show_history
     rescue Exception => e
       flash[:error] = e.message
@@ -417,7 +419,8 @@ class CandidatesController < ApplicationController
       if @latest_cr && @latest_cr.project_id
         @call_record.project_id = @latest_cr.project_id
       end
-      @return_to = @candidate.category == 'doctor' ? doctors_path : candidates_path
+      @remote = params[:return_to].blank?
+      @return_to = params[:return_to] || (@candidate.category == 'doctor' ? doctors_path : candidates_path)
       @modal_title = t('action.new_model', :model => t('activerecord.models.call_record'))
       @modal_body_form = 'candidates/loading_modal/new_call_record_form'
     end
@@ -444,6 +447,14 @@ class CandidatesController < ApplicationController
     exp = @candidate.latest_work_experience
     @call_record = CallRecord.new(candidate_id: @candidate.id, name: @candidate.name, phone: @candidate.phone, company: exp.try(:org_cn), title: exp.try(:title), category: @candidate.category)
     @return_to = @candidate.category == 'doctor' ? doctors_path : candidates_path
+  end
+
+  # remote
+  def load_work_experiences_for_project_task
+    @candidate = Candidate.find(params[:id])
+    @work_experiences_options = '<option value>Please select</option>'
+    @work_experiences_options += @candidate.work_experiences.map { |exp| "<option value=\"#{exp.id}\">#{exp.org_cn}</option>" }.join
+    respond_to { |f| f.js }
   end
 
   private

@@ -98,6 +98,8 @@ class DoctorsController < ApplicationController
   def show
     begin
       load_doctor
+      @call_records = @doctor.call_records.order(id: :desc).limit(6)
+      @candidate_comments = @doctor.comments.order(id: :desc).limit(6)
       # session_cache_show_history
     rescue Exception => e
       flash[:error] = e.message

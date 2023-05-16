@@ -70,7 +70,11 @@ class CallRecordsController < ApplicationController
     rescue Exception => e
       @error = e.message
     end
-    respond_to { |f| f.js }
+    if params[:return_to].present?
+      redirect_to params[:return_to]
+    else
+      respond_to { |f| f.js }
+    end
   end
 
   # GET /call_records/:id/edit

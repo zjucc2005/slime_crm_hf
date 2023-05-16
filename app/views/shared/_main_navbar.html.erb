@@ -81,6 +81,7 @@
                         <%= link_to mt(:finance), finance_index_path, class:"nav-link #{yield :nav_finance}" %>
                     </li>
                 <% end %>
+                <!--
                 <% if can? :index, User %>
                     <li class="nav-item">
                         <%= link_to mt(:user), users_path, class:"nav-link #{yield :nav_users}" %>
@@ -91,11 +92,18 @@
                         <%= link_to mt(:user_channel), user_channels_path, class:"nav-link #{yield :nav_user_channels}" %>
                     </li>
                 <% end %>
+                -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="settings-drop" data-toggle="dropdown">
                         <%= t(:settings) %>
                     </a>
                     <div class="dropdown-menu fa-fixed">
+                        <%= link_to users_path, class: 'dropdown-item' do %>
+                            <i class="fa fa-user"></i> <%= mt(:user) %>
+                        <% end if can?(:index, User) %>
+                        <%= link_to user_channels_path, class: 'dropdown-item' do %>
+                            <i class="fa fa-code-fork"></i> <%= mt(:user_channel) %>
+                        <% end if can?(:index, UserChannel) %>
                         <%= link_to card_templates_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('drivers-license-o') %> <%= mt(:card_template) %>
                         <% end if can?(:index, CardTemplate) %>

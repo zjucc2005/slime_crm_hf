@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_15_074055) do
+ActiveRecord::Schema.define(version: 2023_05_16_090015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -339,6 +339,7 @@ ActiveRecord::Schema.define(version: 2023_05_15_074055) do
     t.bigint "user_channel_id"
     t.datetime "notice_email_sent_at"
     t.jsonb "property", default: {}
+    t.bigint "candidate_experience_id"
     t.index ["client_id"], name: "index_project_tasks_on_client_id"
     t.index ["expert_id"], name: "index_project_tasks_on_expert_id"
     t.index ["project_id"], name: "index_project_tasks_on_project_id"
