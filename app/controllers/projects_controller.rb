@@ -434,9 +434,7 @@ class ProjectsController < ApplicationController
     begin
       case params[:template]
       when 'settlement_20210604_1' then export_settlement_20210604_1(@project)
-      # when 'settlement_20220509'   then export_settlement_20220509(@project)
       when 'settlement_202206' then export_settlement_202206(@project)
-      # when 'iqvia_settlement'      then export_iqvia_settlement_template(@project)
       when 'settlement_20230217' then export_settlement_20230217(@project)
       else raise('template not found')
       end
@@ -584,96 +582,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # DEPRECATED 20230217
-  def export_iqvia_settlement_template(project)
-    template_path = 'public/templates/iqvia_settlement_template.xlsx'
-    raise 'template file not found' unless File.exist?(template_path)
-    query = project.project_tasks.where(status: 'finished').order(:started_at => :asc)
-    raise 'project task not found' if query.count == 0
-
-    color1 = '000080' # 主色调, 普蓝
-    color2 = 'CCCCFF' # 辅色调, 浅蓝
-    bottom_text = '备注:关于本执行单的最终解释权归IQVIA。如有更新版本，以更新版为准。'
-    book = ::RubyXL::Parser.parse(template_path)  # read from template file
-    sheet = book[0]
-    sheet.add_cell(3, 1, project.code)  # B4, 项目内部号
-    sheet.sheet_data[3][1].change_horizontal_alignment('left')  # B4 align to left
-    sheet.add_cell(4, 1, query.first.started_at.try(:strftime, '%F') )  # B5, 订单下达日期
-
-    row = 11  # 任务表格起始行
-    query.each_with_index do |task, index|
-      # 内容填充 >> code here
-      exp = task.expert.latest_work_experience
-
-      sheet.add_cell(row, 0,  index + 1)                             # 代理编号
-      sheet.add_cell(row, 1,  '海鄞')                                # 公司名称
-      if exp
-        sheet.add_cell(row, 2,  "#{exp.org_cn}#{exp.title}")         # 配额描述
-      else
-        sheet.add_cell(row, 2, '')
-      end
-      sheet.add_cell(row, 3,  '全国')                                # 城市
-      sheet.add_cell(row, 4,  1)                                     # 预计样本量
-      sheet.add_cell(row, 5,  1)                                     # 实际样本量
-      sheet.add_cell(row, 6,  '')                                    # 咨询服务费单价
-      sheet.add_cell(row, 7,  (2500 * task.expert_rate).round(2) )   # 执行/招募单价
-      sheet.add_cell(row, 8,  '')                                    # 其他费用单价
-      sheet.add_cell(row, 9,  (2500 * task.expert_rate).round(2) )   # 预计订单折前总额
-      sheet.add_cell(row, 10, (2100 * task.expert_rate).round(2) )   # 预计订单折后总额
-      sheet.add_cell(row, 11, (task.actual_price / 0.84).round(2) )  # 实际结算折前总额
-      sheet.add_cell(row, 12, task.actual_price)                     # 实际结算折后总额
-      if task.memo.present?
-        sheet.add_cell(row, 13, "#{task.duration}分钟, #{task.memo}")  # 备注, 实际时长 + 备注
-      else
-        sheet.add_cell(row, 13, "#{task.duration}分钟")
-      end
-
-      # 格式设定
-      sheet.sheet_data[row][0].change_horizontal_alignment('center')
-      (0..13).each {|i|
-        sheet[row][i].change_border(:bottom, :thin)
-        sheet[row][i].change_border(:right, :thin)
-        sheet[row][i].change_border_color(:bottom, color1)
-        sheet[row][i].change_border_color(:right, color1)
-      }
-      (4..8).each {|i| sheet[row][i].change_fill(color2) }
-
-      row += 1
-      sheet.insert_row(row)
-    end
-
-    # merge cells
-    sheet.merge_cells(11, 1, row - 1, 1)
-
-    # sum
-    sheet.add_cell(row + 1, 9,  '', "SUM(J12:J#{row})")
-    sheet.add_cell(row + 1, 10, '', "SUM(K12:K#{row})")
-    sheet.add_cell(row + 1, 11, '', "SUM(L12:L#{row})")
-    sheet.add_cell(row + 1, 12, '', "SUM(M12:M#{row})")
-    (9..12).each {|i|
-      sheet[row + 1][i].change_fill(color1)          # 补背景色
-      sheet[row + 1][i].change_font_color('FFFFFF')  # 白色字体
-    }
-
-    # bottom cell
-    sheet.add_cell(row + 3, 0, bottom_text)
-    sheet[row + 3][0].change_horizontal_alignment('left')
-    sheet[row + 3][0].change_font_bold(true)
-
-    ActiveRecord::Base.transaction do
-      query.each do |task|
-        task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
-      end
-      project.close! if params[:close_or_not] == 'true'  # 关闭项目选项
-    end
-
-    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
-    FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_IQVIA项目执行订单-海鄞.xlsx"
-    book.write file_path
-    send_file file_path
-  end
-
   def export_settlement_20210604_1(project)
     template_path = 'public/templates/settlement_template_20210604_1.xlsx'
     raise 'template file not found' unless File.exist?(template_path)
@@ -693,7 +601,8 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 4, ProjectTask::INTERVIEW_FORM[task.interview_form])                # D, 访问类型
       sheet.add_cell(row, 5, "# #{task.expert.uid}")                                          # E, 专家编号
       sheet.add_cell(row, 6, task.expert_name_for_external)                                   # F, 专家称呼
-      exp = task.expert.latest_work_experience
+      # exp = task.expert.latest_work_experience
+      exp = task.active_exp
       exp ? sheet.add_cell(row, 7, "#{exp.org_cn}#{exp.title}") : sheet.add_cell(row, 6, '')  # G, 专家信息
       sheet.add_cell(row, 8, (task.started_at.strftime('%F') rescue ''))                      # H, 访谈日期
       sheet.add_cell(row, 9, (task.started_at.strftime('%H:%M') rescue ''))                   # I, 开始时间
@@ -717,67 +626,6 @@ class ProjectsController < ApplicationController
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
     file_path = "#{file_dir}/#{project.code}_对账单.xlsx"
-    book.write file_path
-    send_file file_path
-  end
-
-  # DEPRECATED 20230217
-  def export_settlement_20220509(project)
-    template_path = 'public/templates/settlement_template_20220509.xlsx'
-    raise 'template file not found' unless File.exist?(template_path)
-    query = project.project_tasks.where(status: 'finished').order(started_at: :asc)
-    raise 'project task not found' if query.count == 0
-    book = ::RubyXL::Parser.parse(template_path)  # read from template file
-    sheet = book[0]
-
-    query.each_with_index do |task, index|
-      row = index + 2
-      sheet.add_cell(row, 0, task.project.code)                                               # A, 内部项目号
-      sheet.add_cell(row, 1, index + 1)                                                       # B, 序号
-      province, city = task.expert.city.to_s.split(' ')
-      sheet.add_cell(row, 2, province)                                                        # C, 省份
-      sheet.add_cell(row, 3, city)                                                            # D, 城市
-      sheet.add_cell(row, 4, project.name)                                                    # E, 疾病领域/项目标题
-      sheet.add_cell(row, 5, '')                                                              # F, 受访者类型
-      sheet.add_cell(row, 6, '')                                                              # G
-      sheet.add_cell(row, 7, '定性IDI（电话访问）')                                              # H, FW执行方法
-      sheet.add_cell(row, 8, '')                                                              # I
-      exp = task.expert.latest_work_experience
-      sheet.add_cell(row, 9, exp.org_cn)                                                      # J, 受访者所在单位名称
-      sheet.add_cell(row, 10, task.expert.category == 'doctor' ? exp.org_en : '')             # K, 医院级别
-      sheet.add_cell(row, 11, exp.department)                                                 # L, 科室
-      sheet.add_cell(row, 12, task.expert_name_for_external)                                  # M, 医生姓名
-      sheet.add_cell(row, 13, exp.title)                                                      # N, 技术职称
-      sheet.add_cell(row, 14, exp.title1)                                                     # O, 行政职务
-      sheet.add_cell(row, 15, '会议平台沟通')                                                   # P, 受访者座机
-      sheet.add_cell(row, 16, '会议平台沟通')                                                   # Q, 受访者手机号码
-      sheet.add_cell(row, 17, (task.started_at.strftime('%F') rescue ''))                     # R, 访问日期
-      sheet.add_cell(row, 18, (task.started_at.strftime('%H:%M') rescue ''))                  # S, 访问时间
-      sheet.add_cell(row, 19, '电话沟通')                                                       # T, 访问地点
-      sheet.add_cell(row, 20, '由代理支付礼金')                                                  # U, 礼金支付方
-      sheet.add_cell(row, 21, task.costs.where(category: 'expert').sum(:price))               # V, 礼金支付数额
-      sheet.add_cell(row, 22, '银行卡转帐（公对私）')                                             # W, 礼金支付方式
-      sheet.add_cell(row, 23, '')                                                             # X
-      sheet.add_cell(row, 24, '')                                                             # Y, 支付宝/微信账号
-      sheet.add_cell(row, 25, '海鄞信息咨询(上海)有限公司')                                        # Z, 招募途径
-      sheet.add_cell(row, 26, '')                                                             # AA
-      sheet.add_cell(row, 27, '')                                                             # AB
-      sheet.add_cell(row, 28, '')                                                             # AC
-      sheet.add_cell(row, 29, '')                                                             # AD
-      sheet.add_cell(row, 30, '')                                                             # AE
-      sheet.add_cell(row, 31, '')                                                             # AF
-    end
-
-    ActiveRecord::Base.transaction do
-      query.each do |task|
-        task.update(charge_status: 'billed') if task.charge_status == 'unbilled'  # 自动更新收费状态
-      end
-      project.close! if params[:close_or_not] == 'true'  # 关闭项目选项
-    end
-
-    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
-    FileUtils.mkdir_p file_dir unless File.exist? file_dir
-    file_path = "#{file_dir}/#{project.code}_定性受访信息表.xlsx"
     book.write file_path
     send_file file_path
   end
@@ -807,7 +655,8 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 3, city)                                                            # D, 城市
       sheet.add_cell(row, 4, project.name)                                                    # E, 疾病领域/项目标题
       sheet.add_cell(row, 7, '定性IDI（电话访问）')                                              # H, FW执行方法
-      exp = task.expert.latest_work_experience
+      # exp = task.expert.latest_work_experience
+      exp = task.active_exp
       sheet.add_cell(row, 9, exp.org_cn)                                                      # J, 受访者所在单位名称
       sheet.add_cell(row, 10, task.expert.category == 'doctor' ? Hospital.level_sort(exp.org_en.to_s) : '')             # K, 医院级别
       sheet.add_cell(row, 11, exp.department)                                                 # L, 科室
@@ -857,7 +706,8 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 1, 'hci consulting')                                                # B, 供应商
       sheet.add_cell(row, 2, project.code)                                                    # C, Internal code
       sheet.add_cell(row, 3, task.expert_name_for_external)                                   # D, 专家名称
-      exp = task.expert.latest_work_experience
+      # exp = task.expert.latest_work_experience
+      exp = task.active_exp
       sheet.add_cell(row, 4, exp.org_cn)                                                      # E, 公司/医院/单位
       sheet.add_cell(row, 5, exp.department)                                                  # F, 部门/科室
       sheet.add_cell(row, 6, exp.title)                                                       # G, 职位/职称

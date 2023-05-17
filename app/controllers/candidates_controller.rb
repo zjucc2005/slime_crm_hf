@@ -221,14 +221,15 @@ class CandidatesController < ApplicationController
   def expert_template
     if params[:project_id].present?
       @candidates = Candidate.joins(:project_candidates).
-        where(:'candidates.id' => params[:uids], :'project_candidates.project_id' => params[:project_id]).
-        order(:'project_candidates.created_at' => :asc)
+        where('candidates.id': params[:uids], 'project_candidates.project_id': params[:project_id]).
+        order('project_candidates.created_at': :asc)
     else
-      @candidates = Candidate.where(id: params[:uids]).order(:created_at => :desc)
+      @candidates = Candidate.where(id: params[:uids]).order(id: :desc)
     end
     case params[:template]
     when 'expert' then export_expert_template(@candidates)
     when 'doctor' then export_doctor_template(@candidates)
+    when 'classify' then export_classify_template(@candidates)
     else raise 'params error'
     end
   end
@@ -527,6 +528,35 @@ class CandidatesController < ApplicationController
     file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
     FileUtils.mkdir_p file_dir unless File.exist? file_dir
     file_path = "#{file_dir}/doctor_#{current_user.id}_#{Time.now.strftime('%H%M%S')}.xlsx"
+    book.write file_path
+    send_file file_path
+  end
+
+  def export_classify_template(query)
+    template_path = 'public/templates/expert_template_20230516.xlsx'
+    raise 'template file not found' unless File.exist?(template_path)
+    book = ::RubyXL::Parser.parse(template_path)
+    sheet0 = book[0]
+    query.expert.each_with_index do |expert, index|
+      row = index + 3
+      exp = expert.latest_work_experience
+      sheet0.add_cell(row, 0, "##{expert.uid}")
+      sheet0.add_cell(row, 1, exp.try(:org_cn))
+      sheet0.add_cell(row, 2, exp.try(:title))
+      sheet0.add_cell(row, 3, expert.description)
+    end
+    sheet1 = book[1]
+    query.doctor.each_with_index do |doctor, index|
+      row = index + 3
+      exp = doctor.latest_work_experience
+      sheet1.add_cell(row, 1, "##{doctor.uid}")
+      sheet1.add_cell(row, 2, exp.org_cn)
+      sheet1.add_cell(row, 3, [exp.department, exp.title, exp.title1].join(' '))
+      sheet1.add_cell(row, 5, doctor.expertise)
+    end
+    file_dir = "public/export/#{Time.now.strftime('%y%m%d')}"
+    FileUtils.mkdir_p file_dir unless File.exist? file_dir
+    file_path = "#{file_dir}/classify_#{current_user.id}_#{Time.now.strftime('%H%M%S')}.xlsx"
     book.write file_path
     send_file file_path
   end
