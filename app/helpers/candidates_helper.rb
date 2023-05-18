@@ -57,8 +57,13 @@ module CandidatesHelper
 
   def yibaotanpan_year_options
     cur_year = Time.now.year
-    options = (2019..cur_year).to_a
-    options.sort.reverse
+    options = []
+    (2019..cur_year).to_a.reverse.each do |year|
+      %w[综合组 测算组 药学 临床 BIA].each do |type|
+        options << [year, type].join('-')
+      end
+    end
+    options
   end
 
   def candidate_job_status_badge(status)
