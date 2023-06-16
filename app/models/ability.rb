@@ -125,6 +125,7 @@ class Ability
   def finance_ability
     can_edit_my_account
     can [:read, :destroy, :gen_card, :project_tasks, :comments, :payment_infos, :create_client, :update_client], Candidate
+    can :manage, CandidatePaymentInfo
     can :read, Doctor
     can :manage, Client
     can :manage, Company
