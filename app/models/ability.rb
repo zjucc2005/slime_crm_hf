@@ -88,7 +88,7 @@ class Ability
     cannot [:billing, :billed], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
-    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel], ProjectTask
+    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost], ProjectTask
     cannot :manage, Finance
     can :manage, CallRecord
 
@@ -112,7 +112,7 @@ class Ability
          :add_project_task, :project_tasks, :experts, :work_board, :user_options], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
-    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel], ProjectTask
+    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost], ProjectTask
     cannot :manage, Finance
     can :manage, CallRecord
 
