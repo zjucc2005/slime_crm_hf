@@ -7,26 +7,30 @@ module Utils
     ##
     # http methods for api
     #
-    def self.get(url, params={}, headers={}, token=nil)
-      self.http_request('get', url, params, headers, token)
+    def self.get(url, params={}, headers={}, options={})
+      self.http_request('get', url, params, headers, options)
     end
 
-    def self.post(url, params={}, headers={}, token=nil)
-      self.http_request('post', url, params, headers, token)
+    def self.post(url, params={}, headers={}, options={})
+      self.http_request('post', url, params, headers, options)
     end
 
-    def self.put(url, params={}, headers={}, token=nil)
-      self.http_request('put', url, params, headers, token)
+    def self.put(url, params={}, headers={}, options={})
+      self.http_request('put', url, params, headers, options)
     end
 
-    def self.delete(url, params={}, headers={}, token=nil)
-      self.http_request('delete', url, params, headers, token)
+    def self.delete(url, params={}, headers={}, options={})
+      self.http_request('delete', url, params, headers, options)
     end
 
-    def self.http_request(method, url, params={}, headers={}, token=nil)
+    # @param cert_pem_file [String] 自签名ssl证书
+    def self.http_request(method, url, params={}, headers={}, options={})
       uri = URI.parse(url)
       http = ::Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = url.start_with? 'https'
+      if url.start_with? 'https'
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if options[:ssl_verify_none]
+      end
       request = case method.upcase
                   when 'GET'    then ::Net::HTTP::Get.new(uri.request_uri)
                   when 'POST'   then ::Net::HTTP::Post.new(uri.request_uri)
@@ -51,7 +55,7 @@ module Utils
         end
       end
 
-      request.add_field 'authorization', token if token
+      request.add_field 'authorization', options[:token] if options[:token]
       http.request(request)
     end
 

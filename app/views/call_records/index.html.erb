@@ -3,9 +3,10 @@
         <%= link_to new_call_record_path, :class => 'btn btn-primary' do %>
             <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:call_record))}" %>
         <% end if can? :new, CallRecord %>
-        <%= render :partial => 'call_records/widgets/btn_batch_import' %>
+        <%= render partial: 'call_records/widgets/btn_batch_import' %>
+        <%= render partial: 'call_records/widgets/yunhu_modal' %>
     </div>
-    <%= render :partial => 'call_records/widgets/search_modal' %>
+    <%= render partial: 'call_records/widgets/search_modal' %>
 </div>
 
 <% if @call_records.present? %>

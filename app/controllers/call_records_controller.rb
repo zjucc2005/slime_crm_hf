@@ -257,6 +257,21 @@ class CallRecordsController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # remote: true
+  def two_way_call
+    begin
+      caller_number = current_user.phone&.strip
+      callee_number = params[:callee_number]&.strip
+      raise '主叫号码不能为空' if caller_number.blank?
+      raise '被叫号码不能为空' if callee_number.blank?
+      res = Utils::Winnerlook.two_way_call(caller_number, callee_number)
+      @msg = res['message']
+    rescue => e
+      @msg = e.message
+    end
+    respond_to { |f| f.js }
+  end
+
   private
   def call_record_params
     params.require(:call_record).permit(:name, :phone, :company, :department, :title, :status, :memo, :project_id,

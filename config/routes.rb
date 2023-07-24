@@ -169,6 +169,8 @@ Rails.application.routes.draw do
     post :remote_import, on: :collection
 
     post :remote_create_for_candidate, on: :collection
+
+    post :two_way_call, on: :collection
   end
 
   resources :location_data do
