@@ -43,6 +43,24 @@ class HospitalsController < ApplicationController
     end
   end
 
+  def new
+    @hospital = Hospital.new
+  end
+
+  def create
+    @hospital = Hospital.new(hospital_params)
+    @province = LocationDatum.provinces.where(id: params[:ld_province_id]).first
+    @city = @province.direct_children.where(id: params[:ld_city_id]).first
+    @hospital.province = @province.name
+    @hospital.city = @city.name
+    if @hospital.save
+      flash[:success] = t(:operation_succeeded)
+      redirect_with_return_to(hospitals_path)
+    else
+      render :new
+    end
+  end
+
   def edit
     load_hospital
   end
@@ -52,7 +70,7 @@ class HospitalsController < ApplicationController
 
     if @hospital.update(hospital_params)
       flash[:success] = t(:operation_succeeded)
-      redirect_with_return_to(hospital_path)
+      redirect_with_return_to(hospitals_path)
     else
       render :edit
     end
@@ -135,7 +153,7 @@ class HospitalsController < ApplicationController
   end
 
   def hospital_params
-    params.require(:hospital).permit(:name, :kwlist)
+    params.require(:hospital).permit(:name, :level, :kwlist)
   end
 
 end

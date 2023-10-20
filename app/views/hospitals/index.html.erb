@@ -25,6 +25,9 @@
                 </div>
 
                 <div class="col-12 form-group">
+                    <%= link_to new_hospital_path, class: 'btn btn-primary' do %>
+                        <i class="fa fa-plus"></i> <%= t('action.new_model', model: mt(:hospital)) %>
+                    <% end %>
                     <%= button_tag type: 'submit', class: 'btn btn-primary pull-right' do %>
                         <i class="fa fa-search"></i> <%= content_tag :span, t('action.search') %>
                     <% end %>
