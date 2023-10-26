@@ -2,6 +2,7 @@
 class Hospital < ApplicationRecord
   has_many :departments, class_name: 'HospitalDepartment', dependent: :destroy
   validates_presence_of :name
+  validates_uniqueness_of :name, case_sensitive: false
   before_validation :setup, on: [:create, :update]
 
   LEVEL = %w[三级 三甲 三乙 三丙 二级 二甲 二乙 二丙 一级 一甲 一乙 一丙]
@@ -13,6 +14,7 @@ class Hospital < ApplicationRecord
 
   private
   def setup
+    self.name = name.try(:strip)
     if kwlist.is_a? String
       self.kwlist = kwlist.split(',').map(&:strip)
       if self.kwlist.length > MAX_KWLIST_LENGTH
