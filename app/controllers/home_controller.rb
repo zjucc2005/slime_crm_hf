@@ -29,7 +29,7 @@ class HomeController < ApplicationController
     @total_experts              = Candidate.where(category: %w[expert doctor]).where(created_by: current_user.id).count
     @total_tasks                = ProjectTask.where(status: 'finished', created_by: current_user.id).count
     @total_charge_duration_hour = (ProjectTask.where(status: 'finished', created_by: current_user.id).sum(:charge_duration) / 60.0).round(1)
-    @self_hour_monthly = (ProjectTask.where(status: 'finished', created_by: current_user.id, pm_id: current_user.id).where('started_at >= ?', current_month).sum(:charge_duration) / 60.0).round(1)
+    @self_hour_monthly = (ProjectTask.where(status: 'finished', created_by: current_user.id).where('started_at >= ?', current_month).sum(:charge_duration) / 60.0).round(1)
     @manage_hour_monthly = (ProjectTask.where(status: 'finished', pm_id: current_user.id).where.not(created_by: current_user.id).where('started_at >= ?', current_month).sum(:charge_duration) / 60.0).round(1)
 
     query = ProjectTask.where('created_by = :uid OR pm_id = :uid', uid: current_user.id)
