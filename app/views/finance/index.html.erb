@@ -54,7 +54,7 @@
                         <td><%= currency_display(task.currency) %></td>
                         <td><%= project_task_charge_status_badge(task.charge_status) %></td>
                         <td><%= project_task_payment_status_badge(task.payment_status) %></td>
-                        <th class="action">
+                        <td class="action">
                             <%= link_to finance_path(task), :class => 'btn btn-primary btn-xs' do %>
                                 <%= fa_icon_tag('file') %> <%= t('action.detail') %>
                             <% end %>

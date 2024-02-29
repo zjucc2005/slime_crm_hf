@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_16_090015) do
+ActiveRecord::Schema.define(version: 2024_02_27_020736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,35 @@ ActiveRecord::Schema.define(version: 2023_05_16_090015) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "shorthand_rate", precision: 10, scale: 2
     t.index ["company_id"], name: "index_contracts_on_company_id"
+  end
+
+  create_table "cost_summaries", force: :cascade do |t|
+    t.datetime "datetime"
+    t.decimal "price", precision: 10, scale: 2
+    t.bigint "operator_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "cost_types", force: :cascade do |t|
+    t.string "name"
+    t.string "path"
+    t.integer "parent_id"
+    t.boolean "is_parent", default: false
+    t.boolean "disabled", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "costs", force: :cascade do |t|
+    t.bigint "cost_summary_id"
+    t.bigint "cost_type_id"
+    t.string "name"
+    t.decimal "price", precision: 10, scale: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cost_summary_id"], name: "index_costs_on_cost_summary_id"
+    t.index ["cost_type_id"], name: "index_costs_on_cost_type_id"
   end
 
   create_table "czbank_xibaos", force: :cascade do |t|

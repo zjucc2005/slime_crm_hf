@@ -16,4 +16,12 @@ class ApplicationRecord < ActiveRecord::Base
   def uid(len=6)
     sprintf("%0#{len}d", id)
   end
+
+  def expose_fields(*args)
+    res = {}
+    args.each do |arg|
+      arg.is_a?(Hash) ? res.merge!(arg) : res[arg] = self.send(arg)
+    end
+    res
+  end
 end

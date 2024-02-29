@@ -1,0 +1,46 @@
+<%= render partial: 'costs/widgets/nav', locals: { active: 2 } %>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-3 col-12">
+                <%= form_tag request.path, :method => :get do %>
+                    <div class="form-group">
+                        <%= label_tag :year, t('dashboard.statistical_year') %>
+                        <%= select_tag :year, options_for_select(@year_options, params[:year]), :class => 'form-control select2' %>
+                    </div>
+                    <div class="form-group">
+                        <%= submit_tag t('action.submit'), class: 'btn btn-submit' %>
+                    </div>
+                <% end %>
+            </div>
+            <div class="col-lg-9 col-12">
+                <div id="bar_chart" style="height: 480px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        let chart = echarts.init(document.getElementById('bar_chart'), 'default');
+        let option = {
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: [120, 200, 150, 80, 70, 110, 130],
+              type: 'bar'
+            }
+          ]
+        };
+
+        chart.setOption(option);
+    });
+</script>

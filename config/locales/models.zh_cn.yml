@@ -74,6 +74,7 @@ zh_cn:
       finance: "财务"
       card_template: "卡片模板"
       call_record: "通话记录"
+      cost_summary: "成本结算"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)
     attributes:
@@ -370,3 +371,8 @@ zh_cn:
         project: "关联项目"
         candidate_id: "关联专家ID"
         candidate: "关联专家"
+
+      cost_summary:
+        datetime: "时间"
+        price: "总费用"
+        operator: "操作员"

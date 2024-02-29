@@ -210,6 +210,18 @@ Rails.application.routes.draw do
     post :import_gllue_candidates, on: :collection
   end
 
+  resources :costs do
+    get :v_summary_show, on: :collection
+    get :v_summary_new, on: :collection
+    post :v_summary_create, on: :collection
+    get :v_summary_edit, on: :collection
+    post :v_summary_update, on: :collection
+    get :v_types, on: :collection
+    get :v_load_types, on: :collection
+
+    get :summary_chart, on: :collection
+  end
+
   resources :c_tags do
   end
 

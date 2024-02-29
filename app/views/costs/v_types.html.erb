@@ -1,0 +1,80 @@
+<%= render partial: 'costs/widgets/nav', locals: { active: 3 } %>
+
+<div id="app" class="card">
+    <div class="card-body">
+        <el-row>
+            <el-col :span="6">
+                <el-tree
+                    :data="cost_types"
+                    node-key="id"
+                    :props="{ label: 'name' }"
+                    default-expand-all
+                    :expand-on-click-node="false">
+                    <span class="c-tree-node" slot-scope="{ node, data }">
+                        <span>
+                            {{ node.label }}
+                        </span>
+                        <span>
+                          <el-button
+                            type="text"
+                            size="mini"
+                            disabled
+                            @click="() => append(data)">
+                            Add
+                          </el-button>
+                          <el-button
+                            type="text"
+                            size="mini"
+                            disabled
+                            @click="() => remove(node, data)">
+                            Remove
+                          </el-button>
+                        </span>
+                    </span>
+                </el-tree>
+            </el-col>
+        </el-row>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            cost_types: [],
+        },
+        mounted: function(){
+            this.$nextTick(function(){
+                var _this_ = this;
+                // 加载类型数据
+                $.get('/costs/v_load_types', function(res){
+                    if (res.status === 0) {
+                        _this_.cost_types = res.data.cost_types;  // 加载类型数据
+                        console.log('load cost types:ok', res.data.cost_types)
+                    } else {
+                        _this_.$message({ message: res.msg, type: 'error' })
+                    }
+                })
+            })
+        },
+        methods: {
+            append(data){
+                console.log('append data:', data)
+            },
+            add() {
+                this.deadline3 = this.deadline3 + 1000 * 10;
+            }
+        }
+    })
+</script>
+
+<style>
+  .c-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+</style>

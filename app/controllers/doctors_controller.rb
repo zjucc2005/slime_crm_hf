@@ -168,7 +168,7 @@ class DoctorsController < ApplicationController
         end
         org = Hospital.where(id: exp_params[:org_id]).first
         dep = HospitalDepartment.where(id: exp_params[:dep_id]).first
-        @exp ? @exp.update!(exp_params.merge(org_cn: org.name, department: dep.name)) :
+        @exp ? @exp.update!(exp_params.merge(org_cn: org.name, org_en: org.level, department: dep.name)) :
             @doctor.experiences.hospital.create!(exp_params.merge(org_cn: org.name, org_en: org.level, department: dep.name))
         unless @doctor.validates_presence_of_experiences
           raise t(:operation_failed)

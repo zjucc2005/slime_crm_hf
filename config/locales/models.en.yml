@@ -44,6 +44,7 @@ en:
       finance: "Finance"
       card_template: "Card template"
       call_record: "Call record"
+      cost_summary: "Cost summary"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)
     attributes:
@@ -340,3 +341,8 @@ en:
         project: "Project"
         candidate_id: "Expert ID"
         candidate: "Expert"
+
+      cost_summary:
+        datetime: "Time"
+        price: "Total price"
+        operator: "Operator"
