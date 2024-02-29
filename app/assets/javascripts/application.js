@@ -6,9 +6,3 @@
 //= require clipboard.min
 //= require vue
 //= require element-ui
-
-const toFormData = (data) => {
-    let formData = new FormData()
-    Object.keys(data).map(k => formData.append(k, data[k]))
-    return formData
-}

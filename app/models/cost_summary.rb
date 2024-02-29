@@ -15,4 +15,17 @@ class CostSummary < ApplicationRecord
   def update_price!
     self.update!(price: costs.sum(:price))
   end
+
+  # 根据根类型分别汇总费用
+  def price_group_by_root_type
+    res = []
+    CostType.root.order(:id).each do |type|
+      type_price = 0
+      costs.each do |cost|
+        type_price += cost.price if type.has_decendant?(cost.cost_type_id)
+      end
+      res << { name: type.name, cost_type_id: type.id, price: type_price }
+    end
+    res
+  end
 end

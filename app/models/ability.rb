@@ -70,6 +70,7 @@ class Ability
     can :manage, SearchAlias
     can :manage, CardTemplate
     can :manage, Extra
+    can :manage, Cost
     # can :manage, Statistic
   end
 

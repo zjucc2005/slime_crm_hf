@@ -1,6 +1,6 @@
 <div id="app" class="mb-2">
     <el-row class="mb-2">
-        <el-col :lg="8" :md="16">
+        <el-col :lg="6" :md="12">
             <el-date-picker
                 v-model="cost_summary.datetime"
                 type="month"
@@ -8,6 +8,9 @@
                 value-format="yyyy-MM-dd"
                 placeholder="选择月份"
             />
+        </el-col>
+        <el-col :lg="6" :md="12">
+            <span class="text-bold">总计: {{ total_price }}</span>
         </el-col>
     </el-row>
     <el-row class="mb-2">
@@ -76,6 +79,15 @@
                     this.mode = 'new'
                 }
             })
+        },
+        computed: {
+            total_price: function() {
+                let sum = 0
+                Object.keys(this.cost_summary.costs).map(k => {
+                    sum += this.cost_summary.costs[k] * 1
+                })
+                return sum
+            }
         },
         methods: {
             submit() {

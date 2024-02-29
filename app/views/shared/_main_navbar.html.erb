@@ -106,7 +106,7 @@
                         <% end if can?(:index, UserChannel) %>
                         <%= link_to costs_path, class: 'dropdown-item' do %>
                             <i class="fa fa-bar-chart text-danger"></i> <%= '成本结算' %>
-                        <% end %>
+                        <% end if can?(:index, Cost) %>
                         <%= link_to card_templates_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('drivers-license-o') %> <%= mt(:card_template) %>
                         <% end if can?(:index, CardTemplate) %>

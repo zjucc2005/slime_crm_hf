@@ -73,7 +73,7 @@ class CostsController < ApplicationController
   def v_types; end
   def v_load_types
     begin
-      @cost_types = CostType.where(parent_id: nil, is_parent: true).order(:id).map(&:to_api)
+      @cost_types = CostType.root.order(:id).map(&:to_api)
       render json: { status: 0, data: { cost_types: @cost_types } }
     rescue => e
       render json: { status: 1, msg: e.message }
@@ -83,5 +83,31 @@ class CostsController < ApplicationController
   def summary_chart
     current_year = Time.now.year
     @year_options = (2024..current_year).to_a.reverse              # year options
+    @year = params[:year] || current_year                          # statistical year
+    @x_axis = I18n.locale == :zh_cn ?
+      %w[1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月] : %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]
+
+    # init result
+    @result = []
+    @result << { name: '总计', data: [] }
+    CostType.root.order(:id).each do |type|
+      @result << { name: type.name, data: [], stack: '总计' }
+    end
+
+    o_time = Time.local @year  # original time
+    12.times do |i|
+      datetime = o_time + i.month  # start time
+      cost_summary = CostSummary.where(datetime: o_time + i.month).first
+      if cost_summary
+        @result.select{|r| r[:name] == '总计' }[0][:data] << cost_summary.price
+        cost_summary.price_group_by_root_type.each do |type|
+          @result.select{|r| r[:name] == type[:name]}[0][:data] << type[:price] 
+        end
+      else
+        @result.each do |item|
+          item[:data] << 0.0  # 无数据时，用0占空位
+        end
+      end
+    end
   end
 end
