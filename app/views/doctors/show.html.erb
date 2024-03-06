@@ -208,6 +208,12 @@
                     </div>
                     <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
                         <div class="input-group-prepend">
+                            <span class="input-group-text"><%= mt(:candidate, :cpt_taxed) %></span>
+                        </div>
+                        <%= content_tag :span, boolean_display(@candidate.cpt_taxed), class: 'form-control' %>
+                    </div>
+                    <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                        <div class="input-group-prepend">
                             <span class="input-group-text"><%= mt(:candidate, :currency) %></span>
                         </div>
                         <%= content_tag :span, currency_display(@doctor.currency), class: 'form-control' %>

@@ -113,6 +113,10 @@
         <%= f.number_field :cpt, :required => true, :min => 0, :step => 1, :value => @candidate.cpt || 0, :class => 'form-control' %>
     </div>
     <div class="col-lg-3 col-6 form-group">
+        <%= f.label :cpt_taxed %><span class="text-red">*</span>
+        <%= f.select :cpt_taxed, boolean_options, { include_blank: false }, class: 'form-control select2-boolean-with-icon' %>
+    </div>
+    <div class="col-lg-3 col-6 form-group">
         <%= f.label :currency %><span class="text-red">*</span>
         <%= f.select :currency, currency_options, { :include_blank => false }, :class => 'form-control select2' %>
     </div>

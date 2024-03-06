@@ -237,7 +237,7 @@ class DoctorsController < ApplicationController
   def doctor_params
     params.require(:candidate).permit(:first_name, :last_name, :nickname, :category2, :date_of_birth, :gender, :city,
                                       :phone, :phone1, :email, :wechat, :file, :sign_file, :expertise, :description,
-                                      :recommender_id, :is_available, :is_kol, :cpt, :currency, :is_yibao)
+                                      :recommender_id, :is_available, :is_kol, :cpt, :cpt_taxed, :currency, :is_yibao)
   end
 
   def exp_params

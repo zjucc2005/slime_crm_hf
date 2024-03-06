@@ -1,5 +1,5 @@
 <div id="addCostModal" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 960px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><%= t('action.add_model', :model => t(:payment_info)) %></h4>
@@ -7,6 +7,7 @@
             </div>
 
             <%= hidden_field_tag :expert_cpt, project_task.expert.cpt %>
+            <%= hidden_field_tag :expert_cpt_taxed, project_task.expert.cpt_taxed %>
             <%= form_tag add_cost_project_task_path(project_task), :method => :post, :remote => true do %>
                 <div class="modal-body">
                     <div class="row">
@@ -174,9 +175,10 @@
         let price_tips = $('#price_tips');
         let charge_duration = $('#project_task_charge_duration').val();
         let expert_cpt = $('#expert_cpt').val();
+        let expert_cpt_taxed = $('#expert_cpt_taxed').val() == 'true' ? '税后' : '税前';
         if(category.val() === 'expert'){
             var refer_fee = (parseFloat(expert_cpt) * parseInt(charge_duration) / 60).toFixed(1);
-            price_tips.html('参考值: ' + [refer_fee, expert_cpt, charge_duration].join(', ') + 'min');
+            price_tips.html('参考值: ' + [refer_fee, `${expert_cpt}(${expert_cpt_taxed})`, charge_duration].join(', ') + 'min');
         } else {
             price_tips.html('');
         }

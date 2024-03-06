@@ -127,6 +127,7 @@ zh_cn:
         is_available: "访谈意愿"
         is_kol: "KOL"
         cpt: "专家费率"
+        cpt_taxed: "是否税后"
         currency: "货币"
         bank: "银行名称"
         bank_card: "银行卡号"

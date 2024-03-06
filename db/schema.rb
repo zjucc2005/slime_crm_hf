@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_27_020736) do
+ActiveRecord::Schema.define(version: 2024_03_06_062817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 2024_02_27_020736) do
     t.decimal "coef", precision: 4, scale: 2, default: "0.0"
     t.string "sign_file"
     t.boolean "is_yibao", default: false
+    t.boolean "cpt_taxed", default: true
     t.index ["coef"], name: "index_candidates_on_coef"
     t.index ["company_id"], name: "index_candidates_on_company_id"
     t.index ["recommender_id"], name: "index_candidates_on_recommender_id"

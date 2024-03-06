@@ -97,6 +97,7 @@ en:
         is_available: "Available"
         is_kol: "KOL"
         cpt: "CPT"
+        cpt_taxed: "CPT taxed"
         currency: "Currency"
         bank: "Bank name"
         bank_card: "Bank card no."

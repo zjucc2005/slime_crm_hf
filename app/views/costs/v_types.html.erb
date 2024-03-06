@@ -15,19 +15,17 @@
                             {{ node.label }}
                         </span>
                         <span>
-                          <el-button
+                          <el-button v-if="data.is_parent"
                             type="text"
                             size="mini"
-                            disabled
                             @click="() => append(data)">
-                            Add
+                            新增下一级
                           </el-button>
                           <el-button
                             type="text"
                             size="mini"
-                            disabled
                             @click="() => remove(node, data)">
-                            Remove
+                            删除
                           </el-button>
                         </span>
                     </span>
@@ -59,10 +57,12 @@
         },
         methods: {
             append(data){
+                alert('功能未开放')
                 console.log('append data:', data)
             },
-            add() {
-                this.deadline3 = this.deadline3 + 1000 * 10;
+            remove(node, data) {
+                alert('功能未开放')
+                console.log('delete data:', data, node)
             }
         }
     })
