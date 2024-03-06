@@ -317,6 +317,7 @@ en:
         recruitment_fee: "Recruitment fee"
         notice_email: "Notice email"
         expert_alias: "Expert alias"
+        is_new_expert: "Is new expert"
 
       project_task_cost:
         category: "Cost category"

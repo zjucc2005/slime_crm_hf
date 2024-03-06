@@ -347,6 +347,7 @@ zh_cn:
         recruitment_fee: "招募费"
         notice_email: "通知邮件"
         expert_alias: "专家化名"
+        is_new_expert: "是否新专家"
 
       project_task_cost:
         category: "费用类型"

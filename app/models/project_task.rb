@@ -58,6 +58,7 @@ class ProjectTask < ApplicationRecord
       self.status = 'finished'
       self.actual_price ||= base_price                                                      # 实际收费
       self.charge_status = contract.payment_way == 'advance_payment' ? 'paid' : 'unbilled'  # 预付合同直接已收费
+      self.is_new_expert = _is_new_expert_
       self.save!
 
       project_candidate = ProjectCandidate.where(project_id: project_id, candidate_id: expert_id).first
@@ -225,6 +226,23 @@ class ProjectTask < ApplicationRecord
       expert.work_experiences.find_by(id: candidate_experience_id) || expert.latest_work_experience
     else
       expert.latest_work_experience
+    end
+  end
+
+  # 是否新专家判定
+  # 1. 专家 - 新建于一个月内 or 一年内无访谈
+  # 2. 医生 - 新建于一个月内 or 半年内无访谈
+  # 3. 以上时间基准为访谈任务开始时间，即字段started_at
+  def _is_new_expert_
+    return true if expert.created_at > started_at - 1.month # 新建于一个月内
+    prev_task = expert.project_tasks.where('started_at < ?', started_at).order(started_at: :desc).first
+    return true if prev_task.nil? # 历史无访谈
+    if expert.category == 'expert'
+      prev_task.started_at < started_at - 1.year
+    elsif expert.category == 'doctor'
+      prev_task.started_at < started_at - 6.months
+    else
+      false
     end
   end
 
