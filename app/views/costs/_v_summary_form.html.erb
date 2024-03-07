@@ -26,7 +26,7 @@
                         {{ node.label }}
                     </span>
                     <span>
-                      <el-input v-if="!data.is_parent" size="mini"
+                      <el-input v-if="!data.is_parent" size="mini" type="number"
                         placeholder="输入金额"
                         v-model="cost_summary.costs[data.id]"
                         clearable>
