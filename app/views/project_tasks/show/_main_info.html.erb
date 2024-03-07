@@ -51,8 +51,8 @@
             <span class="input-group-text"><%= t(:expert) %></span>
         </div>
         <%= content_tag :span, class: 'form-control' do %>
-            <%= content_tag :span, 'new', class: 'badge badge-danger' if @project_task.is_new_expert %>
             <%= link_to @project_task.expert.name, candidate_path(@project_task.expert_id), :target => '_blank' %>
+            <%= content_tag :span, 'new', class: 'badge badge-danger' if @project_task.is_new_expert %>
         <% end %>
     </div>
     <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">

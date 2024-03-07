@@ -44,8 +44,8 @@
                         <td><%= project.company.name_abbr %></td>
                         <td><%= task.started_at.strftime('%F %H:%M') %></td>
                         <td>
-                            <%= content_tag :span, 'new', class: 'badge badge-danger' if task.is_new_expert %>
                             <%= link_to task.expert.name, candidate_path(task.expert_id), target: '_blank' %>
+                            <%= content_tag :span, 'new', class: 'badge badge-danger' if task.is_new_expert %>
                         </td>
                         <td><%= task.expert.uid %></td>
                         <td><%= project_task_interview_form_badge(task.interview_form) %></td>
