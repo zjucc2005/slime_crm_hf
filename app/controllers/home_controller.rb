@@ -22,6 +22,7 @@ class HomeController < ApplicationController
     @total_experts              = user_channel_filter(Candidate.where(category: %w[expert doctor])).count
     @total_signed_companies     = user_channel_filter(Company.signed).count
     @total_tasks                = user_channel_filter(ProjectTask.where(status: 'finished')).count
+    @total_tasks_of_new_expert  = user_channel_filter(ProjectTask.where(status: 'finished', is_new_expert: true)).count
     @total_charge_duration_hour = ( user_channel_filter(ProjectTask.where(status: 'finished')).sum(:charge_duration) / 60.0).round(1)
   end
 
