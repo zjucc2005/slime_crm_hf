@@ -125,20 +125,20 @@
         </div>
         <%= content_tag :span, @project_task.memo, :class => 'form-control' %>
     </div>
-    <div id="app" class="col-3">
+    <div id="jiesuan_file" class="col-3" v-if="url">
         <div class="text-smaller"><%= mt(:project_task, :jiesuan_file) %></div>
-            <el-image
-                class="img-thumbnail"
-                style="width: 100px; height: 100px;"
-                :src="url"
-                :preview-src-list="srcList">
-            </el-image>
+        <el-image
+            class="img-thumbnail"
+            style="width: 100px; height: 100px;"
+            :src="url"
+            :preview-src-list="srcList">
+        </el-image>
     </div>
 </div>
 
 <script>
     var app = new Vue({
-        el: '#app',
+        el: '#jiesuan_file',
         data: {
             url: '<%= @project_task.jiesuan_file.url %>',
             srcList: [
