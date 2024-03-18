@@ -143,8 +143,10 @@
     </div>
     <div class="col-lg-3 col-12 form-group">
         <%= f.label :jiesuan_file %>
-        <%= link_to t('action.preview'), 'javascript:void(0);',class: 'btn btn-link btn-xs', onclick: "previewFile('#{@project_task.jiesuan_file.url}', 'project_task_jiesuan_file')" if @project_task.jiesuan_file.present? %>
-        <%= f.file_field :jiesuan_file, class: 'form-control-file', accept: 'image/jpeg,image/png' %>
+        <%= link_to t('action.preview'), 'javascript:void(0);',
+            onclick: "previewFile('#{@project_task.jiesuan_file.url}', 'project_task_jiesuan_file')",
+            id: 'previewBtn', class: 'btn btn-link btn-xs', style: @project_task.jiesuan_file.blank? ? 'display: none;' : '' %>
+        <%= f.file_field :jiesuan_file, class: 'form-control-file', accept: 'image/jpeg,image/png', onchange: "$('#previewBtn').show();"  %>
     </div>
 </div>
 
@@ -249,6 +251,10 @@
             if (file) {
                 file_path = window.URL.createObjectURL(file)
             }
+        }
+        if (!file_path) {
+            alert('无预览文件')
+            return
         }
         $('#previewSrc')[0].src = file_path;
         $('#previewModal').modal('toggle');
