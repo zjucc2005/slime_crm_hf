@@ -219,7 +219,8 @@ class ProjectTasksController < ApplicationController
   def project_task_params
     params.require(:project_task).permit(:client_id, :pm_id, :interview_form, :started_at, :expert_level, :expert_rate, :duration,
                                          :charge_duration, :actual_price, :is_shorthand, :is_recorded, :memo, :f_flag,
-                                         :interview_no, :recruitment_fee, :notice_email, :expert_alias, :candidate_experience_id)
+                                         :interview_no, :recruitment_fee, :notice_email, :expert_alias, :candidate_experience_id,
+                                         :jiesuan_file)
   end
 
   def project_task_cost_params

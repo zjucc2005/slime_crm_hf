@@ -318,6 +318,7 @@ en:
         notice_email: "Notice email"
         expert_alias: "Expert alias"
         is_new_expert: "Is new expert"
+        jiesuan_file: "File"
 
       project_task_cost:
         category: "Cost category"

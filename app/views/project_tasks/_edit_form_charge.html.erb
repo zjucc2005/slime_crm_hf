@@ -141,6 +141,27 @@
         <%= f.label :memo %>
         <%= f.text_field :memo, :class => 'form-control' %>
     </div>
+    <div class="col-lg-3 col-12 form-group">
+        <%= f.label :jiesuan_file %>
+        <%= link_to t('action.preview'), 'javascript:void(0);',class: 'btn btn-link btn-xs', onclick: "previewFile('#{@project_task.jiesuan_file.url}', 'project_task_jiesuan_file')" if @project_task.jiesuan_file.present? %>
+        <%= f.file_field :jiesuan_file, class: 'form-control-file', accept: 'image/jpeg,image/png' %>
+    </div>
+</div>
+
+<div class="modal fade" id="previewModal" tabindex="-1">
+  <div class="modal-dialog" style="max-width: 960px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">预览</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= image_tag '', id: 'previewSrc', style: 'max-width: 100%;' %>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -220,5 +241,16 @@
             charge_rate_mod.readOnly = false;
         }
         get_base_price();
+    }
+
+    function previewFile(file_path, target_id) {
+        if (target_id) {
+            let file = document.getElementById(target_id).files[0];
+            if (file) {
+                file_path = window.URL.createObjectURL(file)
+            }
+        }
+        $('#previewSrc')[0].src = file_path;
+        $('#previewModal').modal('toggle');
     }
 </script>

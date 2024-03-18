@@ -30,6 +30,8 @@ class ProjectTask < ApplicationRecord
   validates_inclusion_of :status, :in => STATUS.keys
   validates_inclusion_of :interview_form, :in => INTERVIEW_FORM.keys
 
+  mount_uploader :jiesuan_file, FileUploader
+
   before_validation :setup, :on => [:create, :update]
   after_update :sync_payment_status
 
