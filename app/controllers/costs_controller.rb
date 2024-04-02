@@ -82,10 +82,17 @@ class CostsController < ApplicationController
 
   def summary_chart
     current_year = Time.now.year
-    @year_options = (2024..current_year).to_a.reverse              # year options
-    @year = params[:year] || current_year                          # statistical year
+    @year_options = ['无'] + (2024..current_year).to_a.reverse    # year options
+    if ['无', '', nil].include?(params[:year])
+      @year = nil
+      @s_time = Time.now.beginning_of_month - 11.months # start time
+    else
+      @year = current_year  # statistical year
+      @s_time = Time.local @year
+    end
     @x_axis = I18n.locale == :zh_cn ?
       %w[1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月] : %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]
+
 
     # init result
     @result = []
@@ -93,11 +100,11 @@ class CostsController < ApplicationController
     CostType.root.order(:id).each do |type|
       @result << { name: type.name, data: [], stack: '总计' }
     end
+    @x_axis = []
 
-    o_time = Time.local @year  # original time
     12.times do |i|
-      datetime = o_time + i.month  # start time
-      cost_summary = CostSummary.where(datetime: o_time + i.month).first
+      datetime = @s_time + i.month  # start time
+      cost_summary = CostSummary.where(datetime: datetime).first
       if cost_summary
         @result.select{|r| r[:name] == '总计' }[0][:data] << cost_summary.price
         cost_summary.price_group_by_root_type.each do |type|
@@ -108,6 +115,7 @@ class CostsController < ApplicationController
           item[:data] << 0.0  # 无数据时，用0占空位
         end
       end
+      @x_axis << datetime.strftime('%Y.%m')
     end
   end
 end

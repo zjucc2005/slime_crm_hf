@@ -11,23 +11,34 @@
                     default-expand-all
                     :expand-on-click-node="false">
                     <span class="c-tree-node" slot-scope="{ node, data }">
-                        <span>
-                            {{ node.label }}
-                        </span>
-                        <span>
-                          <el-button v-if="data.is_parent"
-                            type="text"
-                            size="mini"
-                            @click="() => append(data)">
-                            新增下一级
-                          </el-button>
-                          <el-button
-                            type="text"
-                            size="mini"
-                            @click="() => remove(node, data)">
-                            删除
-                          </el-button>
-                        </span>
+                        <template v-if="data.is_parent">
+                            <span class="text-bold">{{ node.label }}</span>
+                            <span>
+                                <el-button v-if="data.is_parent"
+                                    type="text"
+                                    size="mini"
+                                    @click="() => append(data)">
+                                    新增下一级
+                                </el-button>
+                                <el-button
+                                    type="text"
+                                    size="mini"
+                                    @click="() => remove(node, data)">
+                                    删除
+                                </el-button>
+                            </span>
+                        </template>
+                        <template v-else>
+                            <span>{{ node.label }}</span>
+                            <span>
+                                <el-button
+                                    type="text"
+                                    size="mini"
+                                    @click="() => remove(node, data)">
+                                    删除
+                                </el-button>
+                            </span>
+                        </template>
                     </span>
                 </el-tree>
             </el-col>

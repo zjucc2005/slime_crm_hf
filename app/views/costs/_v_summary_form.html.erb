@@ -10,7 +10,7 @@
             />
         </el-col>
         <el-col :lg="6" :md="12">
-            <span class="text-bold">总计: {{ total_price }}</span>
+            <span class="text-bold">总计: {{ sum_price() }}</span>
         </el-col>
     </el-row>
     <el-row class="mb-2">
@@ -22,16 +22,33 @@
                 default-expand-all
                 :expand-on-click-node="false">
                 <span class="c-tree-node" slot-scope="{ node, data }">
-                    <span>
-                        {{ node.label }}
-                    </span>
-                    <span>
-                      <el-input v-if="!data.is_parent" size="mini" type="number"
-                        placeholder="输入金额"
-                        v-model="cost_summary.costs[data.id]"
-                        clearable>
-                      </el-input>
-                    </span>
+                    <template v-if="data.is_parent">
+                        <span class="text-bold">
+                            {{ node.label }}
+                        </span>
+                        <span class="text-bold">
+                            {{ sum_price(data.id) }}
+                            <i class="el-icon-pie-chart"></i>
+                            {{ sum_price_rate(data.id) }}
+                        </span>
+                    </template>
+                    <template v-else>
+                        <span>
+                            {{ node.label }}
+                        </span>
+                        <span>
+                            <el-input v-if="!data.is_parent" size="mini" type="number"
+                                placeholder="输入金额"
+                                v-model="cost_summary.costs[data.id]"
+                                clearable>
+                            </el-input>
+                            <span v-else>
+                                {{ sum_price(data.id) }}
+                                <i class="el-icon-pie-chart"></i>
+                                {{ sum_price_rate(data.id) }}
+                            </span>
+                        </span>
+                    </template>
                 </span>
             </el-tree>
         </el-col>
@@ -81,12 +98,27 @@
             })
         },
         computed: {
-            total_price: function() {
-                let sum = 0
-                Object.keys(this.cost_summary.costs).map(k => {
-                    sum += this.cost_summary.costs[k] * 1
-                })
-                return sum
+            sum_price() {
+                return (cost_type_id) => {
+                    let sum = 0
+                    if (cost_type_id) {
+                        let cost_type = this.cost_types.find(t => t.id === cost_type_id)
+                        cost_type.children.map(c => {
+                            sum += (this.cost_summary.costs[c.id] || 0) * 1
+                        })
+                    } else {
+                        Object.keys(this.cost_summary.costs).map(k => {
+                            sum += (this.cost_summary.costs[k] || 0) * 1
+                        })
+                    }
+                    return sum
+                }
+            },
+            sum_price_rate() {
+                return (cost_type_id) => {
+                    let rate = (this.sum_price(cost_type_id) / this.sum_price()) || 0
+                    return `${(rate * 100).toFixed(1)} %`
+                }
             }
         },
         methods: {

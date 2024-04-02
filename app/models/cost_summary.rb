@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CostSummary < ApplicationRecord
-  has_many :costs, class_name: 'Cost'
+  has_many :costs, class_name: 'Cost', dependent: :destroy
   belongs_to :operator, class_name: 'User', foreign_key: :operator_id
   
   def to_api

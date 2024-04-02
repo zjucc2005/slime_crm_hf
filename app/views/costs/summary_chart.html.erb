@@ -15,7 +15,7 @@
                 <% end %>
             </div>
             <div class="col-lg-9 col-12">
-                <div id="bar_chart" style="height: 480px;">
+                <div id="bar_chart" style="height: 600px;">
                 </div>
             </div>
         </div>
@@ -25,29 +25,65 @@
 <script>
     $(document).ready(function(){
         let bar_chart = echarts.init(document.getElementById('bar_chart'), 'default');
-        let data = [
-            <% @result.each do |res| %>
-                {
-                    name: '<%= res[:name] %>',
+        let res =  <%= @result.to_json.html_safe %>;
+        let data = res.map(item => {
+            if (item.stack) {
+                return {
+                    name: item.name,
                     type: 'bar',
-                    <% if res[:stack].present? %>
-                    stack: '<%= res[:stack] %>',
-                    barWidth: 4,
-                    <% else %>
-                    barWidth: 36,
+                    stack: item.stack,
+                    barWidth: '50%',
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: (e) => `${((e.data / res[0].data[e.dataIndex]) * 100 || 0).toFixed(1)} %`,
+                    },
+                    data: item.data
+                }
+            } else {
+                return {
+                    name: item.name,
+                    type: 'bar',
+                    barWidth: 2,
                     label: {
                         show: true,
                         position: 'top'
                     },
-                    <% end %>
-                    data: <%= res[:data].to_s.html_safe %>
-                },
-            <% end %>
-        ];
+                    data: item.data
+                }
+            }
+        })
+        // let data = [
+        //     <% @result.each do |res| %>
+        //         {
+        //             name: '<%= res[:name] %>',
+        //             type: 'bar',
+        //             <% if res[:stack].present? %>
+        //             stack: '<%= res[:stack] %>',
+        //             barWidth: '50%',
+        //             label: {
+        //                 show: true,
+        //                 position: 'inside',
+        //                 formatter: (e) => {
+        //                     console.log('e:', e)
+        //                     return e.data / 1
+        //                 }
+        //             },
+        //             <% else %>
+        //             barWidth: 2,
+        //             label: {
+        //                 show: true,
+        //                 position: 'top'
+        //             },
+        //             <% end %>
+        //             data: <%= res[:data].to_s.html_safe %>
+        //         },
+        //     <% end %>
+        // ];
 
         let option = {
             title: {
-                text: '<%= @year %>年成本结算',
+                text: '<%= @year ? "#{@year}年" : '' %>成本结算',
                 subtext:  'Monthly Statistics - RMB'
             },
             tooltip: {
