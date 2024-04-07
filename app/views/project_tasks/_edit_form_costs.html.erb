@@ -30,11 +30,11 @@
         <td class="action">
             <%= link_to edit_cost_project_task_path(project_task, project_task_cost_id: cost.id), class: 'btn btn-edit btn-xs' do %>
                 <i class="fa fa-edit"></i> 编辑价格
-            <% end %>
+            <% end if cost.category.exclude?('expert_tax') %>
             <%= link_to remove_cost_project_task_path(project_task, project_task_cost_id: cost.id), :method => :delete, :remote => true,
                         :data => { :confirm => t(:sure_to_remove) }, :class => 'btn btn-danger btn-xs' do %>
                 <%= fa_icon_tag('trash') %> <%= t('action.remove') %>
-            <% end %>
+            <% end if cost.category.exclude?('expert_tax') %>
         </td>
     </tr>
     <% end %>

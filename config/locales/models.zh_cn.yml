@@ -353,6 +353,8 @@ zh_cn:
       project_task_cost:
         category: "费用类型"
         price: "价格"
+        tax: "税费"
+        gongsizhichu: "公司支出"
         currency: "货币"
         lijin: "礼金支出数额"
         memo: "备注"

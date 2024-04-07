@@ -323,6 +323,8 @@ en:
       project_task_cost:
         category: "Cost category"
         price: "Price"
+        tax: "Tax"
+        gongsizhichu: "Company cost"
         currency: "Currency"
         lijin: "Lijin"
         memo: "Memo"

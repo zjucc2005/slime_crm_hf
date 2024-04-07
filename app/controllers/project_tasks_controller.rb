@@ -125,6 +125,10 @@ class ProjectTasksController < ApplicationController
           cost.payment_info = params[:payment_info]  # general
         end
         cost.save!
+
+        if cost.category == 'expert'
+          cost.create_expert_tax_instance
+        end
       end
     rescue Exception => e
       @error = e.message
@@ -138,7 +142,10 @@ class ProjectTasksController < ApplicationController
     load_project_task
 
     cost = @project_task.costs.where(id: params[:project_task_cost_id]).first
-    cost.try(:destroy!)
+    cost&.destroy!
+    if cost.category == 'expert'
+      @project_task.costs.where(category: 'expert_tax').map(&:destroy)
+    end
     respond_to{|f| f.js }
   end
 

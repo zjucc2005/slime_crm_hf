@@ -2,17 +2,19 @@
 class ProjectTaskCost < ApplicationRecord
   # ENUM
   CATEGORY = {
-    :expert      => '专家费用',
-    :recommend   => '推荐费用',
-    :translation => '翻译费用',
-    :others      => '其他费用'
+    expert:      '专家费用',
+    expert_tax:  '税费（专家费用）',
+    recommend:   '推荐费用',
+    translation: '翻译费用',
+    others:      '其他费用'
   }.stringify_keys
 
   CATEGORY_LIMIT = {
-    :expert      => 1,  # 费用条目限制
-    :recommend   => 1,
-    :translation => 1,
-    :others      => 999
+    expert:      1,  # 费用条目限制
+    expert_tax:  0,
+    recommend:   1,
+    translation: 1,
+    others:      999
   }.stringify_keys
 
   # Associations
@@ -33,6 +35,34 @@ class ProjectTaskCost < ApplicationRecord
     elsif self.payment_info['category'] == 'unionpay'
       self.payment_info['bank']
     end
+  end
+
+  def self.cost_monthly(category, expert_id, t=Time.now)
+    start_time = t.beginning_of_month
+    project_task_costs = self.joins(:project_task).
+      where('project_task_costs.category': category).
+      where('project_tasks.expert_id': expert_id, 'project_tasks.status': 'finished').
+      where('project_tasks.started_at BETWEEN ? AND ?', start_time, start_time + 1.month)
+    project_task_costs.sum(:price)
+  end
+
+  # 生成专家费用税费（根据专家费判断），免税额度：800元/月
+  # 税费 = 0.25 * 专家费
+  def create_expert_tax_instance(tax_free=800)
+    if category != 'expert'
+      puts "只有专家费可调用该方法" and return
+    end
+    tax_free_limit = project_task.expert.expert_tax_free_limit(project_task.started_at) # 免税额度
+    tax_price = (price - tax_free_limit) * 0.25
+    return if tax_price <= 0
+    instance = project_task.costs.create(
+      user_channel_id: user_channel_id,
+      category: 'expert_tax',
+      price: tax_price,
+      currency: currency,
+      payment_info: payment_info
+    )
+    instance
   end
 
   private

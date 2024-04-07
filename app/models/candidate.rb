@@ -251,6 +251,11 @@ class Candidate < ApplicationRecord
     score
   end
 
+  def expert_tax_free_limit(t=Time.now)
+    limit = 800 - ProjectTaskCost.cost_monthly('expert', id, t)
+    [limit, 0].max
+  end
+
   private
   def setup
     self.category    ||= 'expert'  # init category
