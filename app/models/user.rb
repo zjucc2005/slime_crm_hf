@@ -34,6 +34,10 @@ class User < ApplicationRecord
   ROLES = { :admin => '管理员', :pm => '项目经理', :pa => '项目助理', :finance => '财务' }.stringify_keys
   STATUS = { :active => '激活', :inactive => '未激活' }.stringify_keys
 
+  def to_api
+    expose_fields(:id, :email, :name_cn, :name_en, :role, :phone)
+  end
+
   def su?
     role == 'su'
   end

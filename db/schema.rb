@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_18_063918) do
+ActiveRecord::Schema.define(version: 2024_04_03_071636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,6 +276,25 @@ ActiveRecord::Schema.define(version: 2024_03_18_063918) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "kpi_infos", force: :cascade do |t|
+    t.bigint "kpi_summary_id"
+    t.string "name"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "remark"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kpi_summary_id"], name: "index_kpi_infos_on_kpi_summary_id"
+  end
+
+  create_table "kpi_summaries", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "datetime"
+    t.bigint "operator_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_kpi_summaries_on_user_id"
   end
 
   create_table "location_data", force: :cascade do |t|

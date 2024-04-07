@@ -1,15 +1,14 @@
-class CreateCosts < ActiveRecord::Migration[6.0]
+class CreateKpiSummaries < ActiveRecord::Migration[6.0]
   def change
-    create_table :cost_summaries do |t|
+    create_table :kpi_summaries do |t|
+      t.references :user
       t.datetime :datetime
-      t.decimal :price, precision: 10, scale: 2
       t.bigint :operator_id
       t.timestamps null: false
     end
 
-    create_table :costs do |t|
-      t.references :cost_summary
-      t.references :cost_type
+    create_table :kpi_infos do |t|
+      t.references :kpi_summary
       t.string :name
       t.decimal :price, precision: 10, scale: 2
       t.string :remark
