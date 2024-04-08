@@ -69,7 +69,7 @@ class StatisticsController < ApplicationController
       total_minutes = interview_minutes + manage_minutes
       if total_minutes > 0
         my_project_tasks = project_tasks.where('created_by = :user_id OR pm_id = :user_id', { user_id: user.id })
-        new_expert_rate = my_project_task.where(is_new_expert: true).count.to_f / my_project_tasks.count
+        new_expert_rate = my_project_tasks.where(is_new_expert: true).count.to_f / my_project_tasks.count
         result << { username: user.name_cn, interview_minutes: interview_minutes, manage_minutes: manage_minutes, 
           total_minutes: total_minutes, new_expert_rate: new_expert_rate }
       end
