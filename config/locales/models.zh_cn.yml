@@ -75,6 +75,7 @@ zh_cn:
       card_template: "卡片模板"
       call_record: "通话记录"
       cost_summary: "成本结算"
+      statistic: "统计"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)
     attributes:

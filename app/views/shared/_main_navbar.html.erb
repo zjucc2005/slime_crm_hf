@@ -81,18 +81,18 @@
                         <%= link_to mt(:finance), finance_index_path, class:"nav-link #{yield :nav_finance}" %>
                     </li>
                 <% end %>
-                <!--
-                <% if can? :index, User %>
-                    <li class="nav-item">
-                        <%= link_to mt(:user), users_path, class:"nav-link #{yield :nav_users}" %>
+                <% if can? :index, Statistic %>
+                    <li class="nav-item dropdown">
+                        <%= link_to '#', id: 'statistic-drop', data: { toggle: 'dropdown' }, class: "nav-link dropdown-toggle #{yield :nav_statistic}" do %>
+                            <%= mt(:statistic) %>
+                        <% end %>
+                        <div class="dropdown-menu fa-fixed">
+                            <%= link_to costs_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-bar-chart text-danger"></i> <%= '成本结算' %>
+                            <% end if can?(:index, Cost) %>
+                        </div>
                     </li>
                 <% end %>
-                <% if can? :index, UserChannel %>
-                    <li class="nav-item">
-                        <%= link_to mt(:user_channel), user_channels_path, class:"nav-link #{yield :nav_user_channels}" %>
-                    </li>
-                <% end %>
-                -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="settings-drop" data-toggle="dropdown">
                         <%= t(:settings) %>
@@ -104,9 +104,6 @@
                         <%= link_to user_channels_path, class: 'dropdown-item' do %>
                             <i class="fa fa-code-fork"></i> <%= mt(:user_channel) %>
                         <% end if can?(:index, UserChannel) %>
-                        <%= link_to costs_path, class: 'dropdown-item' do %>
-                            <i class="fa fa-bar-chart text-danger"></i> <%= '成本结算' %>
-                        <% end if can?(:index, Cost) %>
                         <%= link_to card_templates_path, class:'dropdown-item' do %>
                             <%= fa_icon_tag('drivers-license-o') %> <%= mt(:card_template) %>
                         <% end if can?(:index, CardTemplate) %>

@@ -71,7 +71,7 @@ class Ability
     can :manage, CardTemplate
     can :manage, Extra
     can :manage, Cost
-    # can :manage, Statistic
+    can :manage, Statistic
   end
 
   def pm_ability
@@ -140,6 +140,7 @@ class Ability
     can :read, Hospital
     can :read, Bank
     can :read, Industry
+    can :manage, Statistic
   end
 
   private

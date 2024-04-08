@@ -65,6 +65,7 @@ module ApplicationHelper
     nav_item = :nav_projects if controller_name == 'project_requirements'
     nav_item = :nav_companies if controller_name == 'clients'
     nav_item = :nav_yibao if controller_name == 'candidates' && action_name == 'yibao'
+    nav_item = :nav_statistic if controller_name == 'costs'
     # >>
     provide nav_item, 'active'
   end
