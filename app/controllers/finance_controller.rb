@@ -152,7 +152,7 @@ class FinanceController < ApplicationController
   end
 
   def export_project_tasks(query, category='cn')
-    query_limit = 1000  # export data limit
+    query_limit = 5000  # export data limit
     if query.count > query_limit
       flash[:error] = "导出数据条目过多, 当前: #{query.count}, 最大: #{query_limit}"
       redirect_to finance_index_path and return
@@ -207,46 +207,47 @@ class FinanceController < ApplicationController
                     end
       sheet.add_cell(row, 7, expert_name)                             # 专家姓名/Expert name
       exp = task.expert.latest_work_experience
-      sheet.add_cell(row, 8, exp.try(:org_cn))                        # 专家公司名称/Expert company
-      sheet.add_cell(row, 9, exp.try(:title))                         # 专家职位/Expert title
-      sheet.add_cell(row, 10, task.expert_level.capitalize)           # 专家级别/Expert level
-      sheet.add_cell(row, 11, task.expert_rate)                       # 倍率/Rate
-      sheet.add_cell(row, 12, task.duration)                          # 访谈时长/Duration
-      sheet.add_cell(row, 13, task.charge_hour)                       # 收费小时/Charge Hour
-      sheet.add_cell(row, 14, task.actual_price)                      # 总费用/Fee
-      sheet.add_cell(row, 15, task.currency)                          # 币种/Currency
-      sheet.add_cell(row, 16, task.memo)                              # 备注/Comment
-      sheet.add_cell(row, 17, task.shorthand_price)                   # 速记费/Shorthand Fee
-      sheet.add_cell(row, 18, task.expert.new_expert? ? 'Y' : 'N')    # 新专家/New Expert
-      sheet.add_cell(row, 19, task.pm.name_cn)                        # 项目经理/PM
-      sheet.add_cell(row, 20, task.creator.name_cn)                   # 专家招募/Research(creator)
-      sheet.add_cell(row, 21, task.expert.cpt)                        # 专家基础费率
+      sheet.add_cell(row, 8, exp&.org_cn)                             # 专家公司名称/Expert company
+      sheet.add_cell(row, 9, exp&.department)                         # 科室/Department
+      sheet.add_cell(row, 10, exp&.title)                             # 专家职位/Expert title
+      sheet.add_cell(row, 11, task.expert_level.capitalize)           # 专家级别/Expert level
+      sheet.add_cell(row, 12, task.expert_rate)                       # 倍率/Rate
+      sheet.add_cell(row, 13, task.duration)                          # 访谈时长/Duration
+      sheet.add_cell(row, 14, task.charge_hour)                       # 收费小时/Charge Hour
+      sheet.add_cell(row, 15, task.actual_price)                      # 总费用/Fee
+      sheet.add_cell(row, 16, task.currency)                          # 币种/Currency
+      sheet.add_cell(row, 17, task.memo)                              # 备注/Comment
+      sheet.add_cell(row, 18, task.shorthand_price)                   # 速记费/Shorthand Fee
+      sheet.add_cell(row, 19, task.expert.new_expert? ? 'Y' : 'N')    # 新专家/New Expert
+      sheet.add_cell(row, 20, task.pm.name_cn)                        # 项目经理/PM
+      sheet.add_cell(row, 21, task.creator.name_cn)                   # 专家招募/Research(creator)
+      sheet.add_cell(row, 22, task.expert.cpt)                        # 专家基础费率
       # 支出信息
       other_cost = task.costs.where(category: 'others').first
       if other_cost
-        sheet.add_cell(row, 22, other_cost.price)
+        sheet.add_cell(row, 23, other_cost.price)
       end
       expert_cost = task.costs.where(category: 'expert').first
       if expert_cost
-        sheet.add_cell(row, 23, expert_cost.price)                         # 专家费/Expert Fee
-        sheet.add_cell(row, 24, expert_cost.payment_info['username'])      # 账号名/Account name(Username)
-        sheet.add_cell(row, 25, expert_cost.bank_or_alipay)                # 银行或者支付宝/Bank&Alipay
-        sheet.add_cell(row, 26, expert_cost.payment_info['account'])       # 账号/Account
-        sheet.add_cell(row, 27, expert_cost.payment_info['sub_branch'])    # 支行备注/Fee Comment
+        sheet.add_cell(row, 24, expert_cost.price)                         # 专家费/Expert Fee
+        sheet.add_cell(row, 25, expert_cost.payment_info['username'])      # 账号名/Account name(Username)
+        sheet.add_cell(row, 26, expert_cost.bank_or_alipay)                # 银行或者支付宝/Bank&Alipay
+        sheet.add_cell(row, 27, expert_cost.payment_info['account'])       # 账号/Account
+        sheet.add_cell(row, 28, expert_cost.payment_info['sub_branch'])    # 支行备注/Fee Comment
       end
       recommend_cost = task.costs.where(category: 'recommend').first
       if recommend_cost
-        sheet.add_cell(row, 28, recommend_cost.price)                       # 推荐费/Recommend Fee
-        sheet.add_cell(row, 29, recommend_cost.payment_info['username'])    # 推荐人账号名
-        sheet.add_cell(row, 30, recommend_cost.bank_or_alipay)              # 推荐人银行或支付宝/Bank&Alipay
-        sheet.add_cell(row, 31, recommend_cost.payment_info['account'])     # 推荐人帐号/Account
-        sheet.add_cell(row, 32, recommend_cost.payment_info['sub_branch'])  # 推荐人支行备注/Sub-branch remarks
+        sheet.add_cell(row, 29, recommend_cost.price)                       # 推荐费/Recommend Fee
+        sheet.add_cell(row, 30, recommend_cost.payment_info['username'])    # 推荐人账号名
+        sheet.add_cell(row, 31, recommend_cost.bank_or_alipay)              # 推荐人银行或支付宝/Bank&Alipay
+        sheet.add_cell(row, 32, recommend_cost.payment_info['account'])     # 推荐人帐号/Account
+        sheet.add_cell(row, 33, recommend_cost.payment_info['sub_branch'])  # 推荐人支行备注/Sub-branch remarks
       end
       translation_cost = task.costs.where(category: 'translation').first
       if translation_cost
-        sheet.add_cell(row, 33, translation_cost.price)                     # 翻译费/Translation
+        sheet.add_cell(row, 34, translation_cost.price)                     # 翻译费/Translation
       end
-      sheet.add_cell(row, 34, '')                                           # 备注/Remark
+      sheet.add_cell(row, 35, '')                                           # 备注/Remark
     end
   end
 
