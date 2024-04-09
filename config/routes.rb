@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     put :edit_my_password,   on: :collection
     get :edit_my_user_channel, on: :collection
     put :edit_my_user_channel, on: :collection
+
+    get :v_staff_options, on: :collection
   end
 
   resources :user_channels do
@@ -220,6 +222,13 @@ Rails.application.routes.draw do
     get :v_load_types, on: :collection
 
     get :summary_chart, on: :collection
+  end
+
+  resources :kpi_summaries do
+    get :v_summary_new, on: :collection
+
+    get :v_summary_show, on: :collection
+    get :v_summary_init, on: :collection
   end
 
   resources :c_tags do

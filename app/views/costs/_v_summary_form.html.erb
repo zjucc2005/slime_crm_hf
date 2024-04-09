@@ -1,16 +1,17 @@
 <div id="app" class="mb-2">
-    <el-row class="mb-2">
-        <el-col :lg="6" :md="12">
+    <el-row class="mb-2" :gutter="10">
+        <el-col :lg="4" :md="8">
             <el-date-picker
                 v-model="cost_summary.datetime"
                 type="month"
                 size="small"
                 value-format="yyyy-MM-dd"
                 placeholder="选择月份"
+                style="width: 100%;"
             />
         </el-col>
-        <el-col :lg="6" :md="12">
-            <span class="text-bold">总计: {{ sum_price() }}</span>
+        <el-col :lg="4" :md="8">
+            <span class="text-bold pull-right">总计: {{ sum_price() }}</span>
         </el-col>
     </el-row>
     <el-row class="mb-2">
@@ -20,7 +21,9 @@
                 node-key="id"
                 :props="{ label: 'name' }"
                 default-expand-all
-                :expand-on-click-node="false">
+                :expand-on-click-node="false"
+                style="width: 100%;"
+                >
                 <span class="c-tree-node" slot-scope="{ node, data }">
                     <template v-if="data.is_parent">
                         <span class="text-bold">

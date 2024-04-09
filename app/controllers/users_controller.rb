@@ -154,6 +154,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def v_staff_options
+    begin
+      @users = user_channel_filter(User.where(role: %w[admin pm pa])).order(:id)
+      render json: { status: 0, data: { users: @users.map{ |u| [u.uid_name, u.id] } } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
   private
   def load_user
     @user = User.find(params[:id])

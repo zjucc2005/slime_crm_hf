@@ -45,6 +45,7 @@ en:
       card_template: "Card template"
       call_record: "Call record"
       cost_summary: "Cost summary"
+      kpi_summary: "Kpi summary"
       statistic: "Statistic"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)

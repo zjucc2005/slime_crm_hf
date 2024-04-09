@@ -141,6 +141,7 @@ en:
     finance_statistics_annual: "%{year} Finance Statistics"
     interview_hour: "Interview hour(s)"
     manage_hour: "Manage hour(s)"
+    new_expert_rate: "New expert rate"
     unscheduled_projects: "Unscheduled Projects"
     ongoing_project_requirements: "Ongoing Project Requirements"
     ongoing_tasks: "Ongoing Tasks"

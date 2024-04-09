@@ -31,12 +31,14 @@
 
                     <div class="row">
                         <div class="col-lg-3 col-6 form-group">
-                            <%= label_tag :price, mt(:project_task_cost, :price) %><span class="text-red">*</span>
+                            <%= label_tag :price, mt(:project_task_cost, :price) %>
+                            <span id="price_label" class="text-smaller"></span>
+                            <span class="text-red">*</span>
                             <%= number_field_tag :price, nil, min: 0, step: 0.01, required: true, class: 'form-control' %>
                             <%= content_tag :span, '', id: 'price_tips', class: 'phone-location' %>
                         </div>
                         <div class="col-lg-3 col-6 form-group">
-                            <%= label_tag :gongsizhichu, mt(:project_task_cost, :gongsizhichu) %><span class="text-smaller">(=价格+税费)</span>
+                            <%= label_tag :gongsizhichu, mt(:project_task_cost, :gongsizhichu) %><span class="text-smaller">(=专家到账金额+税费)</span>
                             <%= text_field_tag :gongsizhichu, nil, class: 'form-control' %>
                         </div>
                         <div class="col-lg-3 col-6 form-group">
@@ -166,6 +168,7 @@
         gongsizhichu.val('');
         tax.parent().hide();
         tax.val('');
+        $('#price_label').html('');
 
         if(category.val() === 'expert'){
             template_expert.parent().show();
@@ -173,6 +176,7 @@
             lijin.parent().show();
             gongsizhichu.parent().show();
             tax.parent().show();
+            $('#price_label').html('(专家到账金额)');
         }else if(category.val() === 'recommend'){
             template_recommend.parent().show();
         }

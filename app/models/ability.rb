@@ -71,6 +71,7 @@ class Ability
     can :manage, CardTemplate
     can :manage, Extra
     can :manage, Cost
+    can :manage, KpiSummary
     can :manage, Statistic
   end
 
