@@ -19,16 +19,16 @@ class KpiSummary < ApplicationRecord
     user = User.find(user_id)
     project_tasks = ProjectTask.where(status: 'finished').where('started_at >= ? AND started_at < ?', s_month, s_month + 1.month)
     my_project_tasks = project_tasks.where(created_by: user.id)
-    interview_hours = (my_project_tasks.sum(:charge_duration) / 60.0).round(1)
+    interview_hours = (my_project_tasks.sum(:charge_duration) / 60.0).round(2)
     if user.is_role?('admin', 'pm')
-      manage_hours = (project_tasks.where(pm_id: user.id).where.not(created_by: user.id).sum(:charge_duration) / 60.0).round(1)
+      manage_hours = (project_tasks.where(pm_id: user.id).where.not(created_by: user.id).sum(:charge_duration) / 60.0).round(2)
     else
       manage_hours = 0.0
     end
-    sum_interview_in = my_project_tasks.sum(:total_price).to_f
+    sum_interview_in = my_project_tasks.sum(:actual_price).to_f
     sum_interview_ex = my_project_tasks.sum{ |t| t.costs.sum(:price) }
-    aver_interview_in = interview_hours.zero? ? 0.0 : (sum_interview_in / interview_hours).round(1)
-    aver_interview_ex = interview_hours.zero? ? 0.0 : (sum_interview_ex / interview_hours).round(1)
+    aver_interview_in = interview_hours.zero? ? 0.0 : (sum_interview_in / interview_hours).round(2)
+    aver_interview_ex = interview_hours.zero? ? 0.0 : (sum_interview_ex / interview_hours).round(2)
     new_expert_count = my_project_tasks.where(is_new_expert: true).count
     new_expert_rate = new_expert_count.zero? ? 0 : new_expert_count.to_f / my_project_tasks.count
 
@@ -44,7 +44,7 @@ class KpiSummary < ApplicationRecord
         { name: '总专家支出', price: sum_interview_ex, disabled: true },
         { name: '总访谈毛利', price: sum_interview_in - sum_interview_ex, disabled: true },
         { name: '访谈平均单价/h', price: aver_interview_in, disabled: true },
-        { name: '专家平均单价/h', price: aver_interview_ex, remark: "#{((1 - aver_interview_ex / aver_interview_in) * 100).round(1)} %", disabled: true },
+        { name: '专家平均单价/h', price: aver_interview_ex, remark: "#{((1 - aver_interview_ex / aver_interview_in) * 100).round(2)} %", disabled: true },
         { name: '新专家率', price: new_expert_rate.round(3), disabled: true },
         { name: '个人总收入', price: 0, disabled: true },
         { name: '基础工资', price: 0, disabled: false },
