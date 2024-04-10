@@ -6,8 +6,8 @@ class KpiSummary < ApplicationRecord
 
   def to_api
     expose_fields(
-      :id, :created_at, :updated_at,
-      user: user&.to_api,
+      :id, :created_at, :updated_at, :user_id,
+      name: user&.name_cn,
       datetime: datetime&.strftime('%F'),
       infos: infos.order(:id).map(&:to_api)
     )
@@ -31,6 +31,7 @@ class KpiSummary < ApplicationRecord
     aver_interview_ex = interview_hours.zero? ? 0.0 : (sum_interview_ex / interview_hours).round(1)
     new_expert_count = my_project_tasks.where(is_new_expert: true).count
     new_expert_rate = new_expert_count.zero? ? 0 : new_expert_count.to_f / my_project_tasks.count
+
     {
       datetime: datetime,
       user_id: user.id,
@@ -45,9 +46,9 @@ class KpiSummary < ApplicationRecord
         { name: '访谈平均单价/h', price: aver_interview_in, disabled: true },
         { name: '专家平均单价/h', price: aver_interview_ex, remark: "#{((1 - aver_interview_ex / aver_interview_in) * 100).round(1)} %", disabled: true },
         { name: '新专家率', price: new_expert_rate.round(3), disabled: true },
-        { name: '个人总收入', price: 0, disabled: false },
+        { name: '个人总收入', price: 0, disabled: true },
         { name: '基础工资', price: 0, disabled: false },
-        { name: '当月奖金', price: 0, disabled: false },
+        { name: '当月奖金', price: 0, disabled: true },
         { name: '当月社保', price: 0, disabled: false },
         { name: '报销', price: 0, disabled: false },
         { name: '绩效倍数', price: 0, disabled: true }

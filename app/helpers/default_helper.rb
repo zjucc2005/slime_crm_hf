@@ -103,7 +103,7 @@ module DefaultHelper
     if params[:return_to].present?
       params[:return_to]
     else
-      default_path || 'javascript:void(0);'
+      default_path || 'javascript:history.go(-1);'
     end
   end
 

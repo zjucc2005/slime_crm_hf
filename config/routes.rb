@@ -225,7 +225,11 @@ Rails.application.routes.draw do
   end
 
   resources :kpi_summaries do
+    get :v_index, on: :collection
     get :v_summary_new, on: :collection
+    post :v_summary_create, on: :collection
+    get :v_summary_edit, on: :collection
+    post :v_summary_update, on: :collection
 
     get :v_summary_show, on: :collection
     get :v_summary_init, on: :collection

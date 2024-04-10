@@ -1,10 +1,10 @@
 <%= render partial: 'costs/widgets/nav', locals: { active: 1 } %>
 
 <div class="card p-2 mb-2">
-    <div class="d-flex flex-row justify-content-between mb-2">
-        <%= link_to v_summary_new_costs_path, class: 'btn btn-primary' do %>
+    <div class="d-flex flex-row justify-content-between mb-2 pb-2 border-bottom">
+        <%= link_to v_summary_new_costs_path, class: 'btn btn-sm btn-primary' do %>
             <%= t('action.new_model', model: mt(:cost_summary)) %> <i class="fa fa-arrow-right"></i>
-        <% end if can? :new, Cost %>
+        <% end %>
     </div>
     <% if @cost_summaries.present? %>
         <table class="table table-sm table-striped nowrap card-text">

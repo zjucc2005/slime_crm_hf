@@ -148,7 +148,6 @@
                         }
                     })
                 } else {
-                    console.log('params:', JSON.stringify(params))
                     $.post('/costs/v_summary_create', params, function(res) {
                         console.log('v_summary_create res:', res)
                         if (res.status === 0) {

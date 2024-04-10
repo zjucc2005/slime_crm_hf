@@ -18,7 +18,7 @@ class CostsController < ApplicationController
     end
   end
 
-  # req - { datetime: '2024-01-01', costs: [ { cost_type_id; 1, price: 8.8 } ] }
+  # req - { datetime: '2024-01-01', costs: [ { cost_type_id: 1, price: 8.8 } ] }
   # res - { status: 0, data: { cost_summary: {...} } }
   #       { status: 1, msg: 'error message' }
   def v_summary_new; end

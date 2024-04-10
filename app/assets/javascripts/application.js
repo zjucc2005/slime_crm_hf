@@ -6,3 +6,5 @@
 //= require clipboard.min
 //= require vue
 //= require element-ui
+
+Vue.config.productionTip = false

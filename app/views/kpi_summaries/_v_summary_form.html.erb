@@ -17,7 +17,6 @@
                 @change="load_kpi_summary"
                 size="small"
                 clearable
-                :disabled="mode === 'edit'"
                 placeholder="选择员工"
                 style="width: 100%;"
             >
@@ -40,21 +39,26 @@
                 default-expand-all
                 :expand-on-click-node="false" style="width: 100%;">
                 <span class="c-tree-node" slot-scope="{ node, data }">
-                        <span :class="data.user_id ? 'text-bold' : ''">{{ node.label }}</span>
-                        <span>
-                            <el-input v-if="!data.user_id" size="mini" type="number"
-                                placeholder="输入金额"
-                                v-model="data.price"
-                                :disabled="data.disabled"
-                                clearable>
-                            </el-input>
-                        </span>
+                    <span :class="data.user_id ? 'text-bold' : ''">{{ data.name }}</span>
+                    <span>
+                        <el-tag v-if="data.remark" size="small">{{ data.remark }}</el-tag>
+                        <el-input
+                            v-if="!data.user_id"
+                            v-model="data.price"
+                            @change="watch_price"
+                            :disabled="data.disabled"
+                            size="mini"
+                            type="number"
+                            placeholder="输入金额"
+                            clearable>
+                        </el-input>
+                    </span>
                 </span>
             </el-tree>
         </el-col>
     </el-row>
-    <el-button type="primary" size="small" @click="submit">提交</el-button>
-    <el-link href="/kpi_summaries" :underline="false">
+    <el-button type="primary" size="small" @click="submit" :disabled="!init_data.name">提交</el-button>
+    <el-link href="/kpi_summaries/v_index" :underline="false">
         <el-button type="info" size="small">返回</el-button>
     </el-link>
 </div>
@@ -66,7 +70,7 @@
             mode: '',  // new/edit
             users: [],
             kpi_summary: {
-                id: '<%= kpi_summary_id %>',
+                id: '<%= params[:kpi_summary_id] %>',
                 datetime: '',
                 user_id: ''
             },
@@ -78,27 +82,23 @@
                 $.get(`/users/v_staff_options`, function(res) {
                     if (res.status === 0) {
                         _this_.users = res.data.users
+                        console.log('load users ok:', _this_.users)
                     } else if (res.status === 1) {
                         _this_.$message({ message: res.msg, type: 'error' })
                     }
                 })
                 if (this.kpi_summary.id) {
+                    $.get(`/kpi_summaries/v_summary_show`, { kpi_summary_id: this.kpi_summary.id }, function (res) {
+                        _this_.kpi_summary = res.data.kpi_summary
+                        _this_.load_kpi_summary()
+                    })
                     this.mode = 'edit'
                     console.log('edit mode')
-                    // $.get(`/costs/v_summary_show?cost_summary_id=${this.cost_summary.id}`, function(res) {
-                    //     if (res.status === 0) {
-                    //         _this_.set_cost_summary(res.data.cost_summary)
-                    //         console.log(`load cost summary(${_this_.cost_summary.id}):ok`, res)
-                    //     } else if (res.status === 1) {
-                    //         _this_.$message({ message: res.msg, type: 'error' })
-                    //     }
-                    // })
                 } else {
                     this.mode = 'new'
+                    console.log('new mode')
                 }
             })
-        },
-        computed: {
         },
         methods: {
             load_kpi_summary () {
@@ -107,8 +107,10 @@
                     $.get(`/kpi_summaries/v_summary_init?datetime=${this.kpi_summary.datetime}&user_id=${this.kpi_summary.user_id}`, function (res) {
                         if (res.status === 0) {
                             _this_.init_data = res.data
-                            console.log('init_data:', _this_.init_data)
+                            _this_.watch_price()
+                            console.log('load init_data ok:', _this_.init_data)
                         } else if (res.status === 1) {
+                            _this_.init_data = {}
                             _this_.$message({ message: res.msg, type: 'error' })
                         }
                     })
@@ -116,7 +118,25 @@
                     this.init_data = []
                 }
             },
-            submit() {
+            get_info (name) {
+                return this.init_data.infos.find(item => item.name === name)
+            },
+            watch_price () {
+                let h1 = this.get_info('访谈小时')
+                let h2 = this.get_info('额外小时')
+                let h3 = this.get_info('管理小时')
+                let maoli = this.get_info('总访谈毛利')
+                let shouru = this.get_info('个人总收入')
+                let gongzi = this.get_info('基础工资')
+                let jiangjin = this.get_info('当月奖金')
+                let shebao = this.get_info('当月社保')
+                let baoxiao = this.get_info('报销')
+                let jixiao = this.get_info('绩效倍数')
+                jiangjin.price = h1.price * 100 + h2.price * 100 + h3.price * 50
+                shouru.price = gongzi.price * 1 + jiangjin.price * 1 + shebao.price * 1 + baoxiao.price * 1
+                jixiao.price = (maoli.price * 1 / shouru.price * 1 || 0).toFixed(1)
+            },
+            submit () {
                 let _this_ = this
                 if (!this.kpi_summary.datetime) { 
                     this.$message({ message: '请选择月份', type: 'warning' });
@@ -126,34 +146,20 @@
                     this.$message({ message: '请选择员工', type: 'warning' });
                     return
                 }
-                // let params = { costs: [] }
-                // params.datetime = this.cost_summary.datetime
-                // params.costs = Object.keys(this.cost_summary.costs).map(k => {
-                //     return { cost_type_id: k * 1, price: this.cost_summary.costs[k] * 1 }
-                // })
-                // if(this.cost_summary.id) {
-                //     params.cost_summary_id = this.cost_summary.id
-                //     $.post('/costs/v_summary_update', params, function(res) {
-                //         console.log('v_summary_update res:', res)
-                //         if (res.status === 0) {
-                //             _this_.set_cost_summary(res.data.cost_summary)
-                //             _this_.$message({ message: '提交成功', type: 'success' })
-                //         } else if (res.status === 1) {
-                //             _this_.$message({ message: res.msg, type: 'error' })
-                //         }
-                //     })
-                // } else {
-                //     console.log('params:', JSON.stringify(params))
-                //     $.post('/costs/v_summary_create', params, function(res) {
-                //         console.log('v_summary_create res:', res)
-                //         if (res.status === 0) {
-                //             _this_.set_cost_summary(res.data.cost_summary)
-                //             _this_.$message({ message: '提交成功', type: 'success' })
-                //         } else if (res.status === 1) {
-                //             _this_.$message({ message: res.msg, type: 'error' })
-                //         }
-                //     })
-                // }
+                let params = {
+                    datetime: this.init_data.datetime,
+                    user_id: this.init_data.user_id,
+                    infos: this.init_data.infos
+                }
+                $.post('/kpi_summaries/v_summary_update', params, function (res) {
+                    console.log('v_summary_update res:', res)
+                    if (res.status === 0) {
+                        _this_.kpi_summary = res.data.kpi_summary
+                        _this_.$message({ message: '提交成功', type: 'success' })
+                    } else if (res.status === 1) {
+                        _this_.$message({ message: res.msg, type: 'error' })
+                    }
+                })
             }
         }
     })
@@ -170,5 +176,11 @@
   }
   .el-tree-node__content {
     height: 30px;
+  }
+  .el-input.is-disabled .el-input__inner {
+    color: #606266;
+  }
+  .el-input {
+    width: auto;
   }
 </style>

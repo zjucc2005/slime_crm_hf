@@ -90,7 +90,7 @@
                             <%= link_to costs_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-bar-chart text-danger"></i> <%= mt(:cost_summary) %>
                             <% end if can?(:index, Cost) %>
-                            <%= link_to kpi_summaries_path, class: 'dropdown-item' do %>
+                            <%= link_to v_index_kpi_summaries_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-line-chart text-danger"></i> <%= mt(:kpi_summary) %>
                             <% end if can?(:index, KpiSummary) %>
                         </div>

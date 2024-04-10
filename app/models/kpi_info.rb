@@ -13,6 +13,8 @@ class KpiInfo < ApplicationRecord
     访谈平均单价/h
     专家平均单价/h
     新专家率
+    个人总收入
+    当月奖金
     绩效倍数
   ]
 
