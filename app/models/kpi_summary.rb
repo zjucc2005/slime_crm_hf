@@ -57,7 +57,8 @@ class KpiSummary < ApplicationRecord
   end
 
   def to_init_data
-    {
+    { 
+      id: id,
       datetime: datetime,
       user_id: user_id,
       name: user.name_cn,

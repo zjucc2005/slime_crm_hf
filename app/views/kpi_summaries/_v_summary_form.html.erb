@@ -39,7 +39,10 @@
                 default-expand-all
                 :expand-on-click-node="false" style="width: 100%;">
                 <span class="c-tree-node" slot-scope="{ node, data }">
-                    <span :class="data.user_id ? 'text-bold' : ''">{{ data.name }}</span>
+                    <span :class="data.user_id ? 'text-bold' : ''">
+                        {{ data.name }}
+                        <el-tag v-if="data.user_id && !data.id" type="danger" size="mini">new</el-tag>
+                    </span>
                     <span>
                         <el-tag v-if="data.remark" size="small">{{ data.remark }}</el-tag>
                         <el-input
