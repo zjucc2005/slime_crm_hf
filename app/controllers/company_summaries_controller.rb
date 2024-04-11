@@ -7,7 +7,7 @@ class CompanySummariesController < ApplicationController
   def v_index
     if params[:datetime]
       begin
-        @kpi_summaries = CompanySummary.where(datetime: params[:datetime]).order(:company_id)
+        @company_summaries = CompanySummary.where(datetime: params[:datetime]).order(:company_id)
         render json: { status: 0, data: { company_summaries: @company_summaries.map(&:to_api) } }
       rescue => e
         render json: { status: 1, msg: e.message }
@@ -27,7 +27,7 @@ class CompanySummariesController < ApplicationController
           if company_summary
             company_summary.update(operator_id: current_user.id)
           else
-            company_summary = CompanySummary.create!(datetime: params[:datetime], company_id: i_item[:company_id], operator_id: current_user.id)
+            company_summary = CompanySummary.create!(datetime: i_item[:datetime], company_id: i_item[:company_id], operator_id: current_user.id)
           end
           i_item[:infos].each do |j, j_item|
             info = company_summary.infos.where(name: j_item[:name]).first
