@@ -90,10 +90,6 @@ class CostsController < ApplicationController
       @year = current_year  # statistical year
       @s_time = Time.local @year
     end
-    @x_axis = I18n.locale == :zh_cn ?
-      %w[1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月] : %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]
-
-
     # init result
     @result = []
     @result << { name: '总计', data: [] }
