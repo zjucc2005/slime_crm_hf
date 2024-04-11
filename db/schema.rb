@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_03_071636) do
+ActiveRecord::Schema.define(version: 2024_04_10_124649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,6 +185,25 @@ ActiveRecord::Schema.define(version: 2024_04_03_071636) do
     t.string "consent_file"
     t.jsonb "consent_file_options", default: {}
     t.index ["user_channel_id"], name: "index_companies_on_user_channel_id"
+  end
+
+  create_table "company_infos", force: :cascade do |t|
+    t.bigint "company_summary_id"
+    t.string "name"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "remark"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_summary_id"], name: "index_company_infos_on_company_summary_id"
+  end
+
+  create_table "company_summaries", force: :cascade do |t|
+    t.bigint "company_id"
+    t.datetime "datetime"
+    t.bigint "operator_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_company_summaries_on_company_id"
   end
 
   create_table "contracts", force: :cascade do |t|

@@ -1,0 +1,90 @@
+# frozen_string_literal: true
+
+class CompanySummariesController < ApplicationController
+  load_and_authorize_resource
+  before_action :authenticate_user!
+
+  def v_index
+    if params[:datetime]
+      begin
+        @kpi_summaries = CompanySummary.where(datetime: params[:datetime]).order(:company_id)
+        render json: { status: 0, data: { company_summaries: @company_summaries.map(&:to_api) } }
+      rescue => e
+        render json: { status: 1, msg: e.message }
+      end
+    end
+  end
+
+  # req - { datetime: '2024-01-01', company_id: 1, infos: [ { name: '访谈小时', price: 8.8, remark: '备注' } ] }
+  # res - { status: 0, data: { company_summary: {...} } }
+  #       { status: 1, msg: 'error message' }
+  def v_summary_edit; end
+  def v_summary_update
+    begin
+      @company_summary = CompanySummary.where(datetime: params[:datetime], company_id: params[:company_id]).first
+      ActiveRecord::Base.transaction do
+        if @company_summary
+          @company_summary.update(operator_id: current_user.id)
+        else
+          @company_summary = CompanySummary.create!(datetime: params[:datetime], company_id: params[:company_id], operator_id: current_user.id)
+        end
+        params[:infos].each do |k, item|
+          info = @company_summary.infos.where(name: item[:name]).first
+          if info
+            info.update(price: item[:price], remark: item[:remark])
+          else
+            @company_summary.infos.create!(name: item[:name], price: item[:price], remark: item[:remark])
+          end
+        end
+      end
+      render json: { status: 0, data: { company_summary: @company_summary.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_summary_show
+    begin
+      @company_summary = CompanySummary.find(params[:company_summary_id])
+      render json: { status: 0, data: { company_summary: @company_summary.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_summary_init
+    begin
+      raise 'datetime is required' if params[:datetime].blank?
+      raise '请选择历史月份' if params[:datetime].to_time >= Time.now.beginning_of_month
+      raise 'company_id is required' if params[:company_id].blank?
+      @company_summary = CompanySummary.where(datetime: params[:datetime], company_id: params[:company_id]).first
+      if @company_summary
+        @data = @company_summary.to_init_data
+      else
+        @data = CompanySummary.init_data(params[:datetime], params[:company_id])
+      end
+      render json: { status: 0, data: @data }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_company_options
+    begin
+      if params[:datetime].present?
+        s_month = Time.parse(params[:datetime]).beginning_of_month
+        company_ids =  ProjectTask.joins(:project).where('project_tasks.status': 'finished').
+          where('project_tasks.started_at BETWEEN ? AND ?', s_month, s_month + 1.month).
+          select('projects.company_id as company_id').distinct.pluck(:company_id)
+        query = Company.where(id: company_ids)
+      else
+        query = Company.all
+      end
+      @companies = user_channel_filter(query).order(:id)
+      render json: { status: 0, data: { companies: @companies.map{ |c| [c.uid_name_abbr, c.id] } } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+end

@@ -72,6 +72,7 @@ class Ability
     can :manage, Extra
     can :manage, Cost
     can :manage, KpiSummary
+    can :manage, CompanySummary
     can :manage, Statistic
   end
 

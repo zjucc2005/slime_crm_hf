@@ -230,9 +230,20 @@ Rails.application.routes.draw do
     post :v_summary_create, on: :collection
     get :v_summary_edit, on: :collection
     post :v_summary_update, on: :collection
-
     get :v_summary_show, on: :collection
     get :v_summary_init, on: :collection
+  end
+
+  resources :company_summaries do
+    get :v_index, on: :collection
+    get :v_summary_new, on: :collection
+    post :v_summary_create, on: :collection
+    get :v_summary_edit, on: :collection
+    post :v_summary_update, on: :collection
+    get :v_summary_show, on: :collection
+    get :v_summary_init, on: :collection
+
+    get :v_company_options, on: :collection
   end
 
   resources :c_tags do

@@ -76,6 +76,7 @@ zh_cn:
       call_record: "通话记录"
       cost_summary: "成本结算"
       kpi_summary: "员工业绩统计"
+      company_summary: "客户统计"
       statistic: "统计"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)

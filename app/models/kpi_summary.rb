@@ -17,7 +17,7 @@ class KpiSummary < ApplicationRecord
   def self.init_data(datetime, user_id)
     s_month = Time.parse(datetime).beginning_of_month
     user = User.find(user_id)
-    project_tasks = ProjectTask.where(status: 'finished').where('started_at >= ? AND started_at < ?', s_month, s_month + 1.month)
+    project_tasks = ProjectTask.where(status: 'finished').where('started_at BETWEEN ? AND ?', s_month, s_month + 1.month)
     my_project_tasks = project_tasks.where(created_by: user.id)
     interview_hours = (my_project_tasks.sum(:charge_duration) / 60.0).round(2)
     if user.is_role?('admin', 'pm')

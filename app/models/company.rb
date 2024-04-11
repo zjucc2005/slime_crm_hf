@@ -29,6 +29,14 @@ class Company < ApplicationRecord
     define_method(:"#{k}="){ |v| self.property[k] = v }
   end
 
+  def uid_name
+    "#{uid} #{name}"
+  end
+
+  def uid_name_abbr
+    "#{uid} #{name_abbr}"
+  end
+
   def is_client?
     category == 'client'
   end

@@ -46,6 +46,7 @@ en:
       call_record: "Call record"
       cost_summary: "Cost summary"
       kpi_summary: "Kpi summary"
+      company_summary: "Company summary"
       statistic: "Statistic"
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute)

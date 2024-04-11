@@ -67,6 +67,7 @@ module ApplicationHelper
     nav_item = :nav_yibao if controller_name == 'candidates' && action_name == 'yibao'
     nav_item = :nav_statistic if controller_name == 'costs'
     nav_item = :nav_statistic if controller_name == 'kpi_summaries'
+    nav_item = :nav_statistic if controller_name == 'company_summaries'
     # >>
     provide nav_item, 'active'
   end
