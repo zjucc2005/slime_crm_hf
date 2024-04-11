@@ -40,7 +40,7 @@
         </el-col>
     </el-row>
     <el-row class="mb-2">
-        <el-col v-for="(s, index) in init_data" :key="s.name" :lg="8" :md="16">
+        <el-col v-for="(s, index) in init_data" :key="s.name" :lg="8" :md="16" class="mb-2">
             <el-tree
                 v-if="s.name"
                 :data="[s]"
@@ -69,7 +69,7 @@
             </el-tree>
         </el-col>
     </el-row>
-    <el-button type="primary" size="small" @click="submit" :disabled="init_data.length === 0">提交</el-button>
+    <el-button type="primary" size="small" @click="submit" :disabled="init_data.length === 0">保存</el-button>
     <el-link href="/company_summaries/v_index" :underline="false">
         <el-button type="info" size="small">返回</el-button>
     </el-link>
@@ -119,10 +119,14 @@
                             _this_.$message({ message: res.msg, type: 'error' })
                         }
                     })
+                    if (this.company_summary.all_companies) {
+                        this.load_company_summary()
+                    }
                 } else {
                     this.companies = []
                     this.company_summary.company_id = ''
-                    this.init_data = {}
+                    this.company_summary.all_companies = false
+                    this.init_data = []
                 }
             },
             load_company_summary () {
