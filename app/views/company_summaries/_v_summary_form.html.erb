@@ -16,7 +16,7 @@
                 v-model="company_summary.company_id"
                 @change="load_company_summary"
                 size="small"
-                :disabled="!company_summary.datetime"
+                :disabled="!company_summary.datetime || company_summary.all_companies"
                 clearable
                 placeholder="选择客户"
                 style="width: 100%;"
@@ -29,12 +29,21 @@
                 </el-option>
             </el-select>
         </el-col>
+        <el-col :lg="4" :md="8">
+            <el-checkbox 
+                v-model="company_summary.all_companies"
+                :disabled="!company_summary.datetime"
+                @change="load_company_summary"
+            >
+                全部公司
+            </el-checkbox>
+        </el-col>
     </el-row>
     <el-row class="mb-2">
-        <el-col :lg="8" :md="16">
+        <el-col v-for="(s, index) in init_data" :key="s.name" :lg="8" :md="16">
             <el-tree
-                v-if="init_data.name"
-                :data="[init_data]"
+                v-if="s.name"
+                :data="[s]"
                 node-key="id"
                 :props="{ label: 'name', children: 'infos' }"
                 default-expand-all
@@ -60,7 +69,7 @@
             </el-tree>
         </el-col>
     </el-row>
-    <el-button type="primary" size="small" @click="submit" :disabled="!init_data.name">提交</el-button>
+    <el-button type="primary" size="small" @click="submit" :disabled="init_data.length === 0">提交</el-button>
     <el-link href="/company_summaries/v_index" :underline="false">
         <el-button type="info" size="small">返回</el-button>
     </el-link>
@@ -75,9 +84,10 @@
             company_summary: {
                 id: '<%= params[:company_summary_id] %>',
                 datetime: '',
-                company_id: ''
+                company_id: '',
+                all_companies: false,
             },
-            init_data: {}
+            init_data: []
         },
         mounted: function(){
             this.$nextTick(function(){
@@ -116,9 +126,21 @@
                 }
             },
             load_company_summary () {
-                if (this.company_summary.datetime && this.company_summary.company_id) {
-                    let _this_ = this;
-                    $.get('/company_summaries/v_summary_init', { datetime: this.company_summary.datetime, company_id: this.company_summary.company_id }, function (res) {
+                let _this_ = this
+                let call_api = false
+                let params = {}
+                if (this.company_summary.datetime && this.company_summary.all_companies) {
+                    call_api = true
+                    params = { datetime: this.company_summary.datetime }
+                    this.company_summary.company_id = ''
+                } else if (this.company_summary.datetime && this.company_summary.company_id) {
+                    call_api = true
+                    params = { datetime: this.company_summary.datetime, company_id: this.company_summary.company_id }
+                } else {
+                    this.init_data = {}
+                }
+                if (call_api) {
+                    $.get('/company_summaries/v_summary_init', params, function (res) {
                         if (res.status === 0) {
                             _this_.init_data = res.data
                             console.log('load init_data ok:', _this_.init_data)
@@ -127,8 +149,6 @@
                             _this_.$message({ message: res.msg, type: 'error' })
                         }
                     })
-                } else {
-                    this.init_data = {}
                 }
             },
             submit () {
@@ -137,19 +157,14 @@
                     this.$message({ message: '请选择月份', type: 'warning' });
                     return
                 }
-                if (!this.company_summary.company_id) {
+                if (!this.company_summary.company_id && !this.company_summary.all_companies) {
                     this.$message({ message: '请选择客户', type: 'warning' });
                     return
                 }
-                let params = {
-                    datetime: this.init_data.datetime,
-                    company_id: this.init_data.company_id,
-                    infos: this.init_data.infos
-                }
+                let params = { data: this.init_data }
                 $.post('/company_summaries/v_summary_update', params, function (res) {
                     console.log('v_summary_update res:', res)
                     if (res.status === 0) {
-                        _this_.company_summary = res.data.company_summary
                         _this_.$message({ message: '提交成功', type: 'success' })
                     } else if (res.status === 1) {
                         _this_.$message({ message: res.msg, type: 'error' })

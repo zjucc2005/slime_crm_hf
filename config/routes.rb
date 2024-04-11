@@ -244,6 +244,8 @@ Rails.application.routes.draw do
     get :v_summary_init, on: :collection
 
     get :v_company_options, on: :collection
+
+    get :v_statistic
   end
 
   resources :c_tags do
