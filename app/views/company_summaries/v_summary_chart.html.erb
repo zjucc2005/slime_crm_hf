@@ -20,14 +20,11 @@
             </el-button>
         </el-col>
     </el-row>
-    <el-row :gutter="10">
-        <el-col :lg="8" :md="24">
+
             <div ref="pie_chart" style="height: 480px;"></div>
-        </el-col>
-        <el-col :lg="16" :md="24">
+
             <div ref="line_chart" style="height: 480px;"></div>
-        </el-col>
-    </el-row>
+
 
 </div>
 
@@ -81,7 +78,16 @@
                             radius: '60%',
                             data: data.map(e => { return { value: e.income, name: e.name } }),
                             label: {
-                                formatter: '{b}({d}%)'
+                                alignTo: 'edge',
+                                formatter: '{name|{b}}({c}, {d}%)',
+                                minMargin: 5,
+                                edgeDistance: 10,
+                                lineHeight: 15,
+                                rich: {
+                                  name: {
+                                    fontWeight: 'bold'
+                                  }
+                                }
                             },
                             emphasis: {
                                 itemStyle: {
