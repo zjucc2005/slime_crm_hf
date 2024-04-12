@@ -8,3 +8,4 @@
 //= require element-ui
 
 Vue.config.productionTip = false
+Vue.prototype.$echarts = echarts
