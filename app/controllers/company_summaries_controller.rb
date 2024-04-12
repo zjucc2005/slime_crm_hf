@@ -111,10 +111,10 @@ class CompanySummariesController < ApplicationController
             profit: s.infos.where(name: '总访谈毛利').first&.price&.to_f
           }
         }
-        arr = arr.sort_by { |e| e[:income] } # 按访谈收入降序
+        arr = arr.sort_by { |e| e[:income] }.reverse # 按访谈收入降序
         @data = arr[0, 12]                   # 取前12名，后面汇总到其他
         rest_arr = arr[12, arr.length - 1]
-        if rest_arr
+        if rest_arr.present?
           @data << { name: '其他', income: rest_arr.sum{ |e| e[:income] }, profit: rest_arr.sum{ |e| e[:profit] } }
         end
         render json: { status: 0, data: @data }
