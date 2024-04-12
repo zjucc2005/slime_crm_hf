@@ -55,8 +55,12 @@
                 $.get('/company_summaries/v_summary_chart', this.search_form, function (res) {
                     console.log('load chart data res:', res)
                     _this_.res_data = res.data
-                    _this_.set_pie_chart(res.data)
-                    _this_.set_line_chart(res.data)
+                    let _data_ = res.data
+                    if (_data_.length === 0) {
+                        _data_ = [{ name: '无数据', income: 0, profit: 0 }]
+                    }
+                    _this_.set_pie_chart(_data_)
+                    _this_.set_line_chart(_data_)
                 })
             },
             set_pie_chart (data) {
@@ -64,7 +68,7 @@
                 let pie_option = {
                     title: {
                         text: '总访谈收入占比',
-                        subtext: 'percentage of income',
+                        subtext: 'Percentage of Revenue',
                         left: 'left'
                     },
                     tooltip: {
@@ -94,6 +98,11 @@
             set_line_chart (data) {
                 let line_chart = this.$echarts.init(this.$refs.line_chart, 'default');
                 let line_option = {
+                    title: {
+                        text: '总访谈收入排名',
+                        subtext: 'Revenue Ranking',
+                        left: 'left'
+                    },
                     xAxis: {
                         type: 'category',
                         data: data.map(e => e.name)
