@@ -50,10 +50,6 @@ class Company < ApplicationRecord
     false  # 公司删除条件待确定
   end
 
-  def company_option_friendly
-    "#{uid} - #{name}"
-  end
-
   # DEPRECATED
   # 生成知情同意书(图片)
   # options - {
@@ -98,6 +94,7 @@ class Company < ApplicationRecord
   def setup
     self.category ||= 'client'
     self.name = self.name.try(:strip)
+    self.last_active_time ||= Time.now
   end
 
 end

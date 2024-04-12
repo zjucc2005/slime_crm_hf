@@ -2,8 +2,8 @@
 module CompaniesHelper
 
   def company_options
-    user_channel_filter(Company.all).map do |company|
-      [company.company_option_friendly, company.id]
+    user_channel_filter(Company.all).order(last_active_time: :desc).map do |company|
+      [company.uid_name, company.id]
     end
   end
 

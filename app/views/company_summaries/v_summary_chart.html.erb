@@ -20,10 +20,8 @@
             </el-button>
         </el-col>
     </el-row>
-
-            <div ref="pie_chart" style="height: 480px;"></div>
-
-            <div ref="line_chart" style="height: 480px;"></div>
+    <div ref="pie_chart" style="height: 480px;"></div>
+    <div ref="line_chart" style="height: 480px;"></div>
 
 
 </div>
@@ -50,7 +48,6 @@
             load_chart_data () {
                 let _this_ = this;
                 $.get('/company_summaries/v_summary_chart', this.search_form, function (res) {
-                    console.log('load chart data res:', res)
                     _this_.res_data = res.data
                     let _data_ = res.data
                     if (_data_.length === 0) {
@@ -109,6 +106,7 @@
                         subtext: 'Revenue Ranking',
                         left: 'left'
                     },
+                    legend: {},
                     xAxis: {
                         type: 'category',
                         data: data.map(e => e.name)

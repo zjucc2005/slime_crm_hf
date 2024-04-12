@@ -169,6 +169,7 @@ class Project < ApplicationRecord
 
   def last_update
     self.update(updated_at: Time.now)
+    company.update(last_active_time: Time.now)
   end
 
   def premium_charge_duration_rate
