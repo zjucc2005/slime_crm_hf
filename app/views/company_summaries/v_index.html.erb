@@ -65,7 +65,7 @@
                             </span>
                             <span v-else>
                                 <el-tag v-if="data.remark" size="small">{{ data.remark }}</el-tag>
-                                <span v-if="data.name === '毛利率'">{{ `${ data.price * 100} %` }}</span>
+                                <span v-if="data.name === '毛利率'">{{ `${ (data.price * 100).toFixed() } %` }}</span>
                                 <span v-else>{{ data.price }}</span>
                             </span>
                         </span>
@@ -122,9 +122,9 @@
                     name: '当月汇总',
                     name_abbr: '当月汇总',
                     infos: [
-                        { name: '总访谈小时', price: interview_hours, disabled: true },
-                        { name: '总访谈收入', price: sum_interview_in, disabled: true },
-                        { name: '总专家支出', price: sum_interview_ex, disabled: true },
+                        { name: '总访谈小时', price: interview_hours.toFixed(2), disabled: true },
+                        { name: '总访谈收入', price: sum_interview_in.toFixed(2), disabled: true },
+                        { name: '总专家支出', price: sum_interview_ex.toFixed(2), disabled: true },
                         { name: '总访谈毛利', price: sum_interview_in - sum_interview_ex, disabled: true },
                         { name: '访谈平均单价/h', price: aver_interview_in, disabled: true },
                         { name: '专家平均单价/h', price: aver_interview_ex, disabled: true },
