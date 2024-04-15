@@ -30,6 +30,7 @@ class CompanySummary < ApplicationRecord
     profit_margin = (1 - sum_interview_ex / sum_interview_in).round(3)
 
     {
+      id: self.where(datetime: datetime, company_id: company_id).first&.id,
       datetime: datetime,
       company_id: company_id,
       name: company&.name_abbr,
