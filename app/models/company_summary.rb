@@ -27,7 +27,7 @@ class CompanySummary < ApplicationRecord
     sum_interview_ex = project_tasks.sum{ |t| t.costs.sum(:price) }
     aver_interview_in = interview_hours.zero? ? 0.0 : (sum_interview_in / interview_hours).round(2)
     aver_interview_ex = interview_hours.zero? ? 0.0 : (sum_interview_ex / interview_hours).round(2)
-    profit_margin = (1 - sum_interview_ex / sum_interview_in).round(3)
+    profit_margin = (1 - sum_interview_ex / sum_interview_in).round(2)
 
     {
       id: self.where(datetime: datetime, company_id: company_id).first&.id,
