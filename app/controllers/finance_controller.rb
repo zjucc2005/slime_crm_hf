@@ -259,7 +259,7 @@ class FinanceController < ApplicationController
     sum_price = 0
     row = 1
     query.each_with_index do |task, index|
-      task.costs.each do |cost|
+      task.costs.where(category: %w[expert recommend translation others]).each do |cost|
         sheet.add_cell(row, 0, '')                                                             # 序号
         sheet.add_cell(row, 1, '')                                                             # 是否兴业银行
         sheet.add_cell(row, 2, CandidatePaymentInfo::CATEGORY[cost.payment_info['category']])  # 支付宝/银联
