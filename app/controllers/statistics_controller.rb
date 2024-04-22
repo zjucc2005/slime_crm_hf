@@ -154,7 +154,7 @@ class StatisticsController < ApplicationController
       @year = nil
       o_time = Time.now.beginning_of_month - 11.months # start time
     else
-      @year = current_year  # statistical year
+      @year = params[:year] || current_year  # statistical year
       o_time = Time.local @year
     end
     @currency = params[:currency] || 'RMB'                         # currency
