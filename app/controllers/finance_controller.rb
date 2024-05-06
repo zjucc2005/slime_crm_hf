@@ -276,6 +276,11 @@ class FinanceController < ApplicationController
         sheet.add_cell(row, 10, cost.price)                                                     # 转账金额
         sheet.add_cell(row, 11, '')                                                             # 转账用途
 
+        if cost.category == 'expert' && cost.payment_info['category'] == 'unionpay'
+          tax_cost = task.costs.where(category: 'expert_tax').first
+          sheet.add_cell(row, 12, tax_cost&.price)
+        end
+
         sum_price += cost.price
         row += 1
       end
