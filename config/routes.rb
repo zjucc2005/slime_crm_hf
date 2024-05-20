@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     get :loading_modal, on: :collection
   end
 
+  resource :event_stream do
+    get :test
+  end
+
   resources :users do
     post :admin_create,      on: :collection  # create users by admin
     get :edit_password,      on: :member
@@ -120,6 +124,10 @@ Rails.application.routes.draw do
 
     get :work_board, on: :collection
     get :load_project_requirements, on: :collection
+
+    get :v_dashboard, on: :collection
+    get :v_dashboard_data, on: :collection
+    post :v_dashboard_update_priority, on: :collection
   end
 
   resources :project_requirements do

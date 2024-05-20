@@ -46,6 +46,13 @@ class ProjectRequirement < ApplicationRecord
     first_line.length <= max_length ? first_line : "#{first_line[0,120]}..."
   end
 
+  def to_api
+    expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority,
+      created_at: created_at.strftime('%F %T'),
+      operator: operator&.name_cn
+      )
+  end
+
   private
   def setup
     self.status ||= 'ongoing'

@@ -182,6 +182,17 @@ class Project < ApplicationRecord
     end
   end
 
+  def to_api_dashboard
+    expose_fields(:id, :name, :code, 
+      created_at: created_at.strftime('%F %T'),
+      updated_at: updated_at.strftime('%F %T'),
+      company_name_abbr: company&.name_abbr,
+      client_contact: main_client&.name,
+      pm_name: pm_users.first&.name_cn,
+      project_requirements: project_requirements.order(priority: :desc, created_at: :desc).map(&:to_api),
+    )
+  end
+
   private
   def setup
     self.status ||= 'initialized'
