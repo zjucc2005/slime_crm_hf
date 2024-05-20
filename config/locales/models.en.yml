@@ -224,6 +224,7 @@ en:
         district: "District"
 
       hospital:
+        category: "Category"
         name: "Name"
         kwlist: "Alias"
         province: "Province"

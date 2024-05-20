@@ -254,6 +254,7 @@ zh_cn:
         district: "县区"
 
       hospital:
+        category: "类别"
         name: "名称"
         kwlist: "别名"
         province: "省份"

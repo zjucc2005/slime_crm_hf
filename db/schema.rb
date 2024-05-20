@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_16_073837) do
+ActiveRecord::Schema.define(version: 2024_05_20_121242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,6 +290,7 @@ ActiveRecord::Schema.define(version: 2024_05_16_073837) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "city"
     t.jsonb "kwlist", default: []
+    t.string "category"
   end
 
   create_table "industries", force: :cascade do |t|

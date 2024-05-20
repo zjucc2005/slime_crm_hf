@@ -43,6 +43,7 @@
                 <th><%= mt(:hospital, :kwlist) %></th>
                 <th><%= mt(:hospital, :province) %></th>
                 <th><%= mt(:hospital, :city) %></th>
+                <th><%= mt(:hospital, :category) %></th>
                 <th><%= mt(:hospital, :level) %></th>
                 <th><%= mt(:hospital, :created_at) %></th>
                 <th class="action"><%= t(:operation) %></th>
@@ -56,6 +57,7 @@
                     <td><%= hospital.kwlist.join(',') rescue nil %></td>
                     <td><%= hospital.province %></td>
                     <td><%= hospital.city %></td>
+                    <td><%= hospital.category %></td>
                     <td><%= hospital.level %></td>
                     <td><%= hospital.created_at.strftime('%F %T') %></td>
                     <td class="action">

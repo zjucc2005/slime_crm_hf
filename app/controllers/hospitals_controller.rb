@@ -153,7 +153,7 @@ class HospitalsController < ApplicationController
   end
 
   def hospital_params
-    params.require(:hospital).permit(:name, :level, :kwlist)
+    params.require(:hospital).permit(:name, :category, :level, :kwlist)
   end
 
 end

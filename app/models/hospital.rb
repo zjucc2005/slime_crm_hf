@@ -5,6 +5,7 @@ class Hospital < ApplicationRecord
   validates_uniqueness_of :name, case_sensitive: false
   before_validation :setup, on: [:create, :update]
 
+  CATEGORY = %w[公立 私立]
   LEVEL = %w[三级 三甲 三乙 三丙 二级 二甲 二乙 二丙 一级 一甲 一乙 一丙]
   MAX_KWLIST_LENGTH = 5
 
