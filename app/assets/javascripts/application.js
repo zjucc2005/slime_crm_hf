@@ -9,3 +9,12 @@
 
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
+Vue.filter('truncate', function(val, length) {
+    if (!val) return ''
+    val = val.toString()
+    if (val.length > length) {
+        return val.substring(0, length) + '...'
+    } else {
+        return val
+    }
+})

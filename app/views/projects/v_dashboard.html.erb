@@ -55,20 +55,26 @@
                             <td></td>
                             <td>
                                 <el-link @click="show_drawer(req.title, req.content)" type="primary">
-                                    {{ req.title }}
+                                    {{ req.title | truncate(20) }}
                                 </el-link>
                             </td>
                         </tr>
                     </template>
                     <template v-else>
                         <tr>
-                            <td></td>
+                            <td>{{ project.company_name_abbr }}</td>
+                            <td>
+                                <el-link :href="`/projects/${project.id}`" target="_blank" type="primary">
+                                    {{ project.name }}
+                                </el-link>
+                            </td>
+                            <td>{{ project.code }}</td>
+                            <td>{{ project.client_contact }}</td>
+                            <td>{{ project.pm_name }}</td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                         </tr>
                     </template>
                 </template>
-                <tr >
-
-                </tr>
             </tbody>
         </table>
     </div>
