@@ -280,6 +280,7 @@ class FinanceController < ApplicationController
           tax_cost = task.costs.where(category: 'expert_tax').first
           sheet.add_cell(row, 12, tax_cost&.price)
         end
+        sheet.add_cell(row, 13, cost.memo)
 
         sum_price += cost.price
         row += 1
