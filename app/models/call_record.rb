@@ -3,11 +3,13 @@ class CallRecord < ApplicationRecord
 
   # ENUM
   STATUS = {
-    pending: '待定',
-    missed: '未接',
-    unsuitable: '不合适',
-    accepted: '接受',
-    declined: '拒绝'
+    pending:  '未联系',
+    missed:   '未接',
+    rejected: '拒接',
+    shutdown: '关机',
+    talking:  '沟通中',
+    declined: '拒绝',
+    accepted: '接受'
   }.stringify_keys
 
   # Associations
@@ -49,9 +51,38 @@ class CallRecord < ApplicationRecord
     end
   end
 
+  def to_api
+    expose_fields(
+      :id, :category, :name, :company, :department, :title, :phone,
+      :number_of_calls, :status, :memo, :created_by,
+      :project_id, :project_requirement_id, :candidate_id,
+      created_at: created_at.strftime('%F %T'),
+      updated_at: updated_at.strftime('%F %T')
+    )
+  end
+
+  # 查找库内匹配的专家信息
+  # cond 1 - name & phone
+  # cond 2 - phone
+  # cond 3 - name & company
+  def match_candidates
+    # cond 1
+    query = Candidate.where(category: category, name: name).where('phone = :phone OR phone1 = :phone', { phone: phone })
+    # cond 2
+    query = Candidate.where(category: category).where('phone = :phone OR phone1 = :phone', { phone: phone }) if query.count.zero?
+    # cond 3
+    query = Candidate.joins(:experiences).where('candidates.category': category, 'candidates.name': name, 'candidate_experiences.org_cn': company) if query.count.zero?
+    query # return
+  end
+
   private
   def setup
     self.status          ||= 'pending'
+    self.name&.strip!
+    self.phone&.strip!
+    self.company&.strip!
+    self.department&.strip!
+    self.title&.strip!
     self.number_of_calls ||= 1
     self.operator_id     ||= self.created_by
     self.user_channel_id ||= self.creator.user_channel_id

@@ -128,6 +128,13 @@ Rails.application.routes.draw do
     get :v_dashboard, on: :collection
     get :v_dashboard_data, on: :collection
     post :v_dashboard_update_priority, on: :collection
+
+    get :v_pm_dashboard, on: :collection
+    get :v_pm_dashboard_data, on: :collection
+    
+    get :v_pa_dashboard, on: :collection
+    get :v_pa_dashboard_data, on: :collection
+
   end
 
   resources :project_requirements do
@@ -137,6 +144,9 @@ Rails.application.routes.draw do
 
     get :edit_operator, on: :member
     put :update_operator, on: :member
+
+    post :v_create, on: :collection
+    post :v_update, on: :collection
   end
 
   resources :project_candidates do
@@ -181,6 +191,11 @@ Rails.application.routes.draw do
     post :remote_create_for_candidate, on: :collection
 
     post :two_way_call, on: :collection
+
+    post :v_create, on: :collection
+    post :v_update, on: :collection
+    get :v_match_candidates, on: :collection
+    post :v_ruku, on: :collection
   end
 
   resources :location_data do

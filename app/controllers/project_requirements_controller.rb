@@ -124,9 +124,35 @@ class ProjectRequirementsController < ApplicationController
     end
   end
 
+  # == Vue actions begin ==
+  def v_create
+    begin
+      @project_requirement = ProjectRequirement.new(v_project_requirement_params.merge(created_by: current_user.id))
+      @project_requirement.save!
+      render json: { status: 0, data: { project_requirement: @project_requirement.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_update
+    begin
+      @project_requirement = ProjectRequirement.find(params[:id])
+      @project_requirement.update!(v_project_requirement_params)
+      render json: { status: 0, data: { project_requirement: @project_requirement.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+  # == Vue actions end ==
+
   private
   def project_requirement_params
-    params.require(:project_requirement).permit(:title, :content, :demand_number, :file, :file1, :file2, :project_id, :operator_id)
+    params.require(:project_requirement).permit(:title, :content, :category, :demand_number, :file, :file1, :file2, :project_id, :operator_id)
+  end
+
+  def v_project_requirement_params
+    params.permit(:title, :content, :category, :demand_number, :file, :file1, :file2, :project_id, :operator_id, :status, :priority)
   end
 
   def load_project_requirement

@@ -71,6 +71,12 @@
                             <%= link_to v_dashboard_projects_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-th-large"></i> Dashboard
                             <% end if can?(:v_dashboard, Project) %>
+                            <%= link_to v_pm_dashboard_projects_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-map text-danger"></i> PM Dashboard
+                            <% end if can?(:v_pm_dashboard, Project) %>
+                            <%= link_to v_pa_dashboard_projects_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-tasks text-primary"></i> PA Dashboard
+                            <% end if can?(:v_pa_dashboard, Project) %>
                         </div>
                     </li>
                 <% end %>

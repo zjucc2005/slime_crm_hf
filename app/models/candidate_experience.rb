@@ -36,4 +36,11 @@ class CandidateExperience < ApplicationRecord
     end
   end
 
+  def to_api
+    expose_fields(:id, :category, :org_cn, :org_en, :department, :title, :title1, :description, :org_id, :dep_id,
+      started_at: started_at&.strftime('%F %T'),
+      ended_at: ended_at&.strftime('%F %T')
+    )
+  end
+
 end

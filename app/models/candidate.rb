@@ -118,7 +118,7 @@ class Candidate < ApplicationRecord
   end
 
   def work_experiences
-    experiences.where(category: %w[work hospital])  # 定义属性
+    experiences.where(category: %w[work hospital]).order(started_at: :desc)  # 定义属性
   end
 
   def latest_work_experience
@@ -254,6 +254,14 @@ class Candidate < ApplicationRecord
   def expert_tax_free_limit(t=Time.now)
     limit = 800 - ProjectTaskCost.cost_monthly('expert', id, t)
     [limit, 0].max
+  end
+
+  def to_api
+    expose_fields(:id, :category, :name, :first_name, :last_name, :nickname, :phone, :description,
+      created_at: created_at&.strftime('%F %T'),
+      updated_at: updated_at&.strftime('%F %T'),
+      candidate_experiences: work_experiences.map(&:to_api)
+    )
   end
 
   private

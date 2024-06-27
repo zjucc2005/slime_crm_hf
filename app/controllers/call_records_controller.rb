@@ -272,10 +272,105 @@ class CallRecordsController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # == Vue actions begin ==
+  def v_create
+    begin
+      @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
+      @call_record = CallRecord.new(v_call_record_params.merge(
+        created_by: current_user.id,
+        project_id: @project_requirement.project_id,
+        project_requirement_id: @project_requirement.id
+      ))
+      @call_record.save!
+      render json: { status: 0, data: { call_record:  @call_record.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_update
+    begin
+      @call_record = CallRecord.find(params[:id])
+      @call_record.update!(v_call_record_params)
+      render json: { status: 0, data: { call_record:  @call_record.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_match_candidates
+    begin
+      @call_record = CallRecord.find(params[:id])
+      @candidates = @call_record.match_candidates
+      render json: { status: 0, data: { candidates: @candidates.map(&:to_api) } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_ruku
+    begin
+      @call_record = CallRecord.find(params[:call_record_id])
+      ActiveRecord::Base.transaction do
+        if params[:candidate_id].present?
+          # 更新专家
+          @candidate = Candidate.find_by(id: params[:candidate_id])
+          raise "未找到专家信息, candidate not found, id: #{params[:candidate_id]}" if @candidate.nil?
+          @candidate.update!(params.permit(:last_name, :first_name, :phone, :description))
+          @exp = @candidate.work_experiences.first
+          if @candidate.category == 'doctor'
+            org = Hospital.where(id: params[:hospital_id]).first
+            dep = HospitalDepartment.where(id: params[:hospital_department_id]).first
+            @candidate.update!(city: "#{org.province} #{org.city}")
+            @exp.update!(
+              org_id: org.id, dep_id: dep.id,
+              org_cn: org.name, org_en: org.level, department: dep.name, title: params[:title]
+            )
+          else
+            @exp.update!(org_cn: params[:company], deparment: params[:department], title: params[:title])
+          end
+        else
+          # 新增专家
+          @candidate = Candidate.new(
+            created_by: current_user.id,
+            user_channel_id: current_user.user_channel_id,
+            category: params[:category],
+            last_name: params[:last_name],
+            first_name: params[:first_name],
+            phone: params[:phone],
+            description: params[:description],
+            cpt: 0, currency: 'RMB', data_source: 'manual'
+          )
+          @candidate.save!
+          if @candidate.category == 'doctor'
+            org = Hospital.where(id: params[:hospital_id]).first
+            dep = HospitalDepartment.where(id: params[:hospital_department_id]).first
+            @candidate.update!(city: "#{org.province} #{org.city}")
+            @candidate.experiences.hospital.create!(
+              org_id: org.id, dep_id: dep.id,
+              org_cn: org.name, org_en: org.level, department: dep.name, title: params[:title]
+            )
+          else
+            @exp = @candidate.experiences.work.create!(org_cn: params[:company], department: params[:department], title: params[:title])
+          end
+        end
+        @call_record.update!(candidate_id: @candidate.id)
+      end
+      render json: { status: 0, data: { call_record: @call_record.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+  # == Vue actions end ==
+
   private
   def call_record_params
     params.require(:call_record).permit(:name, :phone, :company, :department, :title, :status, :memo, :project_id,
                                         :project_requirement_id, :candidate_id, :operator_id, :category)
+  end
+
+  def v_call_record_params
+    params.permit(:category, :name, :phone, :company, :department, :title, :memo, :status)
   end
 
   def load_call_record

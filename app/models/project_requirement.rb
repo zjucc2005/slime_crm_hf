@@ -53,6 +53,19 @@ class ProjectRequirement < ApplicationRecord
       )
   end
 
+  def to_api_dashboard
+    expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority, :project_id,
+      created_at: created_at.strftime('%F %T'),
+      operator: operator&.name_cn,
+      call_records: CallRecord.where(project_requirement_id: id).order(id: :desc).map(&:to_api),
+      company_name_abbr: project&.company&.name_abbr,
+      project_name: project&.name,
+      project_code: project&.code,
+      client_contact: project&.main_client&.name,
+      pm_name: project&.pm_users&.first&.name_cn
+    )
+  end
+
   private
   def setup
     self.status ||= 'ongoing'

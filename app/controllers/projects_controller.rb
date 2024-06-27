@@ -483,6 +483,34 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def v_pm_dashboard_data
+    begin
+      page = Integer(params[:page]) rescue 1
+      per_page = Integer(params[:per_page]) rescue 10
+      query = current_user.projects.where(status: %w[initialized ongoing])
+      @projects = query.order(id: :desc).paginate(page: page, per_page: per_page)
+      render json: { 
+        status: 0, 
+        data: { 
+          projects: @projects.map(&:to_api_dashboard),
+          total: query.count, page: page, per_page: per_page
+        }
+      }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_pa_dashboard_data
+    begin
+      query = ProjectRequirement.where(status: 'ongoing', operator_id: current_user.id)
+      @project_requirements = query.order(priority: :desc, id: :asc)
+      render json: { status: 0, data: { project_requirements: @project_requirements.map(&:to_api_dashboard) } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
   def v_dashboard_update_priority
     begin
       @project_requirement = ProjectRequirement.find(params[:project_requirement_id])

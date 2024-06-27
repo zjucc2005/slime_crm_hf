@@ -183,7 +183,7 @@ class Project < ApplicationRecord
   end
 
   def to_api_dashboard
-    expose_fields(:id, :name, :code, 
+    expose_fields(:id, :name, :code, :status,
       created_at: created_at.strftime('%F %T'),
       updated_at: updated_at.strftime('%F %T'),
       company_name_abbr: company&.name_abbr,

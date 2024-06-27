@@ -112,7 +112,7 @@ class Ability
     can :manage, Client
     # can [:new_client], Company
     can [:index, :show, :add_clients, :delete_client, :add_experts, :delete_expert,
-         :add_project_task, :project_tasks, :experts, :work_board, :user_options], Project
+         :add_project_task, :project_tasks, :experts, :work_board, :user_options, :v_pa_dashboard, :v_pa_dashboard_data], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
     can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost], ProjectTask
