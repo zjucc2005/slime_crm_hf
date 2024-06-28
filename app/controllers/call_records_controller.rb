@@ -292,6 +292,10 @@ class CallRecordsController < ApplicationController
     begin
       @call_record = CallRecord.find(params[:id])
       @call_record.update!(v_call_record_params)
+      if @call_record.rec_status == 'ok'
+        @project = Project.find(@call_record.project_id)
+        @project.project_candidates.expert.find_or_create_by!(candidate_id: @call_record.candidate_id) # 把专家加入项目中
+      end
       render json: { status: 0, data: { call_record:  @call_record.to_api } }
     rescue => e
       render json: { status: 1, msg: e.message }
@@ -361,6 +365,16 @@ class CallRecordsController < ApplicationController
       render json: { status: 1, msg: e.message }
     end
   end
+
+  def v_tuijian
+    begin
+      @call_record = CallRecord.find(params[:id])
+      @call_record.update!(rec_status: 'recommended', rec_description: params[:rec_description])
+      render json: { status: 0, data: { call_record: @call_record.to_api } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
   # == Vue actions end ==
 
   private
@@ -370,7 +384,7 @@ class CallRecordsController < ApplicationController
   end
 
   def v_call_record_params
-    params.permit(:category, :name, :phone, :company, :department, :title, :memo, :status)
+    params.permit(:category, :name, :phone, :company, :department, :title, :memo, :status, :rec_status)
   end
 
   def load_call_record

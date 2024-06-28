@@ -99,6 +99,7 @@ class Ability
     can :manage, Hospital
     can :manage, Bank
     can :read, Industry
+    can [:v_group_index, :v_apply], CardTemplate
   end
 
   def pa_ability
@@ -123,6 +124,7 @@ class Ability
     can :manage, Hospital
     can :manage, Bank
     can :read, Industry
+    can [:v_group_index, :v_apply], CardTemplate
   end
 
   def finance_ability

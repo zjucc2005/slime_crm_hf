@@ -127,7 +127,7 @@ Rails.application.routes.draw do
 
     get :v_dashboard, on: :collection
     get :v_dashboard_data, on: :collection
-    post :v_dashboard_update_priority, on: :collection
+    # post :v_dashboard_update_priority, on: :collection
 
     get :v_pm_dashboard, on: :collection
     get :v_pm_dashboard_data, on: :collection
@@ -196,6 +196,7 @@ Rails.application.routes.draw do
     post :v_update, on: :collection
     get :v_match_candidates, on: :collection
     post :v_ruku, on: :collection
+    post :v_tuijian, on: :collection
   end
 
   resources :location_data do
@@ -217,7 +218,10 @@ Rails.application.routes.draw do
   resources :banks
   resources :industries
   resources :search_aliases
-  resources :card_templates
+  resources :card_templates do
+    get :v_group_index, on: :collection
+    get :v_apply, on: :collection
+  end
 
   resources :statistics do
     get :current_month_count_infos,  on: :collection

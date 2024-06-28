@@ -511,15 +511,15 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def v_dashboard_update_priority
-    begin
-      @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
-      @project_requirement.update!(priority: params[:priority])
-      render json: { status: 0, data: { projects: dashboard_projects.map(&:to_api_dashboard) } }
-    rescue => e
-      render json: { status: 1, msg: e.message }
-    end
-  end
+  # def v_dashboard_update_priority
+  #   begin
+  #     @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
+  #     @project_requirement.update!(priority: params[:priority])
+  #     render json: { status: 0, data: { projects: dashboard_projects.map(&:to_api_dashboard) } }
+  #   rescue => e
+  #     render json: { status: 1, msg: e.message }
+  #   end
+  # end
 
   private
   def load_project

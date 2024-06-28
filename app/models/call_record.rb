@@ -11,6 +11,7 @@ class CallRecord < ApplicationRecord
     declined: '拒绝',
     accepted: '接受'
   }.stringify_keys
+  REC_STATUS = { init: '未推荐', recommended: '已推荐', hold: '客户确认中', unsuited: '不合适', ok: '可约访' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
@@ -20,7 +21,8 @@ class CallRecord < ApplicationRecord
 
   # Validations
   validates_presence_of :name
-  validates_inclusion_of :status, :in => STATUS
+  validates_inclusion_of :status, :in => STATUS.keys
+  validates_inclusion_of :rec_status, in: REC_STATUS.keys
   validates_numericality_of :number_of_calls, :greater_than_or_equal_to => 0
 
   before_validation :setup, :on => [:create, :update]
@@ -54,8 +56,8 @@ class CallRecord < ApplicationRecord
   def to_api
     expose_fields(
       :id, :category, :name, :company, :department, :title, :phone,
-      :number_of_calls, :status, :memo, :created_by,
-      :project_id, :project_requirement_id, :candidate_id,
+      :number_of_calls, :status, :memo, :rec_status, :rec_description,
+      :created_by, :project_id, :project_requirement_id, :candidate_id,
       created_at: created_at.strftime('%F %T'),
       updated_at: updated_at.strftime('%F %T')
     )
@@ -77,7 +79,8 @@ class CallRecord < ApplicationRecord
 
   private
   def setup
-    self.status          ||= 'pending'
+    self.status ||= 'pending'
+    self.rec_status ||= 'init'
     self.name&.strip!
     self.phone&.strip!
     self.company&.strip!

@@ -73,6 +73,33 @@ class CardTemplatesController < ApplicationController
     end
   end
 
+  # == Vue actions begin ==
+  def v_group_index
+    begin
+      res = []
+      CardTemplate::GROUP.each do |group|
+        res << {
+          group: group,
+          data: CardTemplate.where(group: group).order(id: :desc).map{ |t| t.expose_fields(:id, :name) }
+        }
+      end
+      render json: { status: 0, data: { card_templates: res } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_apply
+    # 套用模板
+    begin
+      @card_template = CardTemplate.find(params[:id])
+      render json: { status: 0, data: { content: @card_template.result(params[:candidate_id]) } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+  # == Vue actions end ==
+
   private
   def card_template_params
     params.require(:card_template).permit(:name, :content, :group)

@@ -49,8 +49,9 @@ class ProjectRequirement < ApplicationRecord
   def to_api
     expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority,
       created_at: created_at.strftime('%F %T'),
-      operator: operator&.name_cn
-      )
+      operator: operator&.name_cn,
+      call_records: CallRecord.where(project_requirement_id: id).order(id: :desc).map(&:to_api)
+    )
   end
 
   def to_api_dashboard

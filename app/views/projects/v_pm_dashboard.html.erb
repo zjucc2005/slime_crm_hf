@@ -1,12 +1,15 @@
 <div id="app">
+    <el-card class="box-card mb-1">
+        <el-button @click="handleProjectNew" type="primary" size="medium" icon="el-icon-plus">新增项目</el-button>
+    </el-card>
     <!-- 进展中的项目 -->
     <el-card v-for="project in projects" :key="project.id" class="box-card mb-1">
         <div slot="header" class="header-cc">
             <el-link :href="`/projects/${project.id}`" target="_blank" type="primary">{{ project.name }}</el-link>
             <div>
-                <el-button size="mini">总览</el-button>
-                <el-button size="mini" type="primary" @click="handleNewReq(project.id, project.name);">
-                    <i class="el-icon-plus"></i> 新增需求
+                <el-button @click="handleCallOverview(project.id)" size="mini" icon="el-icon-star-on">总览</el-button>
+                <el-button @click="handleNewReq(project.id, project.name);" size="mini" type="primary" icon="el-icon-plus">
+                    新增需求
                 </el-button>
             </div>
         </div>
@@ -29,7 +32,12 @@
                 <el-col :span="16">
                     <el-table :data="project.project_requirements" size="mini" border stripe>
                         <el-table-column prop="category" label="需求类型"></el-table-column>
-                        <el-table-column prop="demand_number" label="需求人数"></el-table-column>
+                        <el-table-column prop="demand_number" label="可约访/需求人数">
+                            <template slot-scope="scope">
+                                {{ scope.row.call_records.filter(c => c.rec_status === 'ok').length }} /
+                                {{ scope.row.demand_number }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="created_at" label="创建时间">
                             <template slot-scope="scope">
                                 <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
@@ -70,7 +78,14 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="更新状态">
-                            <template slot-scope="scope"></template>
+                            <template slot-scope="scope">
+                                <el-button 
+                                    v-if="scope.row.call_records.filter(c =>  c.rec_status === 'recommended').length"
+                                    @click="handleCallOverview(project.id, scope.row.id)"
+                                    type="danger" size="mini" icon="el-icon-star-on">
+                                    + {{ scope.row.call_records.filter(c =>  c.rec_status === 'recommended').length }}
+                                </el-button>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="title" label="需求内容" min-width="120">
                             <template slot-scope="scope">
@@ -135,9 +150,61 @@
               <div slot="tip" class="el-upload__tip">最多选择3个文件上传</div>
             </el-upload>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer">
             <el-button size="small" @click="newReqFormVisible = false">取消</el-button>
             <el-button type="primary" size="small" @click="handleNewReqSubmit">确定</el-button>
+        </span>
+    </el-dialog>
+
+    <!-- 总览 & 推荐更新 table -->
+    <el-dialog :title="callOverviewTitle" :visible.sync="callOverviewVisible"  width="80%">
+        <el-table :data="callOverview" size="mini" border stripe>
+            <el-table-column prop="category" label="类型" width="72">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.category === 'doctor'" ><i class="fa fa-user-circle text-danger"></i> 医生</span>
+                    <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="name" label="姓名"></el-table-column>
+            <el-table-column prop="phone" label="电话"></el-table-column>
+            <el-table-column prop="company" label="公司/医院"></el-table-column>
+            <el-table-column prop="department" label="部门/科室"></el-table-column>
+            <el-table-column prop="title" label="职位"></el-table-column>
+            <el-table-column prop="memo" label="备注"></el-table-column>
+            <el-table-column prop="rec_description" label="推荐描述">
+                <template slot-scope="scope">
+                    <el-button @click="handleRecDescription(scope.row.rec_description)" size="mini">查看</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column prop="rec_status" label="推荐状态">
+                <template slot-scope="scope">
+                    <el-dropdown trigger="click">
+                        <span>
+                            <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">
+                                {{ call_rec_status_dict[scope.row.rec_status] }}
+                            </el-tag>
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item v-for="(val, key) in call_rec_status_dict" :key="key">
+                                <el-tag @click="update_call_rec_status(key, scope.row.id)" :type="call_rec_status_tag_type[key]" size="mini">
+                                    {{ call_rec_status_dict[key] }}
+                                </el-tag>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
+            </el-table-column>
+        </el-table>
+        <span slot="footer">
+            <el-button size="small" @click="callOverviewVisible = false">取消</el-button>
+        </span>
+    </el-dialog>
+
+    <el-dialog title="推荐描述" :visible.sync="recDescriptionVisible">
+        <div id="rec-description-content" class="rec-description-cc">{{ recDescription }}</div>
+        <span slot="footer">
+            <el-button @click="clipboard" type="primary" size="small">复制</el-button>
         </span>
     </el-dialog>
 </div>
@@ -177,11 +244,18 @@
                 ],
             },
             newReqFormVisible: false,
+            callOverview: [],
+            callOverviewTitle: '',
+            callOverviewVisible: false,
+            recDescription: '',
+            recDescriptionVisible: false,
             user_options: [],  // 项目需求操作员
             drawer: { title: '', content: '',  visible: false },
             status_dict: <%= Project::STATUS.to_json.html_safe %>,
             req_status_dict: <%= ProjectRequirement::STATUS.to_json.html_safe %>,
-            req_status_tag_type: { 'ongoing': 'success', 'finished': 'info', 'cancelled': 'info'}
+            req_status_tag_type: { ongoing: 'success', finished: 'info', cancelled: 'info'},
+            call_rec_status_dict: <%= CallRecord::REC_STATUS.to_json.html_safe %>,
+            call_rec_status_tag_type: { init: 'info', recommended: 'primary', hold: 'warning', unsuited: 'danger', ok: 'success' },
         },
         mounted: function(){
             this.$nextTick(function(){
@@ -205,10 +279,20 @@
                 // 项目需求更新后台数据后同步更新页面数据
                 this.projects.map(p => {
                     let index = p.project_requirements.findIndex(req => req.id === project_requirement.id)
-                    if (index !== -1) {
-                        p.project_requirements.splice(index, 1, project_requirement)
+                    if (index !== -1) { p.project_requirements.splice(index, 1, project_requirement) }
+                })
+            },
+            sync_call_record (call_record) {
+                let _this_ = this
+                this.projects.map(p => {
+                    let req = p.project_requirements.find(req => req.id === call_record.project_requirement_id)
+                    if (req) {
+                        let index = req.call_records.findIndex(c => c.id === call_record.id)
+                        if (index !== -1) { req.call_records.splice(index, 1, call_record) }
                     }
                 })
+                let co_index = this.callOverview.find(c => c.id === call_record.id)
+                if (co_index !== -1) { this.callOverview.splice(co_index, 1, call_record) }
             },
             update_priority (priority, req_id) {
                 let _this_ = this;
@@ -223,6 +307,12 @@
                     _this_.sync_project_requirement(res.data.project_requirement)
                 })
             },
+            update_call_rec_status (rec_status, call_record_id) {
+                let _this_ = this;
+                $.post('/call_records/v_update', { id: call_record_id, rec_status: rec_status }, function (res) {
+                    _this_.sync_call_record(res.data.call_record)
+                })
+            },
             get_user_options (project_id) {
                 let _this_ = this;
                 fetch(`/projects/${project_id}/user_options`).then(res => res.json()).then(data => {
@@ -234,6 +324,9 @@
             },
             handlePageChange () {
                 this.load_projects()
+            },
+            handleProjectNew () {
+                window.open('/projects/new', '_blank');
             },
             handleNewReq (project_id, project_name) {
                 this.newReqFormVisible = true
@@ -281,6 +374,27 @@
             },
             handleNewReqFileChange (file, fileList) {
                 this.newReqForm.fileList = fileList
+            },
+            handleCallOverview (project_id, project_requirement_id) {
+                let call_records = []
+                let project = this.projects.find(p => p.id === project_id)
+                project.project_requirements.map(req => {
+                    if (!project_requirement_id || req.id === project_requirement_id) {
+                        req.call_records.map(c => {
+                            if (c.rec_status !== 'init') call_records.push(c)
+                        })
+                    }
+                })
+                this.callOverview = call_records
+                this.callOverviewTitle = project_requirement_id ? '更新状态' : '更新状态 - 总览'
+                this.callOverviewVisible = true
+            },
+            handleRecDescription (rec_description) {
+                this.recDescription = rec_description
+                this.recDescriptionVisible = true
+            },
+            clipboard () {
+                clipboard('rec-description-content')
             }
         }
     })
@@ -297,6 +411,9 @@
     .drawer-content {
         padding: 0 20px;
         font-size: 0.9rem;
+        white-space: pre-line;
+    }
+    .rec-description-cc {
         white-space: pre-line;
     }
 </style>
