@@ -331,7 +331,7 @@ class CallRecordsController < ApplicationController
               org_cn: org.name, org_en: org.level, department: dep.name, title: params[:title]
             )
           else
-            @exp.update!(org_cn: params[:company], deparment: params[:department], title: params[:title])
+            @exp.update!(org_cn: params[:company], department: params[:department], title: params[:title])
           end
         else
           # 新增专家
