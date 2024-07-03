@@ -130,7 +130,7 @@
     </el-drawer>
 
     <!-- 新增需求form -->
-    <el-dialog :title="reqForm.project_requirement_id ? '编辑需求' : '新增需求'" :visible.sync="reqFormVisible">
+    <el-dialog :title="reqForm.id ? '编辑需求' : '新增需求'" :visible.sync="reqFormVisible">
         <el-form ref="reqForm" :model="reqForm" size="small" label-width="80px">
             <el-form-item label="标题" prop="title" :rules="reqFormRules.title">
                 <el-input v-model="reqForm.title" clearable></el-input>
