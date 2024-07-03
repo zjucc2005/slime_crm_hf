@@ -13,6 +13,9 @@ class ProjectTasksController < ApplicationController
     begin
       load_project_task
       load_active_contract
+      if @project_task.status != 'ongoing'
+        redirect_to project_task_path(@project_task) and return
+      end
       check_editable # 只能编辑自己创建的任务
       @project = @project_task.project
       @project_task.notice_email ||= @project.company.project_task_notice_email

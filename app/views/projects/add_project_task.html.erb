@@ -7,6 +7,7 @@
     <div class="card-body">
         <%= form_for @project_task, :url => add_project_task_project_path(@project, return_to: params[:return_to]), :method => :put do |f| %>
             <%= model_error_tag(@project_task) %>
+            <%= hidden_field_tag :call_record_id, params[:call_record_id] %>
 
             <div class="row">
                 <div class="col-12 form-group">

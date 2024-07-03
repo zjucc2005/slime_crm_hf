@@ -259,43 +259,41 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#call_records">
                             <%= mt(:call_record) %>
-                            <%= count_badge(@doctor.call_records.count) %>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#comments">
-                            <%= mt(:candidate_comment) %>
-                            <%= count_badge(@doctor.comments.count) %>
+                            <%#= count_badge(@doctor.call_records.count) %>
                         </a>
                     </li>
                 </ul>
                  
                 <!-- Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane active" id="call_records">
-                    <div class="candidate-comment-group mt-3">
-                        <% @call_records.each do |call_record| %>
-                            <div class="candidate-comment-unit">
-                                <span class="badge badge-light"><%= show_creator(call_record) %></span>
-                                <span class="badge badge-light"><%= "#{mt(:user, :created_at)}: #{call_record.created_at.strftime('%F %T')}" %></span>
-                                <p class="content"><%= call_record.memo %></p>
-                            </div>
-                        <% end %>
+                    <div class="tab-pane active" id="call_records">
+                        <div class="candidate-comment-group mt-3">
+                            <% @call_records.each do |call_record| %>
+                                <div class="candidate-comment-unit">
+                                    <div>
+                                        <span class="badge badge-light"><%= show_creator(call_record) %></span>
+                                        <span class="badge badge-light"><%= "#{mt(:user, :created_at)}: #{call_record.created_at.strftime('%F %T')}" %></span>
+                                    </div>
+                                    <div>
+                                        <span class="badge badge-light"><%= call_record.project&.name %></span> /
+                                        <span class="badge badge-light"><%= call_record.project_requirement&.title %></span>
+                                    </div>
+                                    <p class="content"><%= call_record.memo %></p>
+                                </div>
+                            <% end %>
+                            <% @candidate_comments.each do |comment| %>
+                                <div class="candidate-comment-unit">
+                                    <div>
+                                        <span class="badge badge-light"><%= show_creator(comment) %></span>
+                                        <span class="badge badge-light"><%= "#{mt(:user, :created_at)}: #{comment.created_at.strftime('%F %T')}" %></span>
+                                    </div>
+                                    <p class="content"><%= content_tag(:i, nil, class: 'fa fa-flag text-red') if comment.is_top? %><%= comment.content %></p>
+                                </div>
+                            <% end%>
+                        </div>
                     </div>
-                  </div>
-                  <div class="tab-pane" id="comments">
-                    <div class="candidate-comment-group mt-3">
-                        <% @candidate_comments.each do |comment| %>
-                            <div class="candidate-comment-unit">
-                                <span class="badge badge-light"><%= show_creator(comment) %></span>
-                                <span class="badge badge-light"><%= "#{mt(:user, :created_at)}: #{comment.created_at.strftime('%F %T')}" %></span>
-                                <p class="content"><%= content_tag(:i, nil, class: 'fa fa-flag text-red') if comment.is_top? %><%= comment.content %></p>
-                            </div>
-                        <% end%>
-                    </div>
-                  </div>
+                </div>
             </div>
         </div>
-
     </div>
 </div>

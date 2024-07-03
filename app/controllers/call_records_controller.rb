@@ -369,7 +369,7 @@ class CallRecordsController < ApplicationController
   def v_tuijian
     begin
       @call_record = CallRecord.find(params[:id])
-      @call_record.update!(rec_status: 'recommended', rec_description: params[:rec_description])
+      @call_record.update!(rec_status: 'recommended', rec_description: params[:rec_description], memo: params[:memo])
       render json: { status: 0, data: { call_record: @call_record.to_api } }
     rescue => e
       render json: { status: 1, msg: e.message }

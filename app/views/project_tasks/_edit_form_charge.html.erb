@@ -223,7 +223,8 @@
                 currency.val(data.currency);
                 is_taxed.val(data.is_taxed);
                 tax_rate.val(data.tax_rate);
-                tax.val(((parseFloat(actual_price.val()) || parseFloat(base_price.val())) + parseFloat(data.shorthand_price)) * parseFloat(tax_rate.val()));
+                let _actual_price = actual_price.val() ? parseFloat(actual_price.val()) : parseFloat(base_price.val())
+                tax.val((_actual_price + parseFloat(data.shorthand_price)) * parseFloat(tax_rate.val()));
             }
         })
     }

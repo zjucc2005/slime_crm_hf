@@ -147,6 +147,19 @@ class HospitalsController < ApplicationController
     respond_to { |f| f.js }
   end
 
+  # == Vue actions begin ==
+  def v_create_department
+    begin
+      @hospital = Hospital.find(params[:id])
+      @department = @hospital.departments.new(name: params[:name].strip)
+      @department.save!
+      render json: { status: 0 }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+  # == Vue actions end ==
+
   private
   def load_hospital
     @hospital = Hospital.find(params[:id])

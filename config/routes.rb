@@ -214,6 +214,8 @@ Rails.application.routes.draw do
     # get :load_hospital_options, on: :collection
     get :hospital_options, on: :collection
     get :load_children, on: :member
+
+    post :v_create_department, on: :collection
   end
   resources :banks
   resources :industries

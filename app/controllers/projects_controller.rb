@@ -257,6 +257,10 @@ class ProjectsController < ApplicationController
                                                                   created_by: current_user.id,
                                                                   user_channel_id: current_user.user_channel_id))
         if @project_task.save
+          if params[:call_record_id].present?
+            @call_record = CallRecord.find_by(id: params[:call_record_id])
+            @call_record&.update!(project_task_id: @project_task.id)
+          end
           flash[:success] = t(:operation_succeeded)
           redirect_with_return_to(project_path(@project))
         else

@@ -1,116 +1,156 @@
 <div id="app">
     <!-- 进展中的项目需求 -->
-    <el-card v-for="req in project_requirements" :key="req.id" class="box-card mb-1">
-        <div slot="header" class="header-cc">
-            <el-link :href="`/projects/${req.project_id}`" target="_blank" type="primary">{{ req.project_name }}</el-link>
-            <div>
-                <el-button size="mini" type="primary" icon="el-icon-plus" @click="handleCallNew(req.id);">
-                    新增通话记录
-                </el-button>
+    <el-tabs v-model="activeTab">
+        <el-tab-pane v-for="req in project_requirements" :key="req.id" :label="req.title" :name="`req_${req.id}`">
+            <div slot="label">
+                <div><i v-if="req.priority" class="el-icon-warning" style="color: #f56c6c;"></i> {{ req.project_name }}</div>
+                <div class="text-smaller text-gray">{{ req.title }}</div>
             </div>
-        </div>
-        <!-- 项目需求table -->
-        <el-table :data="[req]" size="mini" border class="mb-1">
-            <el-table-column prop="company_name_abbr" label="公司简称"></el-table-column>
-            <el-table-column prop="project_name" label="项目名称" min-width="120"></el-table-column>
-            <el-table-column prop="project_code" label="项目编码"></el-table-column>
-            <el-table-column prop="client_contact" label="客户联系人"></el-table-column>
-            <el-table-column prop="pm_name" label="PM"></el-table-column>
-            <el-table-column prop="category" label="需求类型"></el-table-column>
-            <el-table-column prop="demand_number" label="可约访/需求人数">
-                <template slot-scope="scope">
-                    {{ scope.row.call_records.filter(c => c.rec_status === 'ok').length }} /
-                    {{ scope.row.demand_number }}
-                </template>
-            </el-table-column>
-            <el-table-column prop="created_at" label="创建时间">
-                <template slot-scope="scope">
-                    <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
-                        <el-button size="mini" type="text">{{ scope.row.created_at.split(' ')[0] }}</el-button>
-                    </el-tooltip>
-                </template>
-            </el-table-column>
-            <el-table-column prop="operator" label="操作员"></el-table-column>
-            <el-table-column prop="status" label="需求状态">
-                <template slot-scope="scope">
-                    <el-tag :type="{ 'ongoing': 'success', 'finished': 'info', 'unfinished': 'danger'}[scope.row.status]" size="mini">
-                        {{ req_status_dict[scope.row.status] }}
-                    </el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="priority" label="紧急程度">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.priority" effect="dark" type="danger" size="mini">紧急</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="title" label="需求内容" min-width="120">
-                <template slot-scope="scope">
-                    <el-link @click="show_drawer(scope.row.title, scope.row.content)" type="primary">
-                        {{ scope.row.title | truncate(20) }}
-                    </el-link>
-                </template>
-            </el-table-column>
-        </el-table>
-        <!-- 通话记录table -->
-        <el-row :gutter="10">
-            <el-col :span="22" :offset="2">
-                <el-tag effect="plain" size="mini" class="mb-1"><i class="el-icon-phone"></i> 通话记录 {{ req.call_records.length }}</el-tag>
-                <el-table :data="req.call_records" size="mini" border stripe>
-                    <el-table-column prop="category" label="类型" width="72">
+
+            <el-card class="box-card mb-1">
+                <div slot="header" class="card-header-cc">
+                    <el-link :href="`/projects/${req.project_id}`" target="_blank" type="primary">{{ req.project_name }}</el-link>
+                    <div>
+                        <el-button size="mini" type="primary" icon="el-icon-plus" @click="handleCallNew(req.id);">
+                            新增通话记录
+                        </el-button>
+                    </div>
+                </div>
+                <!-- 项目需求table -->
+                <el-table :data="[req]" size="mini" border class="mb-1">
+                    <el-table-column prop="company_name_abbr" label="公司简称"></el-table-column>
+                    <el-table-column prop="project_name" label="项目名称" min-width="120"></el-table-column>
+                    <el-table-column prop="project_code" label="项目编码"></el-table-column>
+                    <el-table-column prop="client_contact" label="客户联系人"></el-table-column>
+                    <el-table-column prop="pm_name" label="PM"></el-table-column>
+                    <el-table-column prop="category" label="需求类型"></el-table-column>
+                    <el-table-column prop="demand_number" label="需求人数/推荐/已约">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.category === 'doctor'" ><i class="fa fa-user-circle text-danger"></i> 医生</span>
-                            <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
+                            {{ scope.row.demand_number }} /
+                            {{ scope.row.call_records.filter(c => c.rec_status !== 'init').length }} /
+                            {{ scope.row.call_records.filter(c => c.rec_status === 'succ').length }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="name" label="姓名">
+                    <el-table-column prop="created_at" label="创建时间" width="90">
                         <template slot-scope="scope">
-                            <el-tag v-if="scope.row.candidate_id" size="mini" plain>已入库</el-tag> {{ scope.row.name }}
+                            <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
+                                <el-button size="mini" type="text">{{ scope.row.created_at.split(' ')[0] }}</el-button>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="phone" label="电话"></el-table-column>
-                    <el-table-column prop="company" label="公司/医院"></el-table-column>
-                    <el-table-column prop="department" label="部门/科室"></el-table-column>
-                    <el-table-column prop="title" label="职位"></el-table-column>
-                    <el-table-column prop="memo" label="备注"></el-table-column>
-                    <el-table-column prop="status" label="通话状态">
+                    <el-table-column prop="operator" label="操作员"></el-table-column>
+                    <el-table-column prop="status" label="需求状态">
                         <template slot-scope="scope">
-                            <el-dropdown trigger="click">
-                                <span>
-                                    <el-tag :type="call_status_tag_type[scope.row.status]" size="mini">{{ call_status_dict[scope.row.status] }}</el-tag>
-                                    <i class="el-icon-arrow-down el-icon--right"></i>
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="(val, key) in call_status_dict" :key="key">
-                                        <el-tag @click="update_call_status(key, scope.row.id)" :type="call_status_tag_type[key]" size="mini">
-                                            {{ call_status_dict[key] }}
-                                        </el-tag>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
+                            <el-tag :type="{ 'ongoing': 'success', 'finished': 'info', 'unfinished': 'danger'}[scope.row.status]" size="mini">
+                                {{ req_status_dict[scope.row.status] }}
+                            </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="rec_status" label="推荐状态">
+                    <el-table-column prop="priority" label="紧急程度">
                         <template slot-scope="scope">
-                            <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">{{ call_rec_status_dict[scope.row.rec_status] }}</el-tag>
+                            <el-tag v-if="scope.row.priority" effect="dark" type="danger" size="mini">紧急</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column prop="title" label="需求内容" min-width="120">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="mini" icon="el-icon-edit" circle title="编辑" @click="handleCallEdit(scope.row)"></el-button>
-                            <el-button v-if="!scope.row.candidate_id" @click="handleRuku(scope.row)" type="primary" size="mini">入库</el-button>
-                            <el-button v-if="scope.row.candidate_id && scope.row.rec_status === 'init'" @click="handleTuijian(scope.row)" type="primary" size="mini">推荐</el-button>
-                            <el-button v-if="scope.row.rec_status === 'ok'" @click="handleInterview(scope.row)" type="success" size="mini">约访</el-button>
+                            <el-link @click="show_drawer(scope.row)" type="primary">
+                                {{ scope.row.title | truncate(20) }}
+                            </el-link>
                         </template>
                     </el-table-column>
                 </el-table>
-            </el-col>
-        </el-row>
-        
-    </el-card>
+                <!-- 通话记录table -->
+                <el-row :gutter="10">
+                    <el-col :span="22" :offset="2">
+                        <el-tag effect="plain" size="mini" class="mb-1"><i class="el-icon-phone"></i> 通话记录 {{ req.call_records.length }}</el-tag>
+                        <el-table :data="req.call_records" size="mini" border stripe>
+                            <el-table-column prop="category" label="类型" width="72">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.category === 'doctor'" ><i class="fa fa-user-circle text-danger"></i> 医生</span>
+                                    <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="name" label="姓名">
+                                <template slot-scope="scope">
+                                    <template v-if="scope.row.candidate_id">
+                                        <el-tag size="mini" plain>已入库</el-tag>
+                                        <el-link :href="`/${scope.row.category === 'doctor' ? 'doctors' : 'candidates'}/${scope.row.candidate_id}`" target="_blank">{{ scope.row.name }}</el-link>
+                                    </template>
+                                    <template v-else>{{ scope.row.name }}</template>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="phone" label="电话"></el-table-column>
+                            <el-table-column prop="company" label="公司/医院"></el-table-column>
+                            <el-table-column prop="department" label="部门/科室"></el-table-column>
+                            <el-table-column prop="title" label="职位"></el-table-column>
+                            <el-table-column prop="memo" label="反馈"></el-table-column>
+                            <el-table-column prop="status" label="通话状态">
+                                <template slot-scope="scope">
+                                    <el-dropdown trigger="click">
+                                        <span>
+                                            <el-tag :type="call_status_tag_type[scope.row.status]" size="mini">{{ call_status_dict[scope.row.status] }}</el-tag>
+                                            <i class="el-icon-arrow-down el-icon--right"></i>
+                                        </span>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item v-for="(val, key) in call_status_dict" :key="key">
+                                                <el-tag @click="update_call_status(key, scope.row.id)" :type="call_status_tag_type[key]" size="mini">
+                                                    {{ call_status_dict[key] }}
+                                                </el-tag>
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="rec_status" label="推荐状态">
+                                <template slot-scope="scope">
+                                    <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">{{ call_rec_status_dict[scope.row.rec_status] }}</el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="creator" label="操作员"></el-table-column>
+                            <el-table-column prop="created_at" label="创建时间" width="90">
+                                <template slot-scope="scope">
+                                    <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
+                                        <el-button size="mini" type="text">{{ scope.row.created_at.split(' ')[0] }}</el-button>
+                                    </el-tooltip>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" width="210">
+                                <template slot-scope="scope">
+                                    <el-button type="primary" size="mini" icon="el-icon-edit" circle title="编辑" @click="handleCallEdit(scope.row)"></el-button>
+                                    <el-button v-if="!scope.row.candidate_id" @click="handleRuku(scope.row)" type="primary" size="mini">入库</el-button>
+                                    <el-button v-if="scope.row.candidate_id && scope.row.rec_status === 'init'" @click="handleTuijian(scope.row)" type="primary" size="mini">推荐</el-button>
+                                    <el-button v-if="scope.row.rec_status === 'ok'" @click="handleInterview(scope.row)" type="success" size="mini">约访</el-button>
+                                    <el-popconfirm
+                                        v-if="scope.row.rec_status === 'ok' && scope.row.project_task_id"
+                                        @confirm="handleInterviewRes(scope.row, 'succ')"
+                                        @cancel="handleInterviewRes(scope.row, 'fail')"
+                                        confirm-button-text="成功"
+                                        confirm-button-type="success"
+                                        cancel-button-text="失败"
+                                        cancel-button-type="danger"
+                                        icon="el-icon-info"
+                                        icon-color="red"
+                                        title="选择约访结果"
+                                    >
+                                      <el-button slot="reference" size="mini">约访结果</el-button>
+                                    </el-popconfirm>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-tab-pane>
+    </el-tabs>
 
     <!-- 需求内容详情 -->
     <el-drawer :title="drawer.title" :visible.sync="drawer.visible" direction="rtl" size="40%">
         <div class="drawer-content">{{ drawer.content }}</div>
+        <div class="drawer-files">
+            <div v-for="(url, index) in drawer.files" :key="index">
+                {{ `附件${index + 1}:` }} <el-link :href="url" type="primary" target="_blank">{{ url.split('/')[url.split('/').length - 1] }}</el-link>
+            </div>
+        </div>
     </el-drawer>
 
     <!-- 新增/修改通话记录form -->
@@ -137,7 +177,7 @@
             <el-form-item label="职位" prop="title">
                 <el-input v-model="callForm.title" clearable></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="memo">
+            <el-form-item label="反馈" prop="memo">
                 <el-input v-model="callForm.memo" clearable></el-input>
             </el-form-item>
             <el-form-item label="通话状态" prop="status" :rules="callFormRules.status">
@@ -240,16 +280,18 @@
                 </el-form-item>
                 <el-form-item :label="rukuForm.category === 'expert' ? '部门' : '科室'" prop="department" :rules="rukuFormRules.department">
                     <el-input v-if="rukuForm.category === 'expert'" v-model="rukuForm.department" clearable></el-input>
-                    <el-select
-                        v-if="rukuForm.category ==='doctor'"
-                        v-model="rukuForm.hospital_department_id"
-                        :loading="loading.hospital_department"
-                        @change="handleHospitalDepartmentChange"
-                        filterable
-                        placeholder="选择科室"
-                        >
-                        <el-option v-for="item in hospital_departments" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                    </el-select>
+                    <template v-if="rukuForm.category ==='doctor'">
+                         <el-select
+                            v-model="rukuForm.hospital_department_id"
+                            :loading="loading.hospital_department"
+                            @change="handleHospitalDepartmentChange"
+                            filterable
+                            placeholder="选择科室"
+                            >
+                            <el-option v-for="item in hospital_departments" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                        <el-button v-if="rukuForm.hospital_id" @click="handleHosDep(rukuForm.hospital_id)" type="primary" icon="el-icon-plus">新增科室</el-button>
+                    </template>
                     <span v-if="rukuForm.department !== rukuCall.department" class="text-primary"><i class="el-icon-warning"></i> {{ rukuCall.department }}</span>
                 </el-form-item>
                 <el-form-item label="职位" prop="title">
@@ -288,11 +330,27 @@
             <el-form-item label="推荐描述" prop="rec_description" :rules="tuijianFormRules.rec_description">
                 <el-input v-model="tuijianForm.rec_description" type="textarea" :rows="15" clearable></el-input>
             </el-form-item>
+            <el-form-item label="反馈" prop="memo">
+                <el-input v-model="tuijianForm.memo" clearable></el-input>
+            </el-form-item>
         </el-form>
           
         <span slot="footer">
             <el-button size="small" @click="tuijianFormVisible = false">取消</el-button>
             <el-button type="primary" size="small" @click="handleTuijianSubmit">确定</el-button>
+        </span>
+    </el-dialog>
+
+    <!-- 新建科室form -->
+    <el-dialog title="新增科室" :visible.sync="hosDepFormVisible">
+        <el-form ref="hosDepForm" :model="hosDepForm" size="small" label-width="80px">
+            <el-form-item label="名称" prop="name" :rules="hosDepFormRules.name">
+                <el-input v-model="hosDepForm.name" clearable></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button size="small" @click="hosDepFormVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="handleHosDepSubmit">确定</el-button>
         </span>
     </el-dialog>
 </div>
@@ -301,6 +359,7 @@
     var app = new Vue({
         el: '#app',
         data: {
+            activeTab: '',
             project_requirements: [],
             search_form: {
                 page: 1,
@@ -337,11 +396,16 @@
                 rec_description: [{ required: true, message: '推荐描述不能为空'},],
             },
             tuijianFormVisible: false,
+            hosDepForm: {},
+            hosDepFormRules: {
+                name: [{ required: true, message: '名称不能为空'},],
+            },
+            hosDepFormVisible: false,
             drawer: { title: '', content: '',  visible: false },
             call_status_dict: <%= CallRecord::STATUS.to_json.html_safe %>,
             call_status_tag_type: { pending: 'info', missed: 'warning', rejected: 'warning', shutdown: 'warning', talking: 'warning',declined: 'danger', accepted: 'success' },
             call_rec_status_dict: <%= CallRecord::REC_STATUS.to_json.html_safe %>,
-            call_rec_status_tag_type: { init: 'info', recommended: 'primary', hold: 'warning', unsuited: 'danger', ok: 'success' },
+            call_rec_status_tag_type: { init: 'info', recommended: 'primary', hold: 'warning', unsuited: 'danger', ok: 'success', succ: 'success', fail: 'danger' },
             req_status_dict: <%= ProjectRequirement::STATUS.to_json.html_safe %>,
         },
         mounted: function(){
@@ -358,7 +422,9 @@
                 let _this_ = this;
                 $.get('/projects/v_pa_dashboard_data', this.search_form, function (res) {
                     _this_.project_requirements = res.data.project_requirements
-                    // _this_.search_form.total = res.data.total
+                    if (_this_.activeTab === '0' || !_this_.activeTab) {
+                        _this_.activeTab = `req_${_this_.project_requirements[0]?.id}`
+                    }
                 })
             },
             load_match_candidates (call_record) {
@@ -424,8 +490,8 @@
                     _this_.tuijianForm.rec_description = res.data.content
                 })
             },
-            show_drawer (title, content) {
-                this.drawer = { title: title, content: content, visible: true }
+            show_drawer (project_requirement) {
+                this.drawer = { title: project_requirement.title, content: project_requirement.content, files: project_requirement.files, visible: true }
             },
             handleCallNew (project_requirement_id) {
                 this.callFormVisible = true
@@ -538,11 +604,11 @@
             handleTuijian (call_record) {
                 this.tuijianFormVisible = true
                 this.load_card_templates()
-                this.tuijianForm = { call_record_id: call_record.id, candidate_id: call_record.candidate_id, card_template_id: '', rec_description: '' }
+                this.tuijianForm = { call_record_id: call_record.id, candidate_id: call_record.candidate_id, card_template_id: '', rec_description: '', memo: call_record.memo }
             },
             handleTuijianSubmit () {
                 let _this_ = this;
-                let data = { id: this.tuijianForm.call_record_id, rec_description: this.tuijianForm.rec_description }
+                let data = { id: this.tuijianForm.call_record_id, rec_description: this.tuijianForm.rec_description, memo: this.tuijianForm.memo }
                 $.post('/call_records/v_tuijian', data, function (res) {
                     if (res.status === 0){
                         _this_.sync_call_record(res.data.call_record)
@@ -553,16 +619,49 @@
                     }
                 })
             },
+            handleHosDep (hospital_id) {
+                this.hosDepForm = { id: hospital_id, name: '' }
+                this.hosDepFormVisible = true
+            },
+            handleHosDepSubmit () {
+                console.log('handleHosDepSubmit:', this.hosDepForm)
+                let _this_ = this;
+                $.post('/hospitals/v_create_department', this.hosDepForm, function (res) {
+                    if (res.status === 0) {
+                        _this_.load_hospital_departments(_this_.hosDepForm.id)
+                        _this_.hosDepFormVisible = false;
+                        _this_.$message({ message: '提交成功', type: 'success' })
+                    } else if (res.status === 1) {
+                        _this_.$message({ message: res.msg, type: 'error' })
+                    }
+                    
+                })
+            },
             handleInterview (call_record) {
-                let url = `/projects/${call_record.project_id}/add_project_task?call_record_id=${call_record.id}`
-                window.open(url, '_blank')
+                let new_url = `/projects/${call_record.project_id}/add_project_task?call_record_id=${call_record.id}`
+                let edit_url = `/project_tasks/${call_record.project_task_id}/edit`
+                window.open(call_record.project_task_id ? edit_url : new_url, '_blank')
+            },
+            handleInterviewRes(call_record, rec_status) {
+                let _this_ = this;
+                $.post('/call_records/v_update', { id: call_record.id, rec_status: rec_status }, function (res) {
+                    _this_.sync_call_record(res.data.call_record)
+                })
             }
         }
     })
 </script>
 
 <style>
-    .header-cc {
+    .el-tabs__item {
+        line-height: 30px;
+        padding: 0 20px !important;
+        height: 100%;
+        background-color: white;
+        border: 1px solid #eaeaea;
+        border-radius: 10px;
+    }
+    .card-header-cc {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -578,5 +677,10 @@
         padding: 0 20px;
         font-size: 0.9rem;
         white-space: pre-line;
+        margin-bottom: 1rem;
+    }
+    .drawer-files {
+        padding: 0 20px;
+        font-size: 0.8rem;
     }
 </style>

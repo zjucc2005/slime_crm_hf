@@ -8,7 +8,7 @@
             <el-link :href="`/projects/${project.id}`" target="_blank" type="primary">{{ project.name }}</el-link>
             <div>
                 <el-button @click="handleCallOverview(project.id)" size="mini" icon="el-icon-star-on">总览</el-button>
-                <el-button @click="handleNewReq(project.id, project.name);" size="mini" type="primary" icon="el-icon-plus">
+                <el-button @click="handleReqNew(project.id);" size="mini" type="primary" icon="el-icon-plus">
                     新增需求
                 </el-button>
             </div>
@@ -32,10 +32,11 @@
                 <el-col :span="16">
                     <el-table :data="project.project_requirements" size="mini" border stripe>
                         <el-table-column prop="category" label="需求类型"></el-table-column>
-                        <el-table-column prop="demand_number" label="可约访/需求人数">
+                        <el-table-column prop="demand_number" label="需求人数/推荐/已约">
                             <template slot-scope="scope">
-                                {{ scope.row.call_records.filter(c => c.rec_status === 'ok').length }} /
-                                {{ scope.row.demand_number }}
+                                {{ scope.row.demand_number }} /
+                                {{ scope.row.call_records.filter(c => c.rec_status !== 'init').length }} /
+                                {{ scope.row.call_records.filter(c => c.rec_status === 'succ').length }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="created_at" label="创建时间">
@@ -72,7 +73,7 @@
                                     active-color="#dc3545"
                                     :active-value="1"
                                     :inactive-value="0"
-                                    @change="update_priority($event, scope.row.id)"
+                                    @change="update_req_priority($event, scope.row.id)"
                                 >
                                 </el-switch>
                             </template>
@@ -89,9 +90,14 @@
                         </el-table-column>
                         <el-table-column prop="title" label="需求内容" min-width="120">
                             <template slot-scope="scope">
-                                <el-link @click="show_drawer(scope.row.title, scope.row.content)" type="primary">
+                                <el-link @click="show_drawer(scope.row)" type="primary">
                                     {{ scope.row.title | truncate(20) }}
                                 </el-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="60">
+                            <template slot-scope="scope">
+                                <el-button @click="handleReqEdit(scope.row)" type="primary" size="mini" icon="el-icon-edit" circle title="编辑"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -116,43 +122,48 @@
     <!-- 需求内容详情 -->
     <el-drawer :title="drawer.title" :visible.sync="drawer.visible" direction="rtl" size="40%">
         <div class="drawer-content">{{ drawer.content }}</div>
+        <div class="drawer-files">
+            <div v-for="(url, index) in drawer.files" :key="index">
+                {{ `附件${index + 1}:` }} <el-link :href="url" type="primary" target="_blank">{{ url.split('/')[url.split('/').length - 1] }}</el-link>
+            </div>
+        </div>
     </el-drawer>
 
     <!-- 新增需求form -->
-    <el-dialog :title="`新增需求 - ${newReqForm.project_name}`" :visible.sync="newReqFormVisible">
-        <el-form ref="newReqForm" :model="newReqForm" size="small" label-width="80px">
-            <el-form-item label="标题" prop="title" :rules="newReqFormRules.title">
-                <el-input v-model="newReqForm.title" clearable></el-input>
+    <el-dialog :title="reqForm.project_requirement_id ? '编辑需求' : '新增需求'" :visible.sync="reqFormVisible">
+        <el-form ref="reqForm" :model="reqForm" size="small" label-width="80px">
+            <el-form-item label="标题" prop="title" :rules="reqFormRules.title">
+                <el-input v-model="reqForm.title" clearable></el-input>
             </el-form-item>
-            <el-form-item label="内容" prop="content" :rules="newReqFormRules.content">
-                <el-input v-model="newReqForm.content" type="textarea" :rows="5" clearable></el-input>
+            <el-form-item label="内容" prop="content" :rules="reqFormRules.content">
+                <el-input v-model="reqForm.content" type="textarea" :rows="5" clearable></el-input>
             </el-form-item>
             <el-form-item label="需求类型" prop="category">
-                <el-input v-model="newReqForm.category" clearable></el-input>
+                <el-input v-model="reqForm.category" clearable></el-input>
             </el-form-item>
-            <el-form-item label="需求人数" prop="demand_number" :rules="newReqFormRules.demand_number">
-                <el-input-number v-model="newReqForm.demand_number" controls-position="right" :min="1"></el-input-number>
+            <el-form-item label="需求人数" prop="demand_number" :rules="reqFormRules.demand_number">
+                <el-input-number v-model="reqForm.demand_number" controls-position="right" :min="1"></el-input-number>
             </el-form-item>
-            <el-form-item label="操作员" prop="operator_id" :rules="newReqFormRules.operator_id">
-                <el-select v-model="newReqForm.operator_id" placeholder="Please select" clearable>
+            <el-form-item label="操作员" prop="operator_id" :rules="reqFormRules.operator_id">
+                <el-select v-model="reqForm.operator_id" placeholder="Please select" clearable>
                     <el-option v-for="opt in user_options" :key="opt[1]" :label="opt[0]" :value="opt[1]"></el-option>
                 </el-select>
             </el-form-item>
             <el-upload
                 action="/"
-                :file-list="newReqForm.fileList"
+                :file-list="reqForm.fileList"
                 :limit="3"
                 :auto-upload="false"
-                :on-change="handleNewReqFileChange"
-                :on-remove="handleNewReqFileChange"
+                :on-change="handleReqFileChange"
+                :on-remove="handleReqFileChange"
             >
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
               <div slot="tip" class="el-upload__tip">最多选择3个文件上传</div>
             </el-upload>
         </el-form>
         <span slot="footer">
-            <el-button size="small" @click="newReqFormVisible = false">取消</el-button>
-            <el-button type="primary" size="small" @click="handleNewReqSubmit">确定</el-button>
+            <el-button size="small" @click="reqFormVisible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="handleReqSubmit">确定</el-button>
         </span>
     </el-dialog>
 
@@ -165,7 +176,15 @@
                     <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" label="姓名"></el-table-column>
+            <el-table-column prop="name" label="姓名">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.candidate_id">
+                        <el-tag size="mini" plain>已入库</el-tag>
+                        <el-link :href="`/${scope.row.category === 'doctor' ? 'doctors' : 'candidates'}/${scope.row.candidate_id}`" target="_blank">{{ scope.row.name }}</el-link>
+                    </template>
+                    <template v-else>{{ scope.row.name }}</template>
+                </template>
+            </el-table-column>
             <el-table-column prop="phone" label="电话"></el-table-column>
             <el-table-column prop="company" label="公司/医院"></el-table-column>
             <el-table-column prop="department" label="部门/科室"></el-table-column>
@@ -186,13 +205,21 @@
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="(val, key) in call_rec_status_dict" :key="key">
-                                <el-tag @click="update_call_rec_status(key, scope.row.id)" :type="call_rec_status_tag_type[key]" size="mini">
-                                    {{ call_rec_status_dict[key] }}
+                            <el-dropdown-item v-for="(val, index) in call_rec_status_op" :key="index">
+                                <el-tag @click="update_call_rec_status(val, scope.row.id)" :type="call_rec_status_tag_type[val]" size="mini">
+                                    {{ call_rec_status_dict[val] }}
                                 </el-tag>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
+                </template>
+            </el-table-column>
+            <el-table-column prop="creator" label="操作员"></el-table-column>
+            <el-table-column prop="created_at" label="创建时间" width="90">
+                <template slot-scope="scope">
+                    <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
+                        <el-button size="mini" type="text">{{ scope.row.created_at.split(' ')[0] }}</el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
@@ -219,7 +246,7 @@
                 per_page: 10,
                 total: 0
             },
-            newReqForm: {
+            reqForm: {
                 project_id: '',
                 project_name: '',
                 title: '',
@@ -229,7 +256,7 @@
                 operator_id: '',
                 fileList: []
             },
-            newReqFormRules: {
+            reqFormRules: {
                 title: [
                     { required: true, message: '标题不能为空'},
                 ],
@@ -243,19 +270,20 @@
                     { required: true, message: '请选择操作员'},
                 ],
             },
-            newReqFormVisible: false,
+            reqFormVisible: false,
             callOverview: [],
             callOverviewTitle: '',
             callOverviewVisible: false,
             recDescription: '',
             recDescriptionVisible: false,
             user_options: [],  // 项目需求操作员
-            drawer: { title: '', content: '',  visible: false },
+            drawer: { title: '', content: '', files: [], visible: false },
             status_dict: <%= Project::STATUS.to_json.html_safe %>,
             req_status_dict: <%= ProjectRequirement::STATUS.to_json.html_safe %>,
             req_status_tag_type: { ongoing: 'success', finished: 'info', cancelled: 'info'},
+            call_rec_status_op: ['init', 'recommended', 'hold', 'unsuited', 'ok'],
             call_rec_status_dict: <%= CallRecord::REC_STATUS.to_json.html_safe %>,
-            call_rec_status_tag_type: { init: 'info', recommended: 'primary', hold: 'warning', unsuited: 'danger', ok: 'success' },
+            call_rec_status_tag_type: { init: 'info', recommended: 'primary', hold: 'warning', unsuited: 'danger', ok: 'success', succ: 'success', fail: 'danger' },
         },
         mounted: function(){
             this.$nextTick(function(){
@@ -294,9 +322,8 @@
                 let co_index = this.callOverview.find(c => c.id === call_record.id)
                 if (co_index !== -1) { this.callOverview.splice(co_index, 1, call_record) }
             },
-            update_priority (priority, req_id) {
+            update_req_priority (priority, req_id) {
                 let _this_ = this;
-                console.log('update priority req:', [req_id, priority])
                 $.post('/project_requirements/v_update', { id: req_id, priority: priority }, function (res) {
                     console.log('update priority res:', res)
                 })
@@ -319,8 +346,8 @@
                     _this_.user_options = data
                 })
             },
-            show_drawer (title, content) {
-                this.drawer = { title: title, content: content, visible: true }
+            show_drawer (project_requirement) {
+                this.drawer = { title: project_requirement.title, content: project_requirement.content, files: project_requirement.files, visible: true }
             },
             handlePageChange () {
                 this.load_projects()
@@ -328,52 +355,86 @@
             handleProjectNew () {
                 window.open('/projects/new', '_blank');
             },
-            handleNewReq (project_id, project_name) {
-                this.newReqFormVisible = true
-                if (this.newReqForm.project_id !== project_id) {
-                    this.newReqForm = { project_id: project_id, project_name: project_name, title: '', content: '',
-                                        category: '', demand_number: '', operator_id: '', fileList: [] }
+            handleReqNew (project_id) {
+                this.reqFormVisible = true
+                if (this.reqForm.project_id !== project_id) {
+                    this.reqForm = { project_id: project_id, title: '', content: '',
+                                     category: '', demand_number: '', operator_id: '', fileList: [] }
                     this.get_user_options(project_id)
                 }
             },
-            handleNewReqSubmit () {
+            handleReqEdit (project_requirement) {
+                this.reqFormVisible = true
+                let fileList = project_requirement.files.map(url => {
+                    return { name: url.split('/')[url.split('/').length - 1], url: url }
+                })
+                this.reqForm = { 
+                    id: project_requirement.id, title: project_requirement.title, content: project_requirement.content,
+                    category: project_requirement.category, demand_number: project_requirement.demand_number, 
+                    operator_id: project_requirement.operator_id, fileList: fileList
+                }
+                this.get_user_options(project_requirement.project_id)
+            },
+            handleReqSubmit () {
                 let _this_ = this;
                 let formData = new FormData();
-                formData.append('project_id', this.newReqForm.project_id)
-                formData.append('title', this.newReqForm.title)
-                formData.append('content', this.newReqForm.content)
-                formData.append('category', this.newReqForm.category)
-                formData.append('demand_number', this.newReqForm.demand_number)
-                formData.append('operator_id', this.newReqForm.operator_id)
-                file_count = this.newReqForm.fileList.length
-                for(let i in this.newReqForm.fileList) {
-                    if (i === 0) {
-                        formData.append('file', this.newReqForm.fileList[i])
+                formData.append('title', this.reqForm.title)
+                formData.append('content', this.reqForm.content)
+                formData.append('category', this.reqForm.category)
+                formData.append('demand_number', this.reqForm.demand_number)
+                formData.append('operator_id', this.reqForm.operator_id)
+                file_count = this.reqForm.fileList.length
+                for(let i in this.reqForm.fileList) {
+                    if (this.reqForm.fileList[i].url) continue
+                    if (i == 0) {
+                        formData.append('file', this.reqForm.fileList[i].raw)
                     } else {
-                        formData.append(`file${i}`, this.newReqForm.fileList[i])
+                        formData.append(`file${i}`, this.reqForm.fileList[i].raw)
                     }
                 }
-                $.ajax({
-                    type: 'POST',
-                    url: '/project_requirements/v_create',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res) {
-                        if (res.status === 0){
-                            let project = _this_.projects.find(p => p.id === _this_.newReqForm.project_id)
-                            project.project_requirements.unshift(res.data.project_requirement)
-                            _this_.newReqFormVisible = false;
-                            _this_.newReqForm = {}
-                            _this_.$message({ message: '提交成功', type: 'success' })
-                        }   else if (res.status === 1) {
-                            _this_.$message({ message: res.msg, type: 'error' })
+                if (this.reqForm.id) {
+                    formData.append('id', this.reqForm.id)
+                     $.ajax({
+                        type: 'POST',
+                        url: '/project_requirements/v_update',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(res) {
+                            if (res.status === 0){
+                                _this_.sync_project_requirement(res.data.project_requirement)
+                                _this_.reqFormVisible = false;
+                                _this_.reqForm = {}
+                                _this_.$message({ message: '提交成功', type: 'success' })
+                            }   else if (res.status === 1) {
+                                _this_.$message({ message: res.msg, type: 'error' })
+                            }
                         }
-                    }
-                })
+                    })
+                } else {
+                    formData.append('project_id', this.reqForm.project_id)
+                    $.ajax({
+                        type: 'POST',
+                        url: '/project_requirements/v_create',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(res) {
+                            if (res.status === 0){
+                                let project = _this_.projects.find(p => p.id === _this_.reqForm.project_id)
+                                project.project_requirements.unshift(res.data.project_requirement)
+                                _this_.reqFormVisible = false;
+                                _this_.reqForm = {}
+                                _this_.$message({ message: '提交成功', type: 'success' })
+                            }   else if (res.status === 1) {
+                                _this_.$message({ message: res.msg, type: 'error' })
+                            }
+                        }
+                    })
+                }
             },
-            handleNewReqFileChange (file, fileList) {
-                this.newReqForm.fileList = fileList
+            handleReqFileChange (file, fileList) {
+                this.reqForm.fileList = fileList
             },
             handleCallOverview (project_id, project_requirement_id) {
                 let call_records = []
@@ -412,6 +473,11 @@
         padding: 0 20px;
         font-size: 0.9rem;
         white-space: pre-line;
+        margin-bottom: 1rem;
+    }
+    .drawer-files {
+        padding: 0 20px;
+        font-size: 0.8rem;
     }
     .rec-description-cc {
         white-space: pre-line;

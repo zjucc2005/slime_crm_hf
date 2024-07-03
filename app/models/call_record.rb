@@ -11,12 +11,13 @@ class CallRecord < ApplicationRecord
     declined: '拒绝',
     accepted: '接受'
   }.stringify_keys
-  REC_STATUS = { init: '未推荐', recommended: '已推荐', hold: '客户确认中', unsuited: '不合适', ok: '可约访' }.stringify_keys
+  REC_STATUS = { init: '未推荐', recommended: '已推荐', hold: '客户确认中', unsuited: '不合适', ok: '可约访', succ: '约访成功', fail: '约访失败' }.stringify_keys
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by, :optional => true
   belongs_to :operator, :class_name => 'User', :foreign_key => :operator_id
   belongs_to :project, :class_name => 'Project', :optional => true
+  belongs_to :project_requirement, class_name: 'ProjectRequirement', optional: true
   belongs_to :candidate, :class_name => 'Candidate', :optional => true
 
   # Validations
@@ -57,7 +58,8 @@ class CallRecord < ApplicationRecord
     expose_fields(
       :id, :category, :name, :company, :department, :title, :phone,
       :number_of_calls, :status, :memo, :rec_status, :rec_description,
-      :created_by, :project_id, :project_requirement_id, :candidate_id,
+      :created_by, :project_id, :project_requirement_id, :project_task_id, :candidate_id,
+      creator: creator&.name_cn,
       created_at: created_at.strftime('%F %T'),
       updated_at: updated_at.strftime('%F %T')
     )

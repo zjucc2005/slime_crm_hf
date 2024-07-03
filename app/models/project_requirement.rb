@@ -47,7 +47,8 @@ class ProjectRequirement < ApplicationRecord
   end
 
   def to_api
-    expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority,
+    expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority, :project_id, :operator_id,
+      files: files.map(&:url),
       created_at: created_at.strftime('%F %T'),
       operator: operator&.name_cn,
       call_records: CallRecord.where(project_requirement_id: id).order(id: :desc).map(&:to_api)
@@ -55,7 +56,8 @@ class ProjectRequirement < ApplicationRecord
   end
 
   def to_api_dashboard
-    expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority, :project_id,
+    expose_fields(:id, :status, :category, :title, :content, :demand_number, :status, :priority, :project_id, :operator_id,
+      files: files.map(&:url),
       created_at: created_at.strftime('%F %T'),
       operator: operator&.name_cn,
       call_records: CallRecord.where(project_requirement_id: id).order(id: :desc).map(&:to_api),
