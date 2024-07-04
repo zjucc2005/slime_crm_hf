@@ -10,15 +10,15 @@
 </div>
 <div class="row">
     <div class="col-3 form-group">
-        <%= label_tag :project_id, mt(:project) %>
-        <%= f.select :project_id, project_options, { include_blank: default_prompt }, onchange: "loadProjectRequirements(this.value);", class: 'form-control select2' %>
+        <%= label_tag :project_id, mt(:project) %><span class="text-red">*</span>
+        <%= f.select :project_id, project_options, { include_blank: default_prompt }, onchange: "loadProjectRequirements(this.value);", class: 'form-control select2', required: true %>
     </div>
     <div class="col-9 form-group">
-        <%= label_tag :project_requirement_id, mt(:project_requirement) %>
+        <%= label_tag :project_requirement_id, mt(:project_requirement) %><span class="text-red">*</span>
         <% if @call_record.project_id.present? %>
-            <%= f.select :project_requirement_id, @call_record.project.project_requirements.order(id: :asc).map{|item| [item.title, item.id]}, { include_blank: default_prompt }, class: 'form-control select2' %>
+            <%= f.select :project_requirement_id, @call_record.project.project_requirements.order(id: :asc).map{|item| [item.title, item.id]}, { include_blank: default_prompt }, class: 'form-control select2', required: true %>
         <% else %>
-            <%= f.select :project_requirement_id, [], { include_blank: default_prompt }, class: 'form-control select2' %>
+            <%= f.select :project_requirement_id, [], { include_blank: default_prompt }, class: 'form-control select2', required: true %>
         <% end %>
     </div>
     <%= f.hidden_field :candidate_id %>

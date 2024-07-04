@@ -59,7 +59,7 @@ class CallRecord < ApplicationRecord
       :id, :category, :name, :company, :department, :title, :phone,
       :number_of_calls, :status, :memo, :rec_status, :rec_description,
       :created_by, :project_id, :project_requirement_id, :project_task_id, :candidate_id,
-      creator: creator&.name_cn,
+      operator: operator&.name_cn,
       created_at: created_at.strftime('%F %T'),
       updated_at: updated_at.strftime('%F %T')
     )

@@ -288,6 +288,29 @@ class CallRecordsController < ApplicationController
     end
   end
 
+  def v_create_batch
+    begin
+      @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
+      @call_records = []
+      ActiveRecord::Base.transaction do
+        params[:call_records].each do |k, item|
+          call_record = CallRecord.new(
+            created_by: current_user.id,
+            project_id: @project_requirement.project_id,
+            project_requirement_id: @project_requirement.id,
+            category: item[:category], name: item[:name], phone: item[:phone],
+            company: item[:company], department: item[:department], title: item[:title]
+          )
+          call_record.save!
+          @call_records << call_record
+        end
+      end
+      render json: { status: 0, data: { call_records:  @call_records.map(&:to_api) } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
   def v_update
     begin
       @call_record = CallRecord.find(params[:id])

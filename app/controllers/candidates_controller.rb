@@ -415,11 +415,13 @@ class CandidatesController < ApplicationController
         title: exp.try(:title), 
         category: @candidate.category
       )
-      # 查询candidate最近的通话记录
-      @latest_cr = @candidate.call_records.order(id: :desc).first
-      if @latest_cr && @latest_cr.project_id
+      # 查询操作员最近的通话记录
+      @latest_cr = CallRecord.where(operator_id: current_user.id).order(id: :desc).first
+      if @latest_cr
         @call_record.project_id = @latest_cr.project_id
+        @call_record.project_requirement_id = @latest_cr.project_requirement_id
       end
+
       @remote = params[:return_to].blank?
       @return_to = params[:return_to] || (@candidate.category == 'doctor' ? doctors_path : candidates_path)
       @modal_title = t('action.new_model', :model => t('activerecord.models.call_record'))

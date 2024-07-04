@@ -11,8 +11,11 @@
                 <div slot="header" class="card-header-cc">
                     <el-link :href="`/projects/${req.project_id}`" target="_blank" type="primary">{{ req.project_name }}</el-link>
                     <div>
-                        <el-button size="mini" type="primary" icon="el-icon-plus" @click="handleCallNew(req.id);">
+                        <el-button @click="handleCallNew(req.id);" size="mini" type="primary" icon="el-icon-plus">
                             新增通话记录
+                        </el-button>
+                        <el-button @click="handleCallBatchNew(req.id)" size="mini">
+                            批量新增
                         </el-button>
                     </div>
                 </div>
@@ -106,7 +109,7 @@
                                     <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">{{ call_rec_status_dict[scope.row.rec_status] }}</el-tag>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="creator" label="操作员"></el-table-column>
+                            <el-table-column prop="operator" label="操作员"></el-table-column>
                             <el-table-column prop="created_at" label="创建时间" width="90">
                                 <template slot-scope="scope">
                                     <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
@@ -183,7 +186,7 @@
             <el-form-item label="通话状态" prop="status" :rules="callFormRules.status">
                 <el-select v-model="callForm.status" placeholder="Please select">
                     <el-option v-for="(val, key) in call_status_dict" :key="key" :label="val" :value="key">
-                        <el-tag size="mini">{{ val }}</el-tag>
+                        <el-tag :type="call_status_tag_type[key]" size="mini">{{ val }}</el-tag>
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -191,6 +194,31 @@
         <span slot="footer" class="dialog-footer">
             <el-button size="small" @click="callFormVisible = false">取消</el-button>
             <el-button type="primary" size="small" @click="handleCallSubmit">确定</el-button>
+        </span>
+    </el-dialog>
+
+    <!---->
+    <el-dialog title="批量新增通话记录" :visible.sync="callBatchFormVisible">
+        <template v-if="callBatchStep == 1">
+            <el-input v-model="callBatchForm.raw" type="textarea" :rows="10" placeholder="请粘贴从Excel中复制的内容"></el-input>
+        </template>
+        <template v-if="callBatchStep == 2">
+            <el-radio-group v-model="callBatchForm.category">
+                <el-radio label="expert">专家</el-radio>
+                <el-radio label="doctor">医生</el-radio>
+            </el-radio-group>
+            <el-table :data="callBatchForm.call_records" size="mini" border stripe>
+                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="phone" label="电话"></el-table-column>
+                <el-table-column prop="company" label="公司/医院"></el-table-column>
+                <el-table-column prop="department" label="部门/科室"></el-table-column>
+                <el-table-column prop="title" label="职位"></el-table-column>
+            </el-table>
+        </template>
+        <span slot="footer" class="dialog-footer">
+            <el-button v-if="callBatchStep == 1 && callBatchForm.raw" @click="handleCallBatchPreview" type="primary" size="small">预览</el-button>
+            <el-button v-if="callBatchStep == 2" @click="handleCallBatchReset" size="small">重置</el-button>
+            <el-button v-if="callBatchStep == 2 && callBatchForm.call_records.length" @click="handleCallBatchSubmit" type="primary" size="small">确定</el-button>
         </span>
     </el-dialog>
 
@@ -381,6 +409,11 @@
                 status: [{ required: true, message: '通话状态不能为空'},]
             },
             callFormVisible: false,
+            callBatchForm: {
+                project_requirement_id: '',
+            },
+            callBatchFormVisible: false,
+            callBatchStep: 1,
             rukuCall: {},
             rukuForm: {},
             rukuFormRules: {
@@ -540,6 +573,63 @@
                             }
                         }
                     })
+                }
+            },
+            handleCallBatchNew (project_requirement_id) {
+                this.callBatchFormVisible = true
+                this.callBatchStep = 1
+                this.callBatchForm = { project_requirement_id: project_requirement_id, raw: '', category: '', call_records: [] }
+            },
+            handleCallBatchReset () {
+                this.callBatchStep = 1
+                this.callBatchForm.category = ''
+                this.callBatchForm.raw = ''
+                this.callBatchForm.call_records = []
+            },
+            handleCallBatchPreview () {
+                this.callBatchForm.raw.split("\n").map(l => {
+                    if (l && l.trim()) {
+                        let row = l.split("\t")
+                        this.callBatchForm.call_records.push({
+                            name: row[0], phone: row[1], company: row[2], department: row[3], title: row[4]
+                        })
+                    }
+                })
+                this.callBatchForm.category = 'expert'
+                this.callBatchStep = 2
+            },
+            handleCallBatchSubmit () {
+                try {
+                    let _this_ = this;
+                    let params = { project_requirement_id: this.callBatchForm.project_requirement_id, call_records: [] }
+                    this.callBatchForm.call_records.map(c => {
+                        if (!c.name) {
+                            throw new Error('姓名不能为空')
+                        }
+                        params.call_records.push({
+                            category: this.callBatchForm.category,
+                            name: c.name, phone: c.phone, company: c.company, department: c.department, title: c.title
+                        })
+                    })
+                    $.ajax({
+                        type: 'POST',
+                        url: '/call_records/v_create_batch',
+                        data: params,
+                        success: function(res) {
+                            if (res.status === 0){
+                                let req = _this_.project_requirements.find(req => req.id === _this_.callBatchForm.project_requirement_id)
+                                res.data.call_records.map(call_record => {
+                                    req.call_records.unshift(call_record) // 添加新增的通话记录实例到前面
+                                })
+                                _this_.callBatchFormVisible = false;
+                                _this_.$message({ message: '提交成功', type: 'success' })
+                            }   else if (res.status === 1) {
+                                _this_.$message({ message: res.msg, type: 'error' })
+                            }
+                        }
+                    })
+                } catch (err) {
+                    this.$message({ message: err, type: 'error' })
                 }
             },
             handleRuku (call_record) {
