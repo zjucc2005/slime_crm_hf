@@ -18,7 +18,7 @@
                     <th><%= mt(:project_requirement, :status) %></th>
                     <th><%= mt(:project_requirement, :created_by) %></th>
                     <th><%= mt(:project_requirement, :created_at) %></th>
-                    <th class="action"><%= t(:operation) %></th>
+                    <%# <th class="action"><%= t(:operation) %></th> %>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,11 +47,12 @@
                         <td><%= project_requirement_status_badge(instance.status) %></td>
                         <td><%= instance.creator.name_cn %></td>
                         <td class="text-nowrap"><%= instance.created_at.strftime('%F %H:%M') %></td>
+                        <!--
                         <td class="action">
                             <div class="btn-group">
                                 <%= link_to edit_project_requirement_path(instance), :class => 'btn btn-edit btn-xs' do %>
                                     <%= fa_icon_tag('edit') %> <%= t('action.edit') %>
-                                <% end if can?(:edit, ProjectRequirement) && @can_operate && instance.can_edit? %>
+                                <% end if false && can?(:edit, ProjectRequirement) && @can_operate && instance.can_edit? %>
                                 <%= link_to finish_project_requirement_path(instance), :method => :put, :class => 'btn btn-warning btn-xs',
                                             :data => { :confirm => t(:sure_to_finish)} do %>
                                     <%= fa_icon_tag('check') %> <%= t('action.finish') %>
@@ -62,6 +63,7 @@
                                 <% end if false && can?(:cancel, ProjectRequirement) && @can_operate && instance.can_edit? %>
                             </div>
                         </td>
+                        -->
                     </tr>
                 <% end %>
                 </tbody>
