@@ -3,8 +3,9 @@
     <el-tabs v-model="activeTab">
         <el-tab-pane v-for="req in project_requirements" :key="req.id" :label="req.title" :name="`req_${req.id}`">
             <div slot="label">
-                <div><i v-if="req.priority" class="el-icon-warning" style="color: #f56c6c;"></i> {{ req.project_name }}</div>
-                <div class="text-smaller text-gray">{{ req.title }}</div>
+                <div class="text-bold text-primary">{{ req.company_name_abbr }}</div>
+                <div class="text-smaller">{{ req.project_name }}</div>
+                <div class="text-smaller text-gray"><i v-if="req.priority" class="el-icon-warning" style="color: #f56c6c;"></i> {{ req.title }}</div>
             </div>
 
             <el-card class="box-card mb-1">
@@ -728,7 +729,7 @@
                 })
             },
             handleInterview (call_record) {
-                let new_url = `/projects/${call_record.project_id}/add_project_task?call_record_id=${call_record.id}`
+                let new_url = `/projects/${call_record.project_id}/add_project_task?call_record_id=${call_record.id}&expert_id=${call_record.candidate_id}`
                 let edit_url = `/project_tasks/${call_record.project_task_id}/edit`
                 window.open(call_record.project_task_id ? edit_url : new_url, '_blank')
             },
@@ -744,7 +745,7 @@
 
 <style>
     .el-tabs__item {
-        line-height: 30px;
+        line-height: 24px;
         padding: 0 20px !important;
         height: 100%;
         background-color: white;

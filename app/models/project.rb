@@ -189,6 +189,9 @@ class Project < ApplicationRecord
       company_name_abbr: company&.name_abbr,
       client_contact: main_client&.name,
       pm_name: pm_users.first&.name_cn,
+      total_charge_duration: total_charge_duration,
+      total_price: total_price,
+      premium_rate: premium_charge_duration_rate,
       project_requirements: project_requirements.order(priority: :desc, created_at: :desc).map(&:to_api),
     )
   end

@@ -7,7 +7,7 @@
         <div slot="header" class="header-cc">
             <el-link :href="`/projects/${project.id}`" target="_blank" type="primary">{{ project.name }}</el-link>
             <div>
-                <el-button @click="handleCallOverview(project.id)" size="mini" icon="el-icon-star-on">总览</el-button>
+                <el-button @click="handleCallOverview(project.id)" size="mini" icon="el-icon-star-on">推荐约访总览</el-button>
                 <el-button @click="handleReqNew(project.id);" size="mini" type="primary" icon="el-icon-plus">
                     新增需求
                 </el-button>
@@ -26,6 +26,9 @@
                                     {{ status_dict[project.status] }}
                                 </el-tag>
                         </el-descriptions-item>
+                        <el-descriptions-item label="总收费时长">{{ project.total_charge_duration }} 小时</el-descriptions-item>
+                        <el-descriptions-item label="Premium Rate">{{ project.premium_rate * 100 }} %</el-descriptions-item>
+                        <el-descriptions-item label="总费用">{{ project.total_price }}</el-descriptions-item>
                         <el-descriptions-item label="更新时间">{{ project.updated_at }}</el-descriptions-item>
                     </el-descriptions>
                 </el-col>
@@ -95,8 +98,9 @@
                                 </el-link>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作" width="60">
+                        <el-table-column label="操作" width="100">
                             <template slot-scope="scope">
+                                <el-button @click="handleCallShow(scope.row.call_records)" size="mini" icon="el-icon-phone" circle></el-button>
                                 <el-button @click="handleReqEdit(scope.row)" type="primary" size="mini" icon="el-icon-edit" circle title="编辑"></el-button>
                             </template>
                         </el-table-column>
@@ -167,6 +171,53 @@
         </span>
     </el-dialog>
 
+    <!-- 通话记录 table -->
+    <el-dialog title="通话记录" :visible.sync="callShowVisible"  width="80%">
+        <el-table :data="callShow" size="mini" border stripe>
+            <el-table-column prop="category" label="类型" width="72">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.category === 'doctor'" ><i class="fa fa-user-circle text-danger"></i> 医生</span>
+                    <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="name" label="姓名">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.candidate_id">
+                        <el-tag size="mini" plain>已入库</el-tag>
+                        <el-link :href="`/${scope.row.category === 'doctor' ? 'doctors' : 'candidates'}/${scope.row.candidate_id}`" target="_blank">{{ scope.row.name }}</el-link>
+                    </template>
+                    <template v-else>{{ scope.row.name }}</template>
+                </template>
+            </el-table-column>
+            <el-table-column prop="phone" label="电话"></el-table-column>
+            <el-table-column prop="company" label="公司/医院"></el-table-column>
+            <el-table-column prop="department" label="部门/科室"></el-table-column>
+            <el-table-column prop="title" label="职位"></el-table-column>
+            <el-table-column prop="memo" label="反馈"></el-table-column>
+            <el-table-column prop="status" label="通话状态">
+                <template slot-scope="scope">
+                    <el-tag :type="call_status_tag_type[scope.row.status]" size="mini">{{ call_status_dict[scope.row.status] }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="rec_status" label="推荐状态">
+                <template slot-scope="scope">
+                    <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">{{ call_rec_status_dict[scope.row.rec_status] }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="operator" label="操作员"></el-table-column>
+            <el-table-column prop="created_at" label="创建时间" width="90">
+                <template slot-scope="scope">
+                    <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
+                        <el-button size="mini" type="text">{{ scope.row.created_at.split(' ')[0] }}</el-button>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+        </el-table>
+        <span slot="footer">
+            <el-button size="small" @click="callOverviewVisible = false">取消</el-button>
+        </span>
+    </el-dialog>
+
     <!-- 总览 & 推荐更新 table -->
     <el-dialog :title="callOverviewTitle" :visible.sync="callOverviewVisible"  width="80%">
         <el-table :data="callOverview" size="mini" border stripe>
@@ -189,7 +240,7 @@
             <el-table-column prop="company" label="公司/医院"></el-table-column>
             <el-table-column prop="department" label="部门/科室"></el-table-column>
             <el-table-column prop="title" label="职位"></el-table-column>
-            <el-table-column prop="memo" label="备注"></el-table-column>
+            <el-table-column prop="memo" label="反馈"></el-table-column>
             <el-table-column prop="rec_description" label="推荐描述">
                 <template slot-scope="scope">
                     <el-button @click="handleRecDescription(scope.row.rec_description)" size="mini">查看</el-button>
@@ -199,9 +250,7 @@
                 <template slot-scope="scope">
                     <el-dropdown trigger="click">
                         <span>
-                            <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">
-                                {{ call_rec_status_dict[scope.row.rec_status] }}
-                            </el-tag>
+                            <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">{{ call_rec_status_dict[scope.row.rec_status] }}</el-tag>
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -271,7 +320,9 @@
                 ],
             },
             reqFormVisible: false,
-            callOverview: [],
+            callShow: [], // 通话记录展示
+            callShowVisible: false,
+            callOverview: [], // 推荐约访总览
             callOverviewTitle: '',
             callOverviewVisible: false,
             recDescription: '',
@@ -281,6 +332,8 @@
             status_dict: <%= Project::STATUS.to_json.html_safe %>,
             req_status_dict: <%= ProjectRequirement::STATUS.to_json.html_safe %>,
             req_status_tag_type: { ongoing: 'success', finished: 'info', cancelled: 'info'},
+            call_status_dict: <%= CallRecord::STATUS.to_json.html_safe %>,
+            call_status_tag_type: { pending: 'info', missed: 'warning', rejected: 'warning', shutdown: 'warning', talking: 'warning',declined: 'danger', accepted: 'success' },
             call_rec_status_op: ['init', 'recommended', 'hold', 'unsuited', 'ok'],
             call_rec_status_dict: <%= CallRecord::REC_STATUS.to_json.html_safe %>,
             call_rec_status_tag_type: { init: 'info', recommended: 'primary', hold: 'warning', unsuited: 'danger', ok: 'success', succ: 'success', fail: 'danger' },
@@ -435,6 +488,10 @@
             },
             handleReqFileChange (file, fileList) {
                 this.reqForm.fileList = fileList
+            },
+            handleCallShow (call_records) {
+                this.callShow = call_records
+                this.callShowVisible = true
             },
             handleCallOverview (project_id, project_requirement_id) {
                 let call_records = []

@@ -37,7 +37,8 @@ gem 'rubyXL', '~> 3.4', '>= 3.4.25'
 gem 'chinese_pinyin', '~> 1.0', '>= 1.0.2'
 gem 'cancancan', '~> 3.0', '>= 3.0.1'
 gem 'settingslogic', '~> 2.0', '>= 2.0.9'
-gem 'rmagick', '~> 4.2', '>= 4.2.6'
+# gem 'rmagick', '~> 4.2', '>= 4.2.6'
+gem 'rmagick', '5.1.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
