@@ -69,6 +69,15 @@ class ProjectRequirement < ApplicationRecord
     )
   end
 
+  def to_api_dashboard_index
+    expose_fields(
+      :id,  :title, :priority,
+      company_name_abbr: project&.company&.name_abbr,
+      project_name: project&.name,
+      created_at: created_at.strftime('%F %T'),
+    )
+  end
+
   private
   def setup
     self.status ||= 'ongoing'

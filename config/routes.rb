@@ -147,6 +147,7 @@ Rails.application.routes.draw do
 
     post :v_create, on: :collection
     post :v_update, on: :collection
+    get :v_show, on: :collection
   end
 
   resources :project_candidates do

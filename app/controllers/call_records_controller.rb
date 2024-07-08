@@ -299,7 +299,7 @@ class CallRecordsController < ApplicationController
             project_id: @project_requirement.project_id,
             project_requirement_id: @project_requirement.id,
             category: item[:category], name: item[:name], phone: item[:phone],
-            company: item[:company], department: item[:department], title: item[:title]
+            company: item[:company], department: item[:department], title: item[:title], memo: item[:memo]
           )
           call_record.save!
           @call_records << call_record

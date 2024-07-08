@@ -1,27 +1,31 @@
 <div id="app">
     <!-- 进展中的项目需求 -->
-    <el-tabs v-model="activeTab">
-        <el-tab-pane v-for="req in project_requirements" :key="req.id" :label="req.title" :name="`req_${req.id}`">
+    <el-tabs v-model="activeTab" @tab-click="load_project_requirement">
+        <el-tab-pane 
+            v-for="req in project_requirement_index"
+            :key="req.id" 
+            :label="req.title"
+            :name="`req_${req.id}`">
             <div slot="label">
                 <div class="text-bold text-primary">{{ req.company_name_abbr }}</div>
                 <div class="text-smaller">{{ req.project_name }}</div>
                 <div class="text-smaller text-gray"><i v-if="req.priority" class="el-icon-warning" style="color: #f56c6c;"></i> {{ req.title | truncate(15) }}</div>
             </div>
 
-            <el-card class="box-card mb-1">
+            <el-card v-if="project_requirement.id == req.id" class="box-card mb-1">
                 <div slot="header" class="card-header-cc">
-                    <el-link :href="`/projects/${req.project_id}`" target="_blank" type="primary">{{ req.project_name }}</el-link>
+                    <el-link :href="`/projects/${project_requirement.project_id}`" target="_blank" type="primary">{{ project_requirement.project_name }}</el-link>
                     <div>
-                        <el-button @click="handleCallNew(req.id);" size="mini" type="primary" icon="el-icon-plus">
+                        <el-button @click="handleCallNew(project_requirement.id);" size="mini" type="primary" icon="el-icon-plus">
                             新增通话记录
                         </el-button>
-                        <el-button @click="handleCallBatchNew(req.id)" size="mini">
+                        <el-button @click="handleCallBatchNew(project_requirement.id)" size="mini">
                             批量新增
                         </el-button>
                     </div>
                 </div>
                 <!-- 项目需求table -->
-                <el-table :data="[req]" size="mini" border class="mb-1">
+                <el-table :data="[project_requirement]" size="mini" border class="mb-1">
                     <el-table-column prop="company_name_abbr" label="公司简称"></el-table-column>
                     <el-table-column prop="project_name" label="项目名称" min-width="120"></el-table-column>
                     <el-table-column prop="project_code" label="项目编码"></el-table-column>
@@ -66,8 +70,8 @@
                 <!-- 通话记录table -->
                 <el-row :gutter="10">
                     <el-col :span="22" :offset="2">
-                        <el-tag effect="plain" size="mini" class="mb-1"><i class="el-icon-phone"></i> 通话记录 {{ req.call_records.length }}</el-tag>
-                        <el-table :data="req.call_records" size="mini" border stripe>
+                        <el-tag effect="plain" size="mini" class="mb-1"><i class="el-icon-phone"></i> 通话记录 {{ project_requirement.call_records.length }}</el-tag>
+                        <el-table :data="project_requirement.call_records" size="mini" border stripe>
                             <el-table-column prop="category" label="类型" width="72">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.category === 'doctor'" ><i class="fa fa-user-circle text-danger"></i> 医生</span>
@@ -214,6 +218,7 @@
                 <el-table-column prop="company" label="公司/医院"></el-table-column>
                 <el-table-column prop="department" label="部门/科室"></el-table-column>
                 <el-table-column prop="title" label="职位"></el-table-column>
+                <el-table-column prop="memo" label="反馈"></el-table-column>
             </el-table>
         </template>
         <span slot="footer" class="dialog-footer">
@@ -389,6 +394,8 @@
         el: '#app',
         data: {
             activeTab: '',
+            project_requirement_index: [],
+            project_requirement: {},
             project_requirements: [],
             search_form: {
                 page: 1,
@@ -445,22 +452,45 @@
         mounted: function(){
             this.$nextTick(function(){
                 console.log('mounted')
-                this.load_project_requirements()
+                this.load_project_requirement_index()
                 setInterval(() => {
-                    this.load_project_requirements()
+                    this.load_project_requirement_index()
+                }, 10000)
+                setInterval(() => {
+                    this.load_project_requirement()
                 }, 5000)
             }) 
         },
         methods: {
-            load_project_requirements () {
+            load_project_requirement_index () {
                 let _this_ = this;
                 $.get('/projects/v_pa_dashboard_data', this.search_form, function (res) {
-                    _this_.project_requirements = res.data.project_requirements
+                    _this_.project_requirement_index = res.data.project_requirements
                     if (_this_.activeTab === '0' || !_this_.activeTab) {
-                        _this_.activeTab = `req_${_this_.project_requirements[0]?.id}`
+                        _this_.activeTab = `req_${_this_.project_requirement_index[0]?.id}`
+                    }
+                    if (_this_.project_requirement_index.length && !_this_.project_requirement.id) {
+                        _this_.load_project_requirement()
                     }
                 })
             },
+            load_project_requirement () {
+                let _this_ = this;
+                let id = this.activeTab.split('_')[1]
+                console.log(`(re)load_project_requirement(${id})`)
+                $.get('/project_requirements/v_show', { id: id }, function(res) {
+                    _this_.project_requirement = res.data.project_requirement
+                })
+            },
+            //load_project_requirements () {
+            //    let _this_ = this;
+            //    $.get('/projects/v_pa_dashboard_data', this.search_form, function (res) {
+            //        _this_.project_requirements = res.data.project_requirements
+            //        if (_this_.activeTab === '0' || !_this_.activeTab) {
+            //            _this_.activeTab = `req_${_this_.project_requirements[0]?.id}`
+            //        }
+            //    })
+            //},
             load_match_candidates (call_record) {
                 let _this_ = this;
                 this.match_candidates = []
@@ -496,10 +526,12 @@
             },
             sync_call_record(call_record) {
                 // 通话记录更新后台数据后同步更新页面数据
-                this.project_requirements.map(req => {
-                    let index = req.call_records.findIndex(c => c.id === call_record.id)
-                    if (index !== -1) { req.call_records.splice(index, 1, call_record) }// 更新通话记录实例
-                })
+                // this.project_requirements.map(req => {
+                //     let index = req.call_records.findIndex(c => c.id === call_record.id)
+                //     if (index !== -1) { req.call_records.splice(index, 1, call_record) }// 更新通话记录实例
+                // })
+                let index = this.project_requirement.call_records.findIndex(c => c.id === call_record.id)
+                if (index !== -1) { this.project_requirement.call_records.splice(index, 1, call_record) }// 更新通话记录实例
             },
             update_call_status (status, id) {
                 let _this_ = this;
@@ -564,8 +596,9 @@
                         data: params,
                         success: function(res) {
                             if (res.status === 0){
-                                let req = _this_.project_requirements.find(req => req.id === _this_.callForm.project_requirement_id)
-                                req.call_records.unshift(res.data.call_record) // 添加新增的通话记录实例到前面
+                                // let req = _this_.project_requirements.find(req => req.id === _this_.callForm.project_requirement_id)
+                                // req.call_records.unshift(res.data.call_record)
+                                _this_.project_requirement.call_records.unshift(res.data.call_record) // 添加新增的通话记录实例到前面
                                 _this_.callFormVisible = false;
                                 _this_.callForm = {}
                                 _this_.$message({ message: '提交成功', type: 'success' })
@@ -592,7 +625,7 @@
                     if (l && l.trim()) {
                         let row = l.split("\t")
                         this.callBatchForm.call_records.push({
-                            name: row[0], phone: row[1], company: row[2], department: row[3], title: row[4]
+                            name: row[0], phone: row[1], company: row[2], department: row[3], title: row[4], memo: row[5]
                         })
                     }
                 })
@@ -618,9 +651,9 @@
                         data: params,
                         success: function(res) {
                             if (res.status === 0){
-                                let req = _this_.project_requirements.find(req => req.id === _this_.callBatchForm.project_requirement_id)
+                                // let req = _this_.project_requirements.find(req => req.id === _this_.callBatchForm.project_requirement_id)
                                 res.data.call_records.map(call_record => {
-                                    req.call_records.unshift(call_record) // 添加新增的通话记录实例到前面
+                                    _this_.project_requirement.call_records.unshift(call_record) // 添加新增的通话记录实例到前面
                                 })
                                 _this_.callBatchFormVisible = false;
                                 _this_.$message({ message: '提交成功', type: 'success' })

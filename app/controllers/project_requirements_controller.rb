@@ -144,6 +144,15 @@ class ProjectRequirementsController < ApplicationController
       render json: { status: 1, msg: e.message }
     end
   end
+
+  def v_show
+    begin
+      @project_requirement = ProjectRequirement.find(params[:id])
+      render json: { status: 0, data: { project_requirement: @project_requirement.to_api_dashboard } }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
   # == Vue actions end ==
 
   private
