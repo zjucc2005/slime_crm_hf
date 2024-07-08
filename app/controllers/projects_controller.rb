@@ -492,11 +492,23 @@ class ProjectsController < ApplicationController
       page = Integer(params[:page]) rescue 1
       per_page = Integer(params[:per_page]) rescue 10
       query = current_user.projects.where(status: %w[initialized ongoing])
+      rec_count = query.joins(:call_records).where('call_records.rec_status': 'recommended').count
+
+      %w[name code].each do |field|
+        query = query.where("projects.#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
+      end
+      if params[:company_name_abbr].present?
+        query = query.joins(:company).where('companies.name ILIKE :company OR companies.name_abbr ILIKE :company', { company: "%#{params[:company_name_abbr].strip}%" })
+      end
+      if [true, 'true', 1, '1'].include?(params[:is_rec])
+        query = query.joins(:call_records).where('call_records.rec_status': 'recommended')
+      end
       @projects = query.order(id: :desc).paginate(page: page, per_page: per_page)
       render json: { 
         status: 0, 
         data: { 
           projects: @projects.map(&:to_api_dashboard),
+          rec_count: rec_count,
           total: query.count, page: page, per_page: per_page
         }
       }

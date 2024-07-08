@@ -34,7 +34,7 @@
                     <el-table-column prop="category" label="需求类型"></el-table-column>
                     <el-table-column prop="demand_number" label="需求人数/推荐/已约">
                         <template slot-scope="scope">
-                            {{ scope.row.demand_number }} /
+                            {{ scope.row.demand_number || '-' }} /
                             {{ scope.row.call_records.filter(c => c.rec_status !== 'init').length }} /
                             {{ scope.row.call_records.filter(c => c.rec_status === 'succ').length }}
                         </template>

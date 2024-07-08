@@ -1,6 +1,30 @@
 <div id="app">
-    <el-card class="box-card mb-1">
+    <el-card class="box-card top-bar-cc mb-1">
         <el-button @click="handleProjectNew" type="primary" size="medium" icon="el-icon-plus">新增项目</el-button>
+        <div>
+            <el-badge :value="rec_count" class="mr-3">
+                <el-button
+                    @click="handleSearchRec"
+                    :type="search_form.is_rec ? 'danger' : ''"
+                    :icon="search_form.is_rec ? 'el-icon-check' : ''"
+                    size="medium" plain>
+                    只看推荐
+                </el-button>
+            </el-badge>
+            
+            <%# <el-button  @click="handleSearchRec" type="danger" size="medium" icon="el-icon-star-on">
+                + {{ rec_count }}
+            </el-button> %>
+            <el-input v-model="search_form._v" placeholder="请输入内容" size="medium" style="width: 640px;" clearable class="input-with-select">
+                <el-select v-model="search_form._k" slot="prepend" placeholder="请选择" style="width: 160px;">
+                    <el-option value="name" label="项目名称"></el-option>
+                    <el-option value="code" label="项目编码"></el-option>
+                    <el-option value="company_name_abbr" label="公司简称"></el-option>
+                </el-select>
+            </el-input>
+            <el-button @click="handleSearch" type="primary" size="medium" icon="el-icon-search">搜索</el-button>
+            <el-button @click="handleSearchReset" size="medium" icon="el-icon-refresh" title="重置">重置</el-button>
+        </div>
     </el-card>
     <!-- 进展中的项目 -->
     <el-card v-for="project in projects" :key="project.id" class="box-card mb-1">
@@ -290,10 +314,14 @@
         el: '#app',
         data: {
             projects: [],
+            rec_count: 0, // 推荐数量
             search_form: {
                 page: 1,
                 per_page: 10,
-                total: 0
+                total: 0,
+                _k: 'name',
+                _v: '',
+                is_rec: false,
             },
             reqForm: {
                 project_id: '',
@@ -350,9 +378,17 @@
         methods: {
             load_projects () {
                 let _this_ = this;
-                // console.log('load dashboard data req:', this.search_form)
-                $.get('/projects/v_pm_dashboard_data', this.search_form, function (res) {
+                let params = { 
+                    page: this.search_form.page,
+                    per_page: this.search_form.per_page,
+                    is_rec: this.search_form.is_rec
+                }
+                if (this.search_form._k && this.search_form._v) {
+                    params[this.search_form._k] = this.search_form._v
+                }
+                $.get('/projects/v_pm_dashboard_data', params, function (res) {
                     _this_.projects = res.data.projects
+                    _this_.rec_count = res.data.rec_count
                     _this_.search_form.total = res.data.total
                 })
             },
@@ -401,6 +437,22 @@
             },
             show_drawer (project_requirement) {
                 this.drawer = { title: project_requirement.title, content: project_requirement.content, files: project_requirement.files, visible: true }
+            },
+            handleSearch () {
+                this.search_form.page = 1
+                this.load_projects()
+            },
+            handleSearchRec () {
+                this.search_form.page = 1
+                this.search_form.is_rec = !this.search_form.is_rec
+                this.load_projects()
+            },
+            handleSearchReset () {
+                this.search_form.page = 1
+                this.search_form._k = 'name'
+                this.search_form._v = ''
+                this.search_form.is_rec = false
+                this.load_projects()
             },
             handlePageChange () {
                 this.load_projects()
@@ -519,6 +571,10 @@
 </script>
 
 <style>
+    .top-bar-cc>.el-card__body {
+        display: flex;
+        justify-content: space-between;
+    }
     .header-cc {
         display: flex;
         justify-content: space-between;
