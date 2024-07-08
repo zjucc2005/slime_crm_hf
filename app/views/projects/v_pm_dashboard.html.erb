@@ -2,7 +2,7 @@
     <el-card class="box-card top-bar-cc mb-1">
         <el-button @click="handleProjectNew" type="primary" size="medium" icon="el-icon-plus">新增项目</el-button>
         <div>
-            <el-badge :value="rec_count" class="mr-3">
+            <el-badge :value="rec_count" :hidden="rec_count == 0" class="mr-3">
                 <el-button
                     @click="handleSearchRec"
                     :type="search_form.is_rec ? 'danger' : ''"
