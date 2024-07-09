@@ -501,7 +501,7 @@ class ProjectsController < ApplicationController
         query = query.joins(:company).where('companies.name ILIKE :company OR companies.name_abbr ILIKE :company', { company: "%#{params[:company_name_abbr].strip}%" })
       end
       if [true, 'true', 1, '1'].include?(params[:is_rec])
-        query = query.joins(:call_records).where('call_records.rec_status': 'recommended')
+        query = query.joins(:call_records).where('call_records.rec_status': 'recommended').distinct
       end
       @projects = query.order(id: :desc).paginate(page: page, per_page: per_page)
       render json: { 

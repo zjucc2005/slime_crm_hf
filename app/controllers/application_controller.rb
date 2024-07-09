@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   private
   def current_user
-    if super.su? && super.title.present?
+    if super&.su? && super.title.present?
       User.find_by(id: super.title) || super  # 账号模拟
     else
       super
