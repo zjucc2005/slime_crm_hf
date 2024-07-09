@@ -455,10 +455,10 @@
                 this.load_project_requirement_index()
                 setInterval(() => {
                     this.load_project_requirement_index()
-                }, 10000)
+                }, 15000)
                 setInterval(() => {
                     this.load_project_requirement()
-                }, 5000)
+                }, 6000)
             }) 
         },
         methods: {
@@ -466,8 +466,10 @@
                 let _this_ = this;
                 $.get('/projects/v_pa_dashboard_data', this.search_form, function (res) {
                     _this_.project_requirement_index = res.data.project_requirements
-                    if (_this_.activeTab === '0' || !_this_.activeTab) {
-                        _this_.activeTab = `req_${_this_.project_requirement_index[0]?.id}`
+                    if (!_this_.activeTab || !_this_.activeTab.startsWith('req_') ) {
+                        if (_this_.project_requirement_index[0]?.id) {
+                            _this_.activeTab = `req_${_this_.project_requirement_index[0]?.id}`
+                        }
                     }
                     if (_this_.project_requirement_index.length && !_this_.project_requirement.id) {
                         _this_.load_project_requirement()
@@ -477,20 +479,13 @@
             load_project_requirement () {
                 let _this_ = this;
                 let id = this.activeTab.split('_')[1]
-                console.log(`(re)load_project_requirement(${id})`)
-                $.get('/project_requirements/v_show', { id: id }, function(res) {
-                    _this_.project_requirement = res.data.project_requirement
-                })
+                if (id && id != 'undefined') {
+                    console.log(`(re)load_project_requirement(${id})`)
+                    $.get('/project_requirements/v_show', { id: id }, function(res) {
+                        _this_.project_requirement = res.data.project_requirement
+                    })
+                }
             },
-            //load_project_requirements () {
-            //    let _this_ = this;
-            //    $.get('/projects/v_pa_dashboard_data', this.search_form, function (res) {
-            //        _this_.project_requirements = res.data.project_requirements
-            //        if (_this_.activeTab === '0' || !_this_.activeTab) {
-            //            _this_.activeTab = `req_${_this_.project_requirements[0]?.id}`
-            //        }
-            //    })
-            //},
             load_match_candidates (call_record) {
                 let _this_ = this;
                 this.match_candidates = []

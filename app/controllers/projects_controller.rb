@@ -478,20 +478,21 @@ class ProjectsController < ApplicationController
     respond_to { |f| f.js }
   end
 
-  def v_dashboard; end
-  def v_dashboard_data
-    begin
-      render json: { status: 0, data: { projects: dashboard_projects.map(&:to_api_dashboard) } }
-    rescue => e
-      render json: { status: 1, msg: e.message }
-    end
-  end
+  # def v_dashboard; end
+  # def v_dashboard_data
+  #   begin
+  #     render json: { status: 0, data: { projects: dashboard_projects.map(&:to_api_dashboard) } }
+  #   rescue => e
+  #     render json: { status: 1, msg: e.message }
+  #   end
+  # end
 
   def v_pm_dashboard_data
     begin
       page = Integer(params[:page]) rescue 1
       per_page = Integer(params[:per_page]) rescue 10
-      query = current_user.projects.where(status: %w[initialized ongoing])
+      query = current_user.admin? ? Project.all : current_user.projects
+      query = query.where(status: %w[initialized ongoing])
       rec_count = query.joins(:call_records).where('call_records.rec_status': 'recommended').count
 
       %w[name code].each do |field|
@@ -526,16 +527,6 @@ class ProjectsController < ApplicationController
       render json: { status: 1, msg: e.message }
     end
   end
-
-  # def v_dashboard_update_priority
-  #   begin
-  #     @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
-  #     @project_requirement.update!(priority: params[:priority])
-  #     render json: { status: 0, data: { projects: dashboard_projects.map(&:to_api_dashboard) } }
-  #   rescue => e
-  #     render json: { status: 1, msg: e.message }
-  #   end
-  # end
 
   private
   def load_project

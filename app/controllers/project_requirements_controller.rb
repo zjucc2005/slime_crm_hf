@@ -147,7 +147,8 @@ class ProjectRequirementsController < ApplicationController
 
   def v_show
     begin
-      @project_requirement = ProjectRequirement.find(params[:id])
+      @project_requirement = ProjectRequirement.find_by(id: params[:id])
+      raise "project_requirement not found with id #{params[:id]}" if @project_requirement.nil?
       render json: { status: 0, data: { project_requirement: @project_requirement.to_api_dashboard } }
     rescue => e
       render json: { status: 1, msg: e.message }

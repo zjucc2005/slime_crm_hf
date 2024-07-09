@@ -125,9 +125,8 @@ Rails.application.routes.draw do
     get :work_board, on: :collection
     get :load_project_requirements, on: :collection
 
-    get :v_dashboard, on: :collection
-    get :v_dashboard_data, on: :collection
-    # post :v_dashboard_update_priority, on: :collection
+    # get :v_dashboard, on: :collection
+    # get :v_dashboard_data, on: :collection
 
     get :v_pm_dashboard, on: :collection
     get :v_pm_dashboard_data, on: :collection

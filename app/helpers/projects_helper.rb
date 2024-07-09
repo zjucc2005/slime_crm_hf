@@ -6,7 +6,7 @@ module ProjectsHelper
               else current_user.admin? ? Project.all : current_user.projects
             end
     query = user_channel_filter(query)
-    query.where(status: %w[ongoing]).order(:updated_at => :desc).map{|p| [p.project_option_friendly, p.id]}
+    query.where(status: %w[initialized ongoing]).order(:updated_at => :desc).map{|p| [p.project_option_friendly, p.id]}
   end
 
   # project status display style

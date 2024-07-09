@@ -11,10 +11,6 @@
                     只看推荐
                 </el-button>
             </el-badge>
-            
-            <%# <el-button  @click="handleSearchRec" type="danger" size="medium" icon="el-icon-star-on">
-                + {{ rec_count }}
-            </el-button> %>
             <el-input v-model="search_form._v" placeholder="请输入内容" size="medium" style="width: 640px;" clearable class="input-with-select">
                 <el-select v-model="search_form._k" slot="prepend" placeholder="请选择" style="width: 160px;">
                     <el-option value="name" label="项目名称"></el-option>
@@ -368,7 +364,7 @@
         },
         mounted: function(){
             this.$nextTick(function(){
-                console.log('mounted')
+                console.log('v_pm_dashboard mounted')
                 this.load_projects()
                 setInterval(() => {
                     this.load_projects()
