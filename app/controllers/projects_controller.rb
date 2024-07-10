@@ -521,7 +521,8 @@ class ProjectsController < ApplicationController
   def v_pa_dashboard_data
     begin
       query = ProjectRequirement.where(status: 'ongoing', operator_id: current_user.id)
-      @project_requirements = query.order(priority: :desc, id: :asc)
+      ordering = params[:ordering] == 'asc' ? :asc : :desc
+      @project_requirements = query.order(priority: :desc, id: ordering)
       render json: { status: 0, data: { project_requirements: @project_requirements.map(&:to_api_dashboard_index) } }
     rescue => e
       render json: { status: 1, msg: e.message }
