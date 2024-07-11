@@ -7,7 +7,7 @@
     </div>
     <div class="col-12 col-md-6 form-group">
         <%= f.label :operator %><span class="text-red">*</span>
-        <%= f.select :operator_id, [], { prompt: default_prompt }, required: true, class: 'form-control select2' %>
+        <%= f.select :operator_id, [], {}, required: true, class: 'form-control select2' %>
     </div>
     <div class="col-12 form-group">
         <%= f.label :title %><span class="text-red">*</span>
@@ -42,7 +42,7 @@
     function load_operator_id(project_id){
         console.log('load_operator_id(' + project_id +')');
         var ele = $('#project_requirement_operator_id');
-        var opt = ['<option><%= default_prompt %></option>'];
+        var opt = [];
         $.ajax({
             type: 'GET',
             url: '/projects/' + project_id + '/user_options',

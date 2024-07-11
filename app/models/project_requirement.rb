@@ -10,7 +10,7 @@ class ProjectRequirement < ApplicationRecord
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by
-  belongs_to :operator, :class_name => 'User', :optional => true
+  belongs_to :operator, :class_name => 'User' # :optional => true
   belongs_to :project, :class_name => 'Project'
 
   # Validations
