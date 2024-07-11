@@ -21,12 +21,27 @@
                 <div slot="header" class="card-header-cc">
                     <el-link :href="`/projects/${project_requirement.project_id}`" target="_blank" type="primary">{{ project_requirement.project_name }}</el-link>
                     <div>
-                        <el-button @click="handleCallNew(project_requirement.id);" size="mini" type="primary" icon="el-icon-plus">
+                        <el-button @click="handleCallNew(project_requirement.id);" type="primary" size="mini" icon="el-icon-plus">
                             新增通话记录
                         </el-button>
-                        <el-button @click="handleCallBatchNew(project_requirement.id)" size="mini">
+                        <el-button @click="handleCallBatchNew(project_requirement.id)" size="mini" icon="el-icon-copy-document">
                             批量新增
                         </el-button>
+                        <el-popconfirm
+                            v-if="project_requirement.call_records.length"
+                            @confirm="handleCallExport"
+                            confirm-button-text="确认"
+                            confirm-button-type="primary"
+                            cancel-button-text="取消"
+                            icon="el-icon-info"
+                            icon-color="red"
+                            title="确认导出通话记录吗"
+                            style="margin-left: 8px;"
+                        >
+                            <el-button slot="reference" type="warning" size="mini" icon="el-icon-download">
+                                导出通话记录
+                            </el-button>
+                        </el-popconfirm>
                     </div>
                 </div>
                 <!-- 项目需求table -->
@@ -666,6 +681,17 @@
                 } catch (err) {
                     this.$message({ message: err, type: 'error' })
                 }
+            },
+            handleCallExport () {
+                let header = ['姓名', '公司/医院', '部门/科室', '职位', '反馈'];
+                let order = ['name', 'company', 'department', 'title', 'memo'];
+                let dataList = [];
+                this.project_requirement.call_records.forEach(item => {
+                  let dataUnit = order.map(key => item[key]);
+                  dataList.push(dataUnit);
+                })
+                let filename = `通话记录_${this.project_requirement.project_id}_${this.project_requirement.id}`
+                exportDataAsExcel(header, dataList, filename)
             },
             handleRuku (call_record) {
                 this.load_match_candidates(call_record)
