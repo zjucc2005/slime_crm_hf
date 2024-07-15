@@ -2,8 +2,9 @@
 class ProjectUser < ApplicationRecord
   # ENUM
   CATEGORY = {
-      :pm => '项目经理',
-      :pa => '项目助理'
+    admin: '管理员',
+    pm: '项目经理',
+    pa: '项目助理'
   }.stringify_keys
 
   # Associations

@@ -51,14 +51,14 @@ class Project < ApplicationRecord
   # 和 users.pm / users.pa 有区别， 只读
   def pm_users
     User.joins(:project_users).where(
-        :'project_users.project_id' => self.id,
-        :'project_users.category' => 'pm')
+        'project_users.project_id': self.id,
+        'project_users.category': %w[admin pm])
   end
 
   def pa_users
     User.joins(:project_users).where(
-        :'project_users.project_id' => self.id,
-        :'project_users.category'   => 'pa')
+        'project_users.project_id': self.id,
+        'project_users.category': 'pa')
   end
 
   def can_edit?
