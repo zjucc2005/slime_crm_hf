@@ -148,7 +148,7 @@ class ProjectsController < ApplicationController
 
       ActiveRecord::Base.transaction do
         # add pm
-        pm_users = User.where(id: params[:uids], role: 'pm')
+        pm_users = User.where(id: params[:uids], role: %w[admin pm])
         pa_users = User.where(id: params[:uids], role: 'pa')
         pm_users.each do |user|
           @project.project_users.find_or_create_by!(category: user.role, user_id: user.id)

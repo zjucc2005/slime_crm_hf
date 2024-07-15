@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     %w[id role status user_channel_id].each do |field|
       query = query.where(field.to_sym => params[field]) if params[field].present?
     end
-    @users = query.order(:created_at => :asc).paginate(:page => params[:page], :per_page => 20)
+    @users = query.order(status: :asc, id: :asc).paginate(page: params[:page], per_page: 20)
   end
 
   # GET /users/:id
