@@ -389,20 +389,30 @@
                     _this_.search_form.total = res.data.total
                 })
             },
-            sync_project_requirement (project_requirement) {
+            sync_project_requirement (project_requirement, update_attrs=[]) {
                 // 项目需求更新后台数据后同步更新页面数据
                 this.projects.map(p => {
-                    let index = p.project_requirements.findIndex(req => req.id === project_requirement.id)
-                    if (index !== -1) { p.project_requirements.splice(index, 1, project_requirement) }
+                    if (update_attrs.length) {
+                        let cur_req = p.project_requirements.find(req => req.id == project_requirement.id)
+                        if (cur_req) update_attrs.map(attr => cur_req[attr] = project_requirement[attr] )
+                    } else {
+                        let index = p.project_requirements.findIndex(req => req.id === project_requirement.id)
+                        if (index !== -1) { p.project_requirements.splice(index, 1, project_requirement) }
+                    }
                 })
             },
-            sync_call_record (call_record) {
+            sync_call_record (call_record, update_attrs=[]) {
                 let _this_ = this
                 this.projects.map(p => {
                     let req = p.project_requirements.find(req => req.id === call_record.project_requirement_id)
                     if (req) {
-                        let index = req.call_records.findIndex(c => c.id === call_record.id)
-                        if (index !== -1) { req.call_records.splice(index, 1, call_record) }
+                        if (update_attrs.length) {
+                            let cur_call_record = req.call_records.find(c => c.id == call_record.id)
+                            update_attrs.map(attr => cur_call_record[attr] = call_record[attr])
+                        } else {
+                            let index = req.call_records.findIndex(c => c.id == call_record.id)
+                            if (index !== -1) { req.call_records.splice(index, 1, call_record) }
+                        }
                     }
                 })
                 let co_index = this.callOverview.find(c => c.id === call_record.id)
@@ -417,13 +427,13 @@
             update_req_status (status, req_id) {
                 let _this_ = this;
                 $.post('/project_requirements/v_update', { id: req_id, status: status }, function (res) {
-                    _this_.sync_project_requirement(res.data.project_requirement)
+                    _this_.sync_project_requirement(res.data.project_requirement, ['status'])
                 })
             },
             update_call_rec_status (rec_status, call_record_id) {
                 let _this_ = this;
                 $.post('/call_records/v_update', { id: call_record_id, rec_status: rec_status }, function (res) {
-                    _this_.sync_call_record(res.data.call_record)
+                    _this_.sync_call_record(res.data.call_record, ['rec_status'])
                 })
             },
             get_user_options (project_id) {

@@ -222,7 +222,7 @@
         </span>
     </el-dialog>
 
-    <!---->
+    <!-- 批量新增通话记录form -->
     <el-dialog title="批量新增通话记录" :visible.sync="callBatchFormVisible">
         <template v-if="callBatchStep == 1">
             <el-input v-model="callBatchForm.raw" type="textarea" :rows="10" placeholder="请粘贴从Excel中复制的内容"></el-input>
@@ -540,19 +540,19 @@
                     _this_.card_templates = res.data.card_templates
                 })
             },
-            sync_call_record(call_record) {
-                // 通话记录更新后台数据后同步更新页面数据
-                // this.project_requirements.map(req => {
-                //     let index = req.call_records.findIndex(c => c.id === call_record.id)
-                //     if (index !== -1) { req.call_records.splice(index, 1, call_record) }// 更新通话记录实例
-                // })
-                let index = this.project_requirement.call_records.findIndex(c => c.id === call_record.id)
-                if (index !== -1) { this.project_requirement.call_records.splice(index, 1, call_record) }// 更新通话记录实例
+            sync_call_record(call_record, update_attrs=[]) {
+                if (update_attrs.length) {
+                    let cur_call_record = this.project_requirement.call_records.find(c => c.id == call_record.id)
+                    update_attrs.map(attr => cur_call_record[attr] = call_record[attr]) // 更新指定字段
+                } else {
+                    let index = this.project_requirement.call_records.findIndex(c => c.id === call_record.id)
+                    if (index !== -1) { this.project_requirement.call_records.splice(index, 1, call_record) }// 更新通话记录实例
+                }
             },
             update_call_status (status, id) {
                 let _this_ = this;
                 $.post('/call_records/v_update', { id: id, status: status }, function (res) {
-                    _this_.sync_call_record(res.data.call_record)
+                    _this_.sync_call_record(res.data.call_record, ['status'])
                 })
             },
             handleHospitalChange (value) {
