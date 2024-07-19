@@ -4,7 +4,6 @@ class ProjectRequirement < ApplicationRecord
   STATUS = {
     :ongoing     => '进展中',
     :finished    => '已完成',
-    # :unfinished  => '未完成',
     :cancelled   => '已取消'
   }.stringify_keys
 
@@ -12,6 +11,7 @@ class ProjectRequirement < ApplicationRecord
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by
   belongs_to :operator, :class_name => 'User' # :optional => true
   belongs_to :project, :class_name => 'Project'
+  has_many :call_records, class_name: 'CallRecord'
 
   # Validations
   validates_inclusion_of :status, :in => STATUS.keys
@@ -60,7 +60,7 @@ class ProjectRequirement < ApplicationRecord
       files: files.map(&:url),
       created_at: created_at.strftime('%F %T'),
       operator: operator&.name_cn,
-      call_records: CallRecord.where(project_requirement_id: id).order(id: :desc).map(&:to_api),
+      call_records: call_records.order(id: :desc).map(&:to_api),
       company_name_abbr: project&.company&.name_abbr,
       project_name: project&.name,
       project_code: project&.code,

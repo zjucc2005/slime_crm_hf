@@ -38,7 +38,8 @@ class ProjectTaskCost < ApplicationRecord
   end
 
   def self.cost_monthly(category, expert_id, t=Time.now)
-    start_time = t.beginning_of_month
+    cur_month = t.beginning_of_month
+    start_time = t.day > 15 ? cur_month + 15.days : cur_month - 1.month + 15.days
     project_task_costs = self.joins(:project_task).
       where('project_task_costs.category': category).
       where('project_tasks.expert_id': expert_id, 'project_tasks.status': 'finished').
