@@ -44,13 +44,8 @@ Rails.application.routes.draw do
 
     get :add_experience, on: :collection
     get :show_phone,     on: :member      # show candidate phone.js
-    # get :card_template,  on: :collection
     get :gen_card,       on: :collection
     get :expert_template,on: :collection
-
-    # post :create_client, on: :collection
-    # get :edit_client,    on: :member
-    # put :update_client,  on: :member
 
     get :import_expert,  on: :collection  # show importing result
     post :import_expert, on: :collection  # import experts with excel
@@ -70,6 +65,8 @@ Rails.application.routes.draw do
     get :new_call_record, on: :member
     get :yibao, on: :collection
     get :load_work_experiences_for_project_task, on: :member
+
+    get :v_index, on: :collection
   end
 
   resources :candidate_payment_infos

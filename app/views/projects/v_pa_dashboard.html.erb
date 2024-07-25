@@ -176,7 +176,7 @@
         <div class="drawer-content">{{ drawer.content }}</div>
         <div class="drawer-files">
             <div v-for="(url, index) in drawer.files" :key="index">
-                {{ `附件${index + 1}:` }} <el-link :href="url" type="primary" target="_blank">{{ url.split('/')[url.split('/').length - 1] }}</el-link>
+                {{ `附件${index + 1}:` }} <el-link :href="url" type="primary" target="_blank">{{ url | url_basename }}</el-link>
             </div>
         </div>
     </el-drawer>

@@ -205,12 +205,6 @@ class CandidatesController < ApplicationController
     respond_to{|f| f.js }
   end
 
-  # GET /candidates/card_template
-  # def card_template
-  #   @candidates = Candidate.where(id: params[:uids])
-  #   @card_template_options = CardTemplate.where(category: 'Candidate').order(:created_at => :desc).pluck(:name, :id)
-  # end
-
   # GET /candidates/gen_card
   def gen_card
     @card_template = CardTemplate.find(params[:card_template_id])
@@ -233,49 +227,6 @@ class CandidatesController < ApplicationController
     else raise 'params error'
     end
   end
-
-  # POST /candidates/create_client
-  # def create_client
-  #   begin
-  #     @company = Company.find(params[:candidate][:company_id])
-  #     @client = @company.candidates.client.new(
-  #         candidate_params.merge({created_by: current_user.id, user_channel_id: current_user.user_channel_id, cpt: 0})
-  #     )
-  #     if @client.save
-  #       flash[:success] = t(:operation_succeeded)
-  #       redirect_with_return_to company_path(@company)
-  #     else
-  #       render 'companies/new_client'
-  #     end
-  #   rescue Exception => e
-  #     flash[:error] = e.message
-  #     redirect_to root_path
-  #   end
-  # end
-
-  # GET /candidates/:id/edit_client
-  # def edit_client
-  #   load_client
-  #   @company = @client.company
-  # end
-
-  # PUT /candidates/:id/update_client
-  # def update_client
-  #   begin
-  #     load_client
-  #     @company = @client.company
-  #
-  #     if @client.update(candidate_params)
-  #       flash[:success] = t(:operation_succeeded)
-  #       redirect_with_return_to company_path(@company)
-  #     else
-  #       render :edit_client
-  #     end
-  #   rescue Exception => e
-  #     flash.now[:error] = e.message
-  #     render :edit_client
-  #   end
-  # end
 
   # POST /candidates/import_expert
   def import_expert
@@ -458,6 +409,10 @@ class CandidatesController < ApplicationController
     @work_experiences_options = '<option value>Please select</option>'
     @work_experiences_options += @candidate.work_experiences.map { |exp| "<option value=\"#{exp.id}\">#{exp.org_cn}</option>" }.join
     respond_to { |f| f.js }
+  end
+
+  def v_index
+    
   end
 
   private

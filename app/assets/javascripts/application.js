@@ -11,13 +11,20 @@
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 Vue.filter('truncate', function(val, length) {
-    if (!val) return ''
-    val = val.toString()
-    if (val.length > length) {
-        return val.substring(0, length) + '...'
-    } else {
-        return val
-    }
+  if (!val) return ''
+  val = val.toString()
+  if (val.length > length) {
+      return val.substring(0, length) + '...'
+  } else {
+      return val
+  }
+})
+
+Vue.filter('url_basename', function(val) {
+  if (!val) return ''
+  val = val.toString()
+  let res = val.split('/')[val.split('/').length -1]
+  return decodeURI(res || '')
 })
 
 // 导出excel的封装方法
