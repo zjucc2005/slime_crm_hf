@@ -411,8 +411,22 @@ class CandidatesController < ApplicationController
     respond_to { |f| f.js }
   end
 
-  def v_index
-    
+  def v_index_data
+    begin
+      page = Integer(params[:page]) rescue 1
+      per_page = Integer(params[:per_page]) rescue 10
+      query = user_channel_filter(Candidate.expert)
+      @candidates = query.order(coef: :desc, id: :desc).paginate(page: page, per_page: per_page)
+      render json: {
+        status: 0,
+        data: {
+          candidates: @candidates.map(&:to_api_expert),
+          total: query.count, page: page, per_page: per_page
+        }
+      }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
   end
 
   private

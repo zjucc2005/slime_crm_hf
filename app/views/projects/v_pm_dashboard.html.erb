@@ -81,7 +81,7 @@
                                     </span>
                                     <el-dropdown-menu slot="dropdown">
                                         <el-dropdown-item v-for="(val, key) in req_status_dict" :key="key">
-                                            <el-tag @click="update_req_status(key, scope.row.id)" :type="req_status_tag_type[key]" size="mini">
+                                            <el-tag @click="update_req_status(key, scope.row)" :type="req_status_tag_type[key]" size="mini">
                                                 {{ req_status_dict[key] }}
                                             </el-tag>
                                         </el-dropdown-item>
@@ -96,7 +96,7 @@
                                     active-color="#dc3545"
                                     :active-value="1"
                                     :inactive-value="0"
-                                    @change="update_req_priority($event, scope.row.id)"
+                                    @change="update_req_priority($event, scope.row)"
                                 >
                                 </el-switch>
                             </template>
@@ -200,7 +200,7 @@
                     <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" label="姓名">
+            <el-table-column prop="name" label="姓名" width="140">
                 <template slot-scope="scope">
                     <template v-if="scope.row.candidate_id">
                         <el-tag size="mini" plain>已入库</el-tag>
@@ -209,22 +209,22 @@
                     <template v-else>{{ scope.row.name }}</template>
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="电话"></el-table-column>
-            <el-table-column prop="company" label="公司/医院"></el-table-column>
-            <el-table-column prop="department" label="部门/科室"></el-table-column>
-            <el-table-column prop="title" label="职位"></el-table-column>
+            <el-table-column prop="phone" label="电话" width="140"></el-table-column>
+            <el-table-column prop="company" label="公司/医院" width="140"></el-table-column>
+            <el-table-column prop="department" label="部门/科室" width="140"></el-table-column>
+            <el-table-column prop="title" label="职位" width="140"></el-table-column>
             <el-table-column prop="memo" label="反馈"></el-table-column>
-            <el-table-column prop="status" label="通话状态">
+            <el-table-column prop="status" label="通话状态" width="90">
                 <template slot-scope="scope">
                     <el-tag :type="call_status_tag_type[scope.row.status]" size="mini">{{ call_status_dict[scope.row.status] }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="rec_status" label="推荐状态">
+            <el-table-column prop="rec_status" label="推荐状态" width="90">
                 <template slot-scope="scope">
                     <el-tag :type="call_rec_status_tag_type[scope.row.rec_status]" size="mini">{{ call_rec_status_dict[scope.row.rec_status] }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="operator" label="操作员"></el-table-column>
+            <el-table-column prop="operator" label="操作员" width="90"></el-table-column>
             <el-table-column prop="created_at" label="创建时间" width="90">
                 <template slot-scope="scope">
                     <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
@@ -248,7 +248,7 @@
                     <span v-else><i class="fa fa-user-circle text-primary"></i> 专家</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" label="姓名">
+            <el-table-column prop="name" label="姓名" width="140">
                 <template slot-scope="scope">
                     <template v-if="scope.row.candidate_id">
                         <el-tag size="mini" plain>已入库</el-tag>
@@ -257,17 +257,17 @@
                     <template v-else>{{ scope.row.name }}</template>
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="电话"></el-table-column>
-            <el-table-column prop="company" label="公司/医院"></el-table-column>
-            <el-table-column prop="department" label="部门/科室"></el-table-column>
-            <el-table-column prop="title" label="职位"></el-table-column>
+            <el-table-column prop="phone" label="电话" width="140"></el-table-column>
+            <el-table-column prop="company" label="公司/医院" width="140"></el-table-column>
+            <el-table-column prop="department" label="部门/科室" width="140"></el-table-column>
+            <el-table-column prop="title" label="职位" width="140"></el-table-column>
             <el-table-column prop="memo" label="反馈"></el-table-column>
-            <el-table-column prop="rec_description" label="推荐描述">
+            <el-table-column prop="rec_description" label="推荐描述" width="90">
                 <template slot-scope="scope">
                     <el-button @click="handleRecDescription(scope.row.rec_description)" size="mini">查看</el-button>
                 </template>
             </el-table-column>
-            <el-table-column prop="rec_status" label="推荐状态">
+            <el-table-column prop="rec_status" label="推荐状态" width="120">
                 <template slot-scope="scope">
                     <el-dropdown trigger="click">
                         <span>
@@ -276,7 +276,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item v-for="(val, index) in call_rec_status_op" :key="index">
-                                <el-tag @click="update_call_rec_status(val, scope.row.id)" :type="call_rec_status_tag_type[val]" size="mini">
+                                <el-tag @click="update_call_rec_status(val, scope.row)" :type="call_rec_status_tag_type[val]" size="mini">
                                     {{ call_rec_status_dict[val] }}
                                 </el-tag>
                             </el-dropdown-item>
@@ -284,7 +284,7 @@
                     </el-dropdown>
                 </template>
             </el-table-column>
-            <el-table-column prop="operator" label="操作员"></el-table-column>
+            <el-table-column prop="operator" label="操作员" width="90"></el-table-column>
             <el-table-column prop="created_at" label="创建时间" width="90">
                 <template slot-scope="scope">
                     <el-tooltip :content="scope.row.created_at.split(' ')[1]" placement="right">
@@ -418,22 +418,24 @@
                 let co_index = this.callOverview.find(c => c.id === call_record.id)
                 if (co_index !== -1) { this.callOverview.splice(co_index, 1, call_record) }
             },
-            update_req_priority (priority, req_id) {
+            update_req_priority (priority, req) {
                 let _this_ = this;
-                $.post('/project_requirements/v_update', { id: req_id, priority: priority }, function (res) {
+                $.post('/project_requirements/v_update', { id: req.id, priority: priority }, function (res) {
                     console.log('update priority res:', res)
                 })
             },
-            update_req_status (status, req_id) {
+            update_req_status (status, req) {
                 let _this_ = this;
-                $.post('/project_requirements/v_update', { id: req_id, status: status }, function (res) {
-                    _this_.sync_project_requirement(res.data.project_requirement, ['status'])
+                req.status = status;
+                $.post('/project_requirements/v_update', { id: req.id, status: status }, function (res) {
+                    // _this_.sync_project_requirement(res.data.project_requirement, ['status'])
                 })
             },
-            update_call_rec_status (rec_status, call_record_id) {
+            update_call_rec_status (rec_status, call_record) {
                 let _this_ = this;
-                $.post('/call_records/v_update', { id: call_record_id, rec_status: rec_status }, function (res) {
-                    _this_.sync_call_record(res.data.call_record, ['rec_status'])
+                call_record.rec_status = rec_status
+                $.post('/call_records/v_update', { id: call_record.id, rec_status: rec_status }, function (res) {
+                    // _this_.sync_call_record(res.data.call_record, ['rec_status'])
                 })
             },
             get_user_options (project_id) {
@@ -463,6 +465,7 @@
             },
             handlePageChange () {
                 this.load_projects()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
             },
             handleProjectNew () {
                 window.open('/projects/new', '_blank');

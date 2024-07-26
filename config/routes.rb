@@ -67,6 +67,7 @@ Rails.application.routes.draw do
     get :load_work_experiences_for_project_task, on: :member
 
     get :v_index, on: :collection
+    get :v_index_data, on: :collection
   end
 
   resources :candidate_payment_infos

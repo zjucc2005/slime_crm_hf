@@ -329,7 +329,7 @@ class CallRecordsController < ApplicationController
     begin
       @call_record = CallRecord.find(params[:id])
       @candidates = @call_record.match_candidates
-      render json: { status: 0, data: { candidates: @candidates.map(&:to_api) } }
+      render json: { status: 0, data: { candidates: @candidates.map(&:to_api_match) } }
     rescue => e
       render json: { status: 1, msg: e.message }
     end

@@ -256,7 +256,16 @@ class Candidate < ApplicationRecord
     [limit, 0].max
   end
 
-  def to_api
+  def to_api_expert
+    expose_fields(:id, :uid, :category, :data_source, :created_by,
+      :name, :first_name, :last_name, :nickname, :city, :email, :email1, :phone, :phone1, :industry, :description,
+      created_at: created_at&.strftime('%F %T'),
+      updated_at: updated_at&.strftime('%F %T'),
+      candidate_experiences: work_experiences.map(&:to_api)
+    )
+  end
+
+  def to_api_match
     expose_fields(:id, :category, :name, :first_name, :last_name, :nickname, :phone, :description,
       created_at: created_at&.strftime('%F %T'),
       updated_at: updated_at&.strftime('%F %T'),
