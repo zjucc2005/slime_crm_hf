@@ -46,6 +46,7 @@
         },
         methods: {
             load_chart_data () {
+                let loading = this.$loading()
                 let _this_ = this;
                 $.get('/statistics/v_monthly_new', this.search_form, function (res) {
                     _this_.res_data = res.data
@@ -54,6 +55,7 @@
                         _data_ = [{ name: '无数据', income: 0, profit: 0 }]
                     }
                     _this_.set_line_chart(_data_)
+                    loading.close()
                 })
             },
             set_line_chart (data) {
