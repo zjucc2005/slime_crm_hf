@@ -68,7 +68,7 @@ module ApplicationHelper
     nav_item = :nav_statistic if controller_name == 'costs'
     nav_item = :nav_statistic if controller_name == 'kpi_summaries'
     nav_item = :nav_statistic if controller_name == 'company_summaries'
-    nav_item = :nav_statistic if controller_name == 'statistics' && action_name == 'finance_summary'
+    nav_item = :nav_statistic if controller_name == 'statistics' && %w[finance_summary current_month_task_ranking v_monthly_new].include?(action_name)
     # >>
     provide nav_item, 'active'
   end

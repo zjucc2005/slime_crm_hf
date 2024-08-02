@@ -233,6 +233,8 @@ Rails.application.routes.draw do
     get :ongoing_project_tasks,      on: :collection
 
     get :finance_summary,            on: :collection
+
+    get :v_monthly_new, on: :collection
   end
 
   resources :extras do

@@ -73,9 +73,6 @@
                             <%= link_to work_board_projects_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-th-large"></i> <%= mt(:project, :work_board) %> <span class="badge badge-danger">将要停用</span>
                             <% end if can?(:work_board, Project) %>
-                            <%#= link_to v_dashboard_projects_path, class: 'dropdown-item' do %>
-                                
-                            <%# end if false # can?(:v_dashboard, Project) %>
                             <%= link_to v_pm_dashboard_projects_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
                                 <i class="fa fa-map text-danger"></i> PM Dashboard
                             <% end if can?(:v_pm_dashboard, Project) %>
@@ -104,14 +101,20 @@
                             <%= link_to costs_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-bar-chart text-danger"></i> <%= mt(:cost_summary) %>
                             <% end if can?(:index, Cost) %>
-                            <%= link_to v_index_kpi_summaries_path, class: 'dropdown-item' do %>
+                            <%= link_to v_index_kpi_summaries_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
                                 <i class="fa fa-th-large text-danger"></i> <%= mt(:kpi_summary) %>
                             <% end if can?(:v_index, KpiSummary) %>
-                            <%= link_to v_index_company_summaries_path, class: 'dropdown-item' do %>
+                            <%= link_to v_index_company_summaries_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
                                 <i class="fa fa-th-large text-danger"></i> <%= mt(:company_summary) %>
                             <% end if can?(:v_index, CompanySummary) %>
                             <%= link_to finance_summary_statistics_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-bar-chart text-danger"></i> <%= t('dashboard.finance_summary') %>
+                            <% end %>
+                            <%= link_to v_monthly_new_statistics_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
+                                <i class="fa fa-line-chart text-danger"></i> 每月新增统计
+                            <% end %>
+                            <%= link_to current_month_task_ranking_statistics_path, class: 'dropdown-item' do %>
+                                <i class="fa fa-sort-amount-desc text-danger"></i> 收费小时数排名
                             <% end %>
                         </div>
                     </li>

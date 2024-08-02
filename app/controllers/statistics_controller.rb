@@ -27,9 +27,9 @@ class StatisticsController < ApplicationController
     end
 
     @current_month_count_infos = [
-      { :name => t('dashboard.total_experts'),              :value => total_experts,              :url => nil },
-      { :name => t('dashboard.total_tasks'),                :value => total_tasks,                :url => nil },
-      { :name => t('dashboard.total_charge_duration_hour'), :value => total_charge_duration_hour, :url => nil },
+      { :name => t('dashboard.total_experts'),              :value => total_experts,              :url => v_monthly_new_statistics_path },
+      { :name => t('dashboard.total_tasks'),                :value => total_tasks,                :url => v_monthly_new_statistics_path },
+      { :name => t('dashboard.total_charge_duration_hour'), :value => total_charge_duration_hour, :url => v_monthly_new_statistics_path },
       { :name => t('dashboard.total_income'),               :value => total_income,               :url => finance_summary_statistics_path },
       { :name => t('dashboard.total_income_unbilled'),      :value => total_income_unbilled,      :url => nil },
       { :name => t('dashboard.total_income_billed'),        :value => total_income_billed,        :url => nil },
@@ -228,4 +228,29 @@ class StatisticsController < ApplicationController
       { name: t('dashboard.expense_others'), value: expense_others.sum }
     ]
   end
+
+  def v_monthly_new
+    if params[:datetime]
+      begin
+        @year = (params[:datetime]&.to_time || Time.now).beginning_of_year
+        @data = []
+        12.times do |i|
+          s_time = @year + i.month
+          q_experts = user_channel_filter(Candidate.where(category: %w[expert doctor]).where('created_at BETWEEN ? AND ?', s_time, s_time + 1.month))
+          q_tasks = user_channel_filter(ProjectTask.where(status: 'finished', currency: 'RMB').where('started_at BETWEEN ? AND ?', s_time, s_time + 1.month))
+
+          @data << {
+            name: s_time.strftime('%Y.%m'),
+            new_expert: q_experts.count,
+            new_task: q_tasks.count,
+            new_task_duration: (q_tasks.sum(:charge_duration) / 60.0).round(1)
+          }
+        end
+        render json: { status: 0, data: @data }
+      rescue => e
+        render json: { status: 1, msg: e.message }
+      end
+    end
+  end
+
 end
