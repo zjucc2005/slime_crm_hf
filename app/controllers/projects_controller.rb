@@ -521,6 +521,13 @@ class ProjectsController < ApplicationController
   def v_pa_dashboard_data
     begin
       query = ProjectRequirement.where(status: 'ongoing', operator_id: current_user.id)
+      %w[name code].each do |field|
+        query = query.joins(:project).where("projects.#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
+      end
+      if params[:company_name_abbr].present?
+        company_ids = Company.where("name ILIKE :company OR name_abbr ILIKE :company", { company: "%#{params[:company_name_abbr].strip}%"}).ids
+        query = query.joins(:project).where("projects.company_id": company_ids)
+      end
       ordering = params[:ordering] == 'asc' ? :asc : :desc
       @project_requirements = query.order(priority: :desc, id: ordering)
       render json: { status: 0, data: { project_requirements: @project_requirements.map(&:to_api_dashboard_index) } }

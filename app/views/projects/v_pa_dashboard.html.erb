@@ -1,9 +1,21 @@
 <div id="app">
     <!-- 进展中的项目需求 -->
-    <el-radio-group v-model="search_form.ordering" @input="load_project_requirement_index" size="mini">
-        <el-radio-button label="desc"><i class="el-icon-d-arrow-right"></i> 时间倒序</el-radio-button>
-        <el-radio-button label="asc"><i class="el-icon-d-arrow-left"></i> 时间顺序</el-radio-button>
-    </el-radio-group>
+    <div class="mb-2">
+        <el-radio-group v-model="search_form.ordering" @input="load_project_requirement_index" size="mini">
+            <el-radio-button label="desc"><i class="el-icon-d-arrow-right"></i> 时间倒序</el-radio-button>
+            <el-radio-button label="asc"><i class="el-icon-d-arrow-left"></i> 时间顺序</el-radio-button>
+        </el-radio-group>
+
+        <el-input v-model="search_form._v" placeholder="请输入内容" size="mini" style="width: 640px;" clearable class="input-with-select">
+            <el-select v-model="search_form._k" slot="prepend" placeholder="请选择" style="width: 160px;">
+                <el-option value="name" label="项目名称"></el-option>
+                <el-option value="code" label="项目编码"></el-option>
+                <el-option value="company_name_abbr" label="公司简称"></el-option>
+            </el-select>
+        </el-input>
+        <el-button @click="handleSearch" type="primary" size="mini" icon="el-icon-search">搜索</el-button>
+        <el-button @click="handleSearchReset" size="mini" icon="el-icon-refresh" title="重置">重置</el-button>
+    </div>
 
     <el-tabs v-model="activeTab" @tab-click="load_project_requirement">
         <el-tab-pane 
@@ -421,6 +433,8 @@
                 page: 1,
                 per_page: 10,
                 total: 0,
+                _k: 'name',
+                _v: '',
                 ordering: 'desc'
             },
             match_candidates: [],  // 入库时匹配的专家信息
@@ -485,7 +499,11 @@
         methods: {
             load_project_requirement_index () {
                 let _this_ = this;
-                $.get('/projects/v_pa_dashboard_data', this.search_form, function (res) {
+                let params = { ordering: this.search_form.ordering }
+                if (this.search_form._k && this.search_form._v) {
+                    params[this.search_form._k] = this.search_form._v
+                }
+                $.get('/projects/v_pa_dashboard_data', params, function (res) {
                     _this_.project_requirement_index = res.data.project_requirements
                     if (!_this_.activeTab || !_this_.activeTab.startsWith('req_') ) {
                         if (_this_.project_requirement_index[0]?.id) {
@@ -555,6 +573,14 @@
                 $.post('/call_records/v_update', { id: call_record.id, status: status }, function (res) {
                     // _this_.sync_call_record(res.data.call_record, ['status'])
                 })
+            },
+            handleSearch () {
+                this.load_project_requirement_index()
+            },
+            handleSearchReset () {
+                this.search_form._k = 'name'
+                this.search_form._v = ''
+                this.load_project_requirement_index()
             },
             handleHospitalChange (value) {
                 let selected_hospital = this.hospitals.find(h => h.id === value)
@@ -808,6 +834,9 @@
 </script>
 
 <style>
+    .el-radio-group label {
+        margin-bottom: 0;
+    }
     .el-tabs__item {
         line-height: 24px;
         padding: 0 20px !important;

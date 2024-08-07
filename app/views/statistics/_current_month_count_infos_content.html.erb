@@ -12,7 +12,7 @@
             <td class="pl-3"><%= info[:name] %></td>
             <td>+ <%= info[:value] %></td>
             <td>
-                <%= link_to(t('dashboard.detail'), info[:url]) if info[:url].present? %>
+                <%= link_to(t('dashboard.detail'), info[:url], data: { turbolinks: false }) if info[:url].present? %>
             </td>
         </tr>
     <% end %>
