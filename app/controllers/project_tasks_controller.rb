@@ -212,6 +212,32 @@ class ProjectTasksController < ApplicationController
     redirect_to file_path.gsub(/^public/, '')
   end
 
+  def v_upload_jiesuan_file
+    begin
+      load_project_task
+      js_files = @project_task.jiesuan_files
+      js_files << params[:file]
+      @project_task.jiesuan_files = js_files
+      @project_task.save!
+      render json: { status: 0 }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
+  def v_remove_jiesuan_file
+    begin
+      load_project_task
+      js_files = @project_task.jiesuan_files
+      js_files.delete_if { |f| f.identifier == params[:filename] }
+      @project_task.jiesuan_files = js_files
+      @project_task.save
+      render json: { status: 0 }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
   private
   def load_project_task
     @project_task = ProjectTask.find(params[:id])

@@ -161,6 +161,9 @@ Rails.application.routes.draw do
 
     put :cancel,         on: :member  # 取消任务
     put :moveto,         on: :member  # 转移任务
+
+    post :v_upload_jiesuan_file, on: :member
+    post :v_remove_jiesuan_file, on: :member
   end
 
   resources :finance do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_03_060011) do
+ActiveRecord::Schema.define(version: 2024_08_12_085318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -417,6 +417,7 @@ ActiveRecord::Schema.define(version: 2024_07_03_060011) do
     t.bigint "candidate_experience_id"
     t.boolean "is_new_expert", default: false
     t.string "jiesuan_file"
+    t.jsonb "jiesuan_files", default: []
     t.index ["client_id"], name: "index_project_tasks_on_client_id"
     t.index ["expert_id"], name: "index_project_tasks_on_expert_id"
     t.index ["project_id"], name: "index_project_tasks_on_project_id"

@@ -154,7 +154,7 @@
     </el-drawer>
 
     <!-- 新增需求form -->
-    <el-dialog :title="reqForm.id ? '编辑需求' : '新增需求'" :visible.sync="reqFormVisible">
+    <el-dialog :title="reqForm.id ? '编辑需求' : '新增需求'" :visible.sync="reqFormVisible" :close-on-click-modal="false">
         <el-form ref="reqForm" :model="reqForm" size="small" label-width="80px">
             <el-form-item label="标题" prop="title" :rules="reqFormRules.title">
                 <el-input v-model="reqForm.title" clearable></el-input>
@@ -192,7 +192,7 @@
     </el-dialog>
 
     <!-- 通话记录 table -->
-    <el-dialog title="通话记录" :visible.sync="callShowVisible"  width="80%">
+    <el-dialog title="通话记录" :visible.sync="callShowVisible" :close-on-click-modal="false" width="80%">
         <el-table :data="callShow" size="mini" border stripe>
             <el-table-column prop="category" label="类型" width="72">
                 <template slot-scope="scope">
@@ -240,7 +240,7 @@
     </el-dialog>
 
     <!-- 总览 & 推荐更新 table -->
-    <el-dialog :title="callOverviewTitle" :visible.sync="callOverviewVisible"  width="80%">
+    <el-dialog :title="callOverviewTitle" :visible.sync="callOverviewVisible" :close-on-click-modal="false" width="80%">
         <el-table :data="callOverview" size="mini" border stripe>
             <el-table-column prop="category" label="类型" width="72">
                 <template slot-scope="scope">
@@ -298,7 +298,7 @@
         </span>
     </el-dialog>
 
-    <el-dialog title="推荐描述" :visible.sync="recDescriptionVisible">
+    <el-dialog title="推荐描述" :visible.sync="recDescriptionVisible" :close-on-click-modal="false">
         <div id="rec-description-content" class="rec-description-cc">{{ recDescription }}</div>
         <span slot="footer">
             <el-button @click="clipboard" type="primary" size="small">复制</el-button>
@@ -509,7 +509,7 @@
                 }
                 if (this.reqForm.id) {
                     formData.append('id', this.reqForm.id)
-                     $.ajax({
+                    $.ajax({
                         type: 'POST',
                         url: '/project_requirements/v_update',
                         data: formData,

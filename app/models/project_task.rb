@@ -31,6 +31,7 @@ class ProjectTask < ApplicationRecord
   validates_inclusion_of :interview_form, :in => INTERVIEW_FORM.keys
 
   mount_uploader :jiesuan_file, FileUploader
+  mount_uploaders :jiesuan_files, FileUploader
 
   before_validation :setup, :on => [:create, :update]
   after_update :sync_payment_status

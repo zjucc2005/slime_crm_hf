@@ -194,7 +194,7 @@
     </el-drawer>
 
     <!-- 新增/修改通话记录form -->
-    <el-dialog :title="`${ callForm.id ? '编辑' : '新增' }通话记录`" :visible.sync="callFormVisible">
+    <el-dialog :title="`${ callForm.id ? '编辑' : '新增' }通话记录`" :visible.sync="callFormVisible" :close-on-click-modal="false">
         <el-form ref="callForm" :model="callForm" size="small" label-width="80px">
             <el-form-item label="类型" :rules="callFormRules.category">
                 <el-radio-group v-model="callForm.category">
@@ -235,7 +235,7 @@
     </el-dialog>
 
     <!-- 批量新增通话记录form -->
-    <el-dialog title="批量新增通话记录" :visible.sync="callBatchFormVisible">
+    <el-dialog title="批量新增通话记录" :visible.sync="callBatchFormVisible" :close-on-click-modal="false">
         <template v-if="callBatchStep == 1">
             <el-input v-model="callBatchForm.raw" type="textarea" :rows="10" placeholder="请粘贴从Excel中复制的内容"></el-input>
         </template>
@@ -261,7 +261,7 @@
     </el-dialog>
 
     <!-- 入库form -->
-    <el-dialog title="入库" :visible.sync="rukuFormVisible" width="80%">
+    <el-dialog title="入库" :visible.sync="rukuFormVisible" :close-on-click-modal="false" width="80%">
         <el-row>
             <el-col :span="12">
                 <el-steps :active="rukuStep" finish-status="success">
@@ -382,7 +382,7 @@
     </el-dialog>
 
     <!-- 推荐form -->
-    <el-dialog title="推荐" :visible.sync="tuijianFormVisible">
+    <el-dialog title="推荐" :visible.sync="tuijianFormVisible" :close-on-click-modal="false">
         <el-form ref="tuijianForm" :model="tuijianForm" size="small" label-width="80px">
             <el-form-item label="专家卡片">
                 <el-select v-model="tuijianForm.card_template_id" @change="handleCardTemplateChange" placeholder="请选择">
@@ -408,7 +408,7 @@
     </el-dialog>
 
     <!-- 新建科室form -->
-    <el-dialog title="新增科室" :visible.sync="hosDepFormVisible">
+    <el-dialog title="新增科室" :visible.sync="hosDepFormVisible" :close-on-click-modal="false">
         <el-form ref="hosDepForm" :model="hosDepForm" size="small" label-width="80px">
             <el-form-item label="名称" prop="name" :rules="hosDepFormRules.name">
                 <el-input v-model="hosDepForm.name" clearable></el-input>

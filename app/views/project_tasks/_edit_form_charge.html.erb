@@ -141,32 +141,74 @@
         <%= f.label :memo %>
         <%= f.text_field :memo, :class => 'form-control' %>
     </div>
-    <div class="col-lg-3 col-12 form-group">
+    <div id="jiesuan_file" class="col-lg-6 col-12 form-group">
         <%= f.label :jiesuan_file %>
-        <%= link_to t('action.preview'), 'javascript:void(0);',
-            onclick: "previewFile('#{@project_task.jiesuan_file.url}', 'project_task_jiesuan_file')",
-            id: 'previewBtn', class: 'btn btn-link btn-xs', style: @project_task.jiesuan_file.blank? ? 'display: none;' : '' %>
-        <%= f.file_field :jiesuan_file, class: 'form-control-file', accept: 'image/jpeg,image/png', onchange: "$('#previewBtn').show();"  %>
+        <el-upload
+            action="#"
+            :http-request="handleJiesuanUpload"
+            :on-preview="handleJiesuanPreview"
+            :on-remove="handleJiesuanRemove"
+            :file-list="jiesuan_files"
+            :limit="5"
+            list-type="picture"
+        >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
     </div>
-</div>
-
-<div class="modal fade" id="previewModal" tabindex="-1">
-  <div class="modal-dialog" style="max-width: 960px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="previewModalLabel">预览</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <%= image_tag '', id: 'previewSrc', style: 'max-width: 100%;' %>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
+    var app = new Vue({
+        el: '#jiesuan_file',
+        data: {
+            project_task_id: <%= @project_task.id %>,
+            jiesuan_files: <%= @project_task.jiesuan_files.map { |f| { name: f.identifier, url: f.url} }.to_json.html_safe %>,
+        },
+        methods: {
+            handleJiesuanUpload (ele) {
+                let _this_ = this;
+                let formData = new FormData();
+                formData.append('file', ele.file)
+                // console.log("handleJiesuanUpload", ele)
+                $.ajax({
+                    type: 'POST',
+                    url: `/project_tasks/${this.project_task_id}/v_upload_jiesuan_file`,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (res.status == 0) {
+                            _this_.$message({ message: '上传结算图片成功', type: 'success' })
+                        } else if (res.status == 1) {
+                            _this_.$message({ message: res.msg, type: 'error' })
+                        }
+                    }
+                })
+            },
+            handleJiesuanPreview (file) {
+                console.log('handleJiesuanPreview', file)
+            },
+            handleJiesuanRemove (file, fileList) {
+                console.log('handleJiesuanRemove', file, fileList)
+                let _this_ = this;
+                $.ajax({
+                    type: 'POST',
+                    url: `/project_tasks/${this.project_task_id}/v_remove_jiesuan_file`,
+                    data: { filename: file.name },
+                    success: function(res) {
+                        console.log('res', res)
+                        if (res.status == 0) {
+                            _this_.$message({ message: '删除结算图片成功', type: 'success' })
+                        } else if (res.status == 1) {
+                            _this_.$message({ message: res.msg, type: 'error' })
+                        }
+                    }
+                })
+            }
+        }
+    });
+
     $(function(){
         get_expert_rate();
     });
@@ -246,18 +288,4 @@
         get_base_price();
     }
 
-    function previewFile(file_path, target_id) {
-        if (target_id) {
-            let file = document.getElementById(target_id).files[0];
-            if (file) {
-                file_path = window.URL.createObjectURL(file)
-            }
-        }
-        if (!file_path) {
-            alert('无预览文件')
-            return
-        }
-        $('#previewSrc')[0].src = file_path;
-        $('#previewModal').modal('toggle');
-    }
 </script>

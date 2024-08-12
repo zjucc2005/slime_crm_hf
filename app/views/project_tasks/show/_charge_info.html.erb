@@ -125,11 +125,14 @@
         </div>
         <%= content_tag :span, @project_task.memo, :class => 'form-control' %>
     </div>
-    <div id="jiesuan_file" class="col-3" v-if="url">
+    <div id="jiesuan_file" class="col-12" v-if="srcList.length">
         <div class="text-smaller"><%= mt(:project_task, :jiesuan_file) %></div>
         <el-image
+            v-for="(url, index) in srcList"
+            :key="index"
+            :initial-index="index"
             class="img-thumbnail"
-            style="width: 100px; height: 100px;"
+            style="width: 100px; height: 100px; margin-right: 0.5rem;"
             :src="url"
             :preview-src-list="srcList">
         </el-image>
@@ -140,10 +143,7 @@
     var app = new Vue({
         el: '#jiesuan_file',
         data: {
-            url: '<%= @project_task.jiesuan_file.url %>',
-            srcList: [
-              '<%= @project_task.jiesuan_file.url %>'
-            ]
+            srcList: <%= @project_task.jiesuan_files.map(&:url).to_json.html_safe %>
         }
     })
 </script>
