@@ -252,7 +252,7 @@ class Candidate < ApplicationRecord
   end
 
   def expert_tax_free_limit(t=Time.now)
-    limit = 800 - ProjectTaskCost.cost_monthly('expert', id, t)
+    limit = 800 - ProjectTaskCost.tax_free_used_monthly(id, t)
     [limit, 0].max
   end
 

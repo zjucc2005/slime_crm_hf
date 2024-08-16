@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_12_085318) do
+ActiveRecord::Schema.define(version: 2024_08_16_073159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -371,6 +371,7 @@ ActiveRecord::Schema.define(version: 2024_08_12_085318) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_channel_id"
     t.decimal "lijin", precision: 10, scale: 2
+    t.decimal "tax_free_value", precision: 10, scale: 2, default: "0.0"
     t.index ["project_task_id"], name: "index_project_task_costs_on_project_task_id"
     t.index ["user_channel_id"], name: "index_project_task_costs_on_user_channel_id"
   end

@@ -161,6 +161,9 @@ class ProjectTasksController < ApplicationController
     load_project_task
     @project_task_cost = @project_task.costs.find(params[:project_task_cost_id])
     @project_task_cost.update(project_task_cost_params)
+    if @project_task_cost.category == 'expert'
+      @project_task_cost.update_expert_tax_instance
+    end
     flash[:success] = t(:operation_succeeded)
     redirect_to edit_project_task_path(@project_task)
   end
