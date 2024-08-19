@@ -91,7 +91,8 @@ class Ability
     cannot [:billing, :billed], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
-    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost], ProjectTask
+    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost,
+         :v_upload_jiesuan_file, :v_remove_jiesuan_file], ProjectTask
     cannot :manage, Finance
     can :manage, CallRecord
 
@@ -117,7 +118,8 @@ class Ability
          :v_pa_dashboard, :v_pa_dashboard_data], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
-    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost], ProjectTask
+    can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost, 
+         :v_upload_jiesuan_file, :v_remove_jiesuan_file], ProjectTask
     cannot :manage, Finance
     can :manage, CallRecord
 
