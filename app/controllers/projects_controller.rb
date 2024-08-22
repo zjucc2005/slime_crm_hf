@@ -32,6 +32,7 @@ class ProjectsController < ApplicationController
     case params[:commit]
     when 'Weekly update' then export_projects(query.order(created_at: :desc), category='weekly_update') and return
     when I18n.t(:standard_template) then export_projects(query.order(created_at: :desc), category='standard') and return
+    when '项目总费用统计表' then export_projects(query.order(created_at: :desc), category='total_fee') and return
     else nil
     end
 
@@ -580,6 +581,7 @@ class ProjectsController < ApplicationController
     template_path = case category
                     when 'weekly_update' then 'public/templates/project_weekly_update_template.xlsx'
                     when 'standard' then 'public/templates/project_standard_template.xlsx'
+                    when 'total_fee' then 'public/templates/project_total_fee_template.xlsx'
                     else ''
                     end
 
@@ -590,6 +592,7 @@ class ProjectsController < ApplicationController
     case category
     when 'weekly_update' then set_sheet_weekly_update(sheet, query)
     when 'standard' then set_sheet_standard(sheet, query)
+    when 'total_fee' then set_sheet_total_fee(sheet, query)
     else raise("invalid category[#{category}]")
     end
 
@@ -646,6 +649,18 @@ class ProjectsController < ApplicationController
       sheet.add_cell(row, 9, (project.creator.name_cn rescue 'NA'))
       sheet.add_cell(row, 10, project.created_at.strftime('%F %T'))
       sheet.add_cell(row, 11, project.updated_at.strftime('%F %T'))
+    end
+  end
+
+  def set_sheet_total_fee(sheet, query)
+    query.each_with_index do |project, index|
+      row = index + 1
+      sheet.add_cell(row, 0, project.company.name_abbr)
+      sheet.add_cell(row, 1, project.name)
+      sheet.add_cell(row, 2, project.code)
+      sheet.add_cell(row, 3, Project::STATUS[project.status] || project.status)
+      sheet.add_cell(row, 4, project.total_price)
+      sheet.add_cell(row, 5, project.created_at.strftime('%F %T'))
     end
   end
 

@@ -26,7 +26,7 @@ class Project < ApplicationRecord
   validates_inclusion_of :status, :in => STATUS.keys
   validates_uniqueness_of :code, :allow_blank => true
 
-  before_validation :setup, :on => :create
+  before_validation :setup, on: [:create, :update]
 
   # has_many :clients / :experts 作为 has_many :candidates 的补充, 依据 project_candidates.category
   # 和 candidates.client / candidates.expert 有区别, 只读
@@ -168,7 +168,8 @@ class Project < ApplicationRecord
   end
 
   def last_update
-    self.update(updated_at: Time.now)
+    self.updated_at = Time.now
+    self.save(validate: false)
     company.update(last_active_time: Time.now)
   end
 
@@ -199,6 +200,7 @@ class Project < ApplicationRecord
   private
   def setup
     self.status ||= 'initialized'
+    self.code = code&.strip
   end
 
 end
