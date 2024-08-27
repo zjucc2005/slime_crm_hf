@@ -3,6 +3,7 @@
         <%= link_to new_project_path, :class => 'btn btn-primary' do %>
             <%= fa_icon_tag('plus') %> <%= "#{t('action.new_model', :model => mt(:project))}" %>
         <% end if can? :new, Project %>
+        <%= render partial: 'projects/widgets/batch_update_status' %>
     </div>
     <%= render :partial => 'projects/widgets/search_modal' %>
 </div>

@@ -109,10 +109,11 @@ Rails.application.routes.draw do
     delete :delete_client, on: :member  # 删除客户
 
     post :start, on: :member
-    # put :close, on: :member
-    # put :reopen, on: :member
+    post :finish, on: :member
     post :billing, on: :member
     post :billed, on: :member
+
+    get :batch_update_status, on: :collection
 
     get :experts,       on: :member
     get :project_tasks, on: :member

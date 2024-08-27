@@ -88,7 +88,7 @@ class Ability
     can :manage, Client
     # can [:new_client], Company
     can :manage, Project
-    cannot [:billing, :billed], Project
+    cannot [:finish, :billing, :billed, :batch_update_status], Project
     can :manage, ProjectCandidate
     can :manage, ProjectRequirement
     can [:show, :edit, :update, :get_base_price, :add_cost, :remove_cost, :cancel, :edit_cost, :update_cost,
@@ -138,7 +138,8 @@ class Ability
     can :manage, Client
     can :manage, Company
     can :manage, Contract
-    can [:index, :show, :edit, :update, :add_clients, :delete_client, :project_tasks, :experts, :export_billing_excel, :close, :reopen, :billing, :billed], Project
+    can [:index, :show, :edit, :update, :add_clients, :delete_client, :project_tasks, :experts, :export_billing_excel, 
+      :finish, :billing, :billed, :batch_update_status], Project
     can :read, ProjectRequirement
     can [:show, :moveto], ProjectTask
     can :manage, Finance

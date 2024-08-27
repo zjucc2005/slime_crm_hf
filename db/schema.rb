@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_16_073159) do
+ActiveRecord::Schema.define(version: 2024_08_24_145510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -449,6 +449,10 @@ ActiveRecord::Schema.define(version: 2024_08_16_073159) do
     t.bigint "user_channel_id"
     t.datetime "billing_at"
     t.datetime "billed_at"
+    t.string "invoice_no"
+    t.datetime "invoice_payment_date"
+    t.decimal "invoice_amount", precision: 10, scale: 2
+    t.string "invoice_file"
     t.index ["company_id"], name: "index_projects_on_company_id"
     t.index ["user_channel_id"], name: "index_projects_on_user_channel_id"
   end

@@ -5,7 +5,7 @@ class Project < ApplicationRecord
       initialized: '新项目',
       ongoing: '进展中',
       finished: '已结束',
-      billing: '结算中',
+      billing: '已开票',
       billed: '已收款',
       cancelled: '已取消'
   }.stringify_keys
@@ -27,6 +27,8 @@ class Project < ApplicationRecord
   validates_uniqueness_of :code, :allow_blank => true
 
   before_validation :setup, on: [:create, :update]
+
+  mount_uploader :invoice_file, FileUploader
 
   # has_many :clients / :experts 作为 has_many :candidates 的补充, 依据 project_candidates.category
   # 和 candidates.client / candidates.expert 有区别, 只读
@@ -73,16 +75,12 @@ class Project < ApplicationRecord
     %w[initialized].include?(status)
   end
 
-  def can_close?
+  def can_finish?
     %w[ongoing].include?(status)
   end
 
-  def can_reopen?
-    %w[finished].include?(status)
-  end
-
   def can_billing?
-    %w[ongoing finished].include?(status)
+    %w[finished].include?(status)
   end
 
   def can_billed?
@@ -131,11 +129,12 @@ class Project < ApplicationRecord
     self.save!
   end
 
-  def close!
-    # self.status = 'finished'
+  def finish!
+    self.status = 'finished'
     self.ended_at ||= Time.now
     self.save!
   end
+  alias close! finish!
 
   def reopen!
     self.status = 'ongoing'

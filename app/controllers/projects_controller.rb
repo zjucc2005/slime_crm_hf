@@ -354,38 +354,30 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # PUT /projects/:id/close
-  # def close
-  #   begin
-  #     load_project
-  #     raise t(:not_authorized) unless @project.can_close?
-  #     @project.close!
-  #     flash[:success] = t(:operation_succeeded)
-  #     redirect_to project_path(@project)
-  #   rescue Exception => e
-  #     flash[:error] = e.message
-  #     redirect_to projects_path
-  #   end
-  # end
-
-  # PUT /projects/:id/reopen
-  # def reopen
-  #   begin
-  #     load_project
-  #     raise t(:not_authorized) unless @project.can_reopen?
-  #     @project.reopen!
-  #     flash[:success] = t(:operation_succeeded)
-  #     redirect_to project_path(@project)
-  #   rescue Exception => e
-  #     flash[:error] = e.message
-  #     redirect_to projects_path
-  #   end
-  # end
+  def finish
+    begin
+      load_project
+      raise t(:not_authorized) unless @project.can_finish?
+      @project.finish!
+      flash[:success] = t(:operation_succeeded)
+      redirect_to project_path(@project)
+    rescue => e
+      flash[:error] = e.message
+      redirect_to projects_path
+    end
+  end
 
   def billing
     begin
       load_project
       raise t(:not_authorized) unless @project.can_billing?
+      @project.invoice_no = params[:invoice_no]
+      @project.attributes = {
+        invoice_no: params[:invoice_no],
+        invoice_payment_date: params[:invoice_payment_date],
+        invoice_amount: params[:invoice_amount],
+        invoice_file: params[:invoice_file],
+      }
       @project.status = 'billing'
       @project.billing_at ||= Time.now
       @project.save!
@@ -406,6 +398,25 @@ class ProjectsController < ApplicationController
       @project.save!
       flash[:success] = t(:operation_succeeded)
       redirect_to project_path(@project)
+    rescue => e
+      flash[:error] = e.message
+      redirect_to projects_path
+    end
+  end
+
+  # @param status : String
+  # @param uids : Array
+  def batch_update_status
+    begin
+      if params[:status] == 'finished'
+        ActiveRecord::Base.transaction do
+          Project.where(id: params[:uids], status: 'ongoing').each do |project|
+            project.update(status: 'finished')
+          end
+        end
+      end
+      flash[:success] = t(:operation_succeeded)
+      redirect_to projects_path
     rescue => e
       flash[:error] = e.message
       redirect_to projects_path

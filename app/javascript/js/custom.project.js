@@ -67,6 +67,17 @@ window.addExpertToProject = function(mode, uid){
     }
 };
 
+window.batchUpdateProjectStatus = function(s){
+    var uids = $("input[name='uids[]']:checked");
+    if(uids.length === 0){
+        alert('请至少选择一个条目');
+    }else{
+        var params = uids.map(function(){ return 'uids[]=' + this.value }).get().join('&');
+        params = params + '&status=' + s;
+        window.location.href = '/projects/batch_update_status?' + params;
+    }
+};
+
 window.batchUpdateChargeStatus = function(s){
     var uids = $("input[name='uids[]']:checked");
     if(uids.length === 0){
