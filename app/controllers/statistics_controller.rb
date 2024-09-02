@@ -166,6 +166,7 @@ class StatisticsController < ApplicationController
     expense             = []
     profit              = []
     expense_expert      = []
+    expense_expert_tax  = []
     expense_recommend   = []
     expense_translation = []
     expense_others      = []
@@ -192,16 +193,18 @@ class StatisticsController < ApplicationController
         select('SUM(project_task_costs.price) AS sum_price, project_task_costs.category').group('project_task_costs.category')
 
       expert_fee      = cost_group.select{|c| c.category == 'expert' }[0].try(:sum_price)      || 0.0
+      expert_tax_fee  = cost_group.select{|c| c.category == 'expert_tax' }[0].try(:sum_price)  || 0.0
       recommend_fee   = cost_group.select{|c| c.category == 'recommend' }[0].try(:sum_price)   || 0.0
       translation_fee = cost_group.select{|c| c.category == 'translation' }[0].try(:sum_price) || 0.0
       others_fee      = cost_group.select{|c| c.category == 'others' }[0].try(:sum_price)      || 0.0
       total_in = project_task_query.where('project_tasks.started_at BETWEEN ? AND ?', s_time, e_time).sum(:actual_price)
-      total_ex = expert_fee + recommend_fee + translation_fee + others_fee
+      total_ex = expert_fee + expert_tax_fee + recommend_fee + translation_fee + others_fee
 
       income << total_in
       expense << total_ex
       profit << total_in - total_ex
       expense_expert << expert_fee
+      expense_expert_tax << expert_tax_fee
       expense_recommend << recommend_fee
       expense_translation << translation_fee
       expense_others << others_fee
@@ -223,6 +226,7 @@ class StatisticsController < ApplicationController
       { name: t('dashboard.total_income'), value: income.sum },
       { name: t('dashboard.expense'), value: expense.sum },
       { name: t('dashboard.expense_expert'), value: expense_expert.sum },
+      { name: '税费（专家费用）', value: expense_expert_tax.sum },
       { name: t('dashboard.expense_recommend'), value: expense_recommend.sum },
       { name: t('dashboard.expense_translation'), value: expense_translation.sum },
       { name: t('dashboard.expense_others'), value: expense_others.sum }

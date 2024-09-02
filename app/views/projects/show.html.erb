@@ -22,7 +22,7 @@
                         <% end if can?(:start, Project) && @project.can_start? %>
                         <%= link_to finish_project_path(@project), method: :post, class: 'btn btn-success', data: { confirm: t(:sure)}  do %>
                             <%= fa_icon_tag('edit') %> <%= mt(:project, :close) %>
-                        <% end if can?(:start, Project) && @project.can_finish? %>
+                        <% end if can?(:finish, Project) && @project.can_finish? %>
                         <% if can?(:billing, Project) && @project.can_billing? %>
                         <div class="btn-group btn-group-sm">
                             <%= render partial: 'projects/widgets/billing_modal', locals: { project: @project } %>
