@@ -64,7 +64,7 @@ class ProjectTaskCost < ApplicationRecord
       puts "只有专家费可调用该方法" and return
     end
     tax_free_value = project_task.expert.expert_tax_free_limit(project_task.started_at) # 免税额度
-    tax_price = (price - tax_free_value) * 0.25
+    tax_price = (price - tax_free_value) * 0.2
     if tax_price > 0
       instance = project_task.costs.create(
         user_channel_id: user_channel_id,
@@ -83,7 +83,7 @@ class ProjectTaskCost < ApplicationRecord
     if category != 'expert'
       puts "只有专家费可调用该方法" and return
     end
-    tax_price = (price - tax_free_value) * 0.25
+    tax_price = (price - tax_free_value) * 0.2
     tax_instance = project_task.costs.where(category: 'expert_tax').first
     if tax_price > 0
       if tax_instance

@@ -127,13 +127,13 @@
                 $('#tax').val(0);
                 $('#gongsizhichu').val(x);
             } else {
-                $('#tax').val((0.25 * x - 0.25 * k).toFixed(1));
-                $('#gongsizhichu').val((1.25 * x - 0.25 * k).toFixed(1));
+                $('#tax').val((0.2 * x - 0.2 * k).toFixed(1));
+                $('#gongsizhichu').val((1.2 * x - 0.2 * k).toFixed(1));
             }
         }
     });
     // (0, k], x = y
-    // (k, +∞), x = 0.8y + 0.2k
+    // (k, +∞), x = (5y + k) / 6
     $('#gongsizhichu').change(function() {
         if ($('#category').val() === 'expert') {
             let y = this.value * 1;
@@ -142,8 +142,8 @@
                 $('#tax').val(0);
                 $('#price').val(y);
             } else {
-                $('#tax').val((0.2 * y - 0.2 * k).toFixed(1));
-                $('#price').val((0.8 * y + 0.2 * k).toFixed(1));
+                $('#tax').val(((y - k) /6).toFixed(1));
+                $('#price').val(((5 * y + k) / 6).toFixed(1));
             }
         }
     })
