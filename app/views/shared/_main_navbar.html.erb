@@ -74,10 +74,10 @@
                                 <i class="fa fa-th-large"></i> <%= mt(:project, :work_board) %> <span class="badge badge-danger">将要停用</span>
                             <% end if can?(:work_board, Project) %>
                             <%= link_to v_pm_dashboard_projects_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
-                                <i class="fa fa-map text-danger"></i> PM Dashboard
+                                <i class="fa fa-map text-danger"></i> 项目管理
                             <% end if can?(:v_pm_dashboard, Project) %>
                             <%= link_to v_pa_dashboard_projects_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
-                                <i class="fa fa-tasks text-primary"></i> PA Dashboard
+                                <i class="fa fa-tasks text-primary"></i> 项目沟通
                             <% end if can?(:v_pa_dashboard, Project) %>
                         </div>
                     </li>
