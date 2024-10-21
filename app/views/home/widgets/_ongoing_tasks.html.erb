@@ -8,15 +8,13 @@
 <% end %>
 <% if @manage_hour_monthly.present? %>
 <div class="col-lg-3 col-12">
-<%#     <a data-toggle="popover" data-trigger="hover" data-placement="bottom" title="本月管理小时明细" data-html="true"
-    data-content="
-        <table></table>
-    "> %>
-        <div class="ctag">
-            <div class="ctag-item teal f-2">本月管理小时</div>
-            <div class="ctag-item f-3"><%= @manage_hour_monthly %></div>
+    <div class="ctag">
+        <div class="ctag-item teal f-2">本月管理小时</div>
+        <div class="ctag-item f-3">
+            <%= @manage_hour_monthly %>
+            <%= link_to '详情', current_month_task_ranking_statistics_path, class: 'text-smaller' %>
         </div>
-    <%# </a> %>
+    </div>
 </div>
 <% end %>
 <div class="col-12 mb-3">

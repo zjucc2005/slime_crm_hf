@@ -55,24 +55,40 @@ class StatisticsController < ApplicationController
 
     s_month = (params[:month].to_time rescue nil) || current_month  # 统计月份
     result = []
-    users = User.active.where(role: %w[admin pm pa])  # 激活中用户 + 角色admin/pm/pa
+    if current_user.admin?
+      users = User.active.where(role: %w[admin pm pa])  # 激活中用户 + 角色admin/pm/pa
+    else
+      users = User.where(id: current_user.id)
+    end
     users = user_channel_filter(users)
     project_tasks = ProjectTask.where(status: 'finished').where('started_at >= ? AND started_at < ?', s_month, s_month + 1.month)
     users.each do |user|
       if user.is_role?('admin', 'pm')
         interview_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration)
         manage_minutes = project_tasks.where(pm_id: user.id).where.not(created_by: user.id).sum(:charge_duration)
+        manage_minutes_group = project_tasks.where(pm_id: user.id).where.not(created_by: user.id).
+                               select('created_by, sum(charge_duration) as charge_duration').group(:created_by)
+        manage_minutes_detail = manage_minutes_group.map{ |item|
+          { username: User.find(item.created_by)&.name_cn, interview_minutes: item.charge_duration }
+        }
       else
         interview_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration)
         manage_minutes = 0.0
+        manage_minutes_detail = []
       end
       total_minutes = interview_minutes + manage_minutes
       if total_minutes > 0
         new_expert_count = project_tasks.where(created_by: user.id, is_new_expert: true).count
         new_expert_rate = new_expert_count.zero? ?
           0 : new_expert_count.to_f / project_tasks.where(created_by: user.id).count
-        result << { username: user.name_cn, interview_minutes: interview_minutes, manage_minutes: manage_minutes, 
-          total_minutes: total_minutes, new_expert_rate: new_expert_rate }
+        result << { 
+          username: user.name_cn,
+          interview_minutes: interview_minutes,
+          manage_minutes: manage_minutes,
+          manage_minutes_detail: manage_minutes_detail,
+          total_minutes: total_minutes,
+          new_expert_rate: new_expert_rate
+        }
       end
 
       # pm_minutes = project_tasks.where(pm_id: user.id).sum(:charge_duration) * 0.5       # 权重 0.5

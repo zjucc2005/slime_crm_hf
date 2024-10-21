@@ -39,7 +39,14 @@
                             <th class="pl-3"><%= index + 1 %></th>
                             <td><%= info[:username] %></td>
                             <td><%= (info[:interview_minutes] / 60.0).round(1) %> h</td>
-                            <td><%= (info[:manage_minutes] / 60.0).round(1) %> h</td>
+                            <td>
+                                <%= (info[:manage_minutes] / 60.0).round(1) %> h
+                                <a href="javascript:void(0);" data-toggle="popover" data-trigger="focus" data-placement="right"
+                                    title="<%= info[:username] %>的管理小时" data-html="true"
+                                    data-content="<%= info[:manage_minutes_detail].map{|item| [item[:username], "#{(item[:interview_minutes] / 60.0).round(1)} h" ].join(', ')  }.join('<br>') %>">
+                                    详情
+                                </a>
+                            </td>
                             <td><%= (info[:total_minutes] / 60.0).round(1) %> h</td>
                             <td><%= (info[:new_expert_rate] * 100).round(1) %> %</td>
                         </tr>
