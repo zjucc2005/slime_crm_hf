@@ -182,8 +182,10 @@
             <el-form-item label="内容" prop="content" :rules="reqFormRules.content">
                 <el-input v-model="reqForm.content" type="textarea" :rows="5" clearable></el-input>
             </el-form-item>
-            <el-form-item label="需求类型" prop="category">
-                <el-input v-model="reqForm.category" clearable></el-input>
+            <el-form-item label="需求类型" prop="category" :rules="reqFormRules.category">
+                <el-select v-model="reqForm.category" placeholder="Please select" clearable>
+                    <el-option v-for="opt in req_categories" :key="opt" :label="opt" :value="opt"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="需求人数" prop="demand_number" :rules="reqFormRules.demand_number">
                 <el-input-number v-model="reqForm.demand_number" controls-position="right" :min="1"></el-input-number>
@@ -357,6 +359,9 @@
                 content: [
                     { required: true, message: '内容不能为空'},
                 ],
+                category: [
+                    { required: true, message: '需求类型不能为空'},
+                ],
                 demand_number: [
                     { required: true, message: '需求人数不能为空'},
                 ],
@@ -375,6 +380,7 @@
             user_options: [],  // 项目需求操作员
             drawer: { title: '', content: '', files: [], visible: false },
             status_dict: <%= Project::STATUS.to_json.html_safe %>,
+            req_categories: <%= ProjectRequirement::CATEGORIES.to_json.html_safe %>,
             req_status_dict: <%= ProjectRequirement::STATUS.to_json.html_safe %>,
             req_status_tag_type: { ongoing: 'success', finished: 'info', cancelled: 'info'},
             call_status_dict: <%= CallRecord::STATUS.to_json.html_safe %>,
@@ -511,62 +517,64 @@
                 this.get_user_options(project_requirement.project_id)
             },
             handleReqSubmit () {
-                let _this_ = this;
-                let formData = new FormData();
-                formData.append('title', this.reqForm.title)
-                formData.append('content', this.reqForm.content)
-                formData.append('category', this.reqForm.category)
-                formData.append('demand_number', this.reqForm.demand_number)
-                formData.append('operator_id', this.reqForm.operator_id)
-                file_count = this.reqForm.fileList.length
-                for(let i in this.reqForm.fileList) {
-                    if (this.reqForm.fileList[i].url) continue
-                    if (i == 0) {
-                        formData.append('file', this.reqForm.fileList[i].raw)
-                    } else {
-                        formData.append(`file${i}`, this.reqForm.fileList[i].raw)
+                this.$refs.reqForm.validate().then(res => {
+                    let _this_ = this;
+                    let formData = new FormData();
+                    formData.append('title', this.reqForm.title)
+                    formData.append('content', this.reqForm.content)
+                    formData.append('category', this.reqForm.category)
+                    formData.append('demand_number', this.reqForm.demand_number)
+                    formData.append('operator_id', this.reqForm.operator_id)
+                    file_count = this.reqForm.fileList.length
+                    for(let i in this.reqForm.fileList) {
+                        if (this.reqForm.fileList[i].url) continue
+                        if (i == 0) {
+                            formData.append('file', this.reqForm.fileList[i].raw)
+                        } else {
+                            formData.append(`file${i}`, this.reqForm.fileList[i].raw)
+                        }
                     }
-                }
-                if (this.reqForm.id) {
-                    formData.append('id', this.reqForm.id)
-                    $.ajax({
-                        type: 'POST',
-                        url: '/project_requirements/v_update',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(res) {
-                            if (res.status === 0){
-                                _this_.sync_project_requirement(res.data.project_requirement)
-                                _this_.reqFormVisible = false;
-                                _this_.reqForm = {}
-                                _this_.$message({ message: '提交成功', type: 'success' })
-                            }   else if (res.status === 1) {
-                                _this_.$message({ message: res.msg, type: 'error' })
+                    if (this.reqForm.id) {
+                        formData.append('id', this.reqForm.id)
+                        $.ajax({
+                            type: 'POST',
+                            url: '/project_requirements/v_update',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(res) {
+                                if (res.status === 0){
+                                    _this_.sync_project_requirement(res.data.project_requirement)
+                                    _this_.reqFormVisible = false;
+                                    _this_.reqForm = {}
+                                    _this_.$message({ message: '提交成功', type: 'success' })
+                                }   else if (res.status === 1) {
+                                    _this_.$message({ message: res.msg, type: 'error' })
+                                }
                             }
-                        }
-                    })
-                } else {
-                    formData.append('project_id', this.reqForm.project_id)
-                    $.ajax({
-                        type: 'POST',
-                        url: '/project_requirements/v_create',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(res) {
-                            if (res.status === 0){
-                                let project = _this_.projects.find(p => p.id === _this_.reqForm.project_id)
-                                project.project_requirements.unshift(res.data.project_requirement)
-                                _this_.reqFormVisible = false;
-                                _this_.reqForm = {}
-                                _this_.$message({ message: '提交成功', type: 'success' })
-                            }   else if (res.status === 1) {
-                                _this_.$message({ message: res.msg, type: 'error' })
+                        })
+                    } else {
+                        formData.append('project_id', this.reqForm.project_id)
+                        $.ajax({
+                            type: 'POST',
+                            url: '/project_requirements/v_create',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(res) {
+                                if (res.status === 0){
+                                    let project = _this_.projects.find(p => p.id === _this_.reqForm.project_id)
+                                    project.project_requirements.unshift(res.data.project_requirement)
+                                    _this_.reqFormVisible = false;
+                                    _this_.reqForm = {}
+                                    _this_.$message({ message: '提交成功', type: 'success' })
+                                }   else if (res.status === 1) {
+                                    _this_.$message({ message: res.msg, type: 'error' })
+                                }
                             }
-                        }
-                    })
-                }
+                        })
+                    }
+                }).catch(err => {})
             },
             handleReqFileChange (file, fileList) {
                 this.reqForm.fileList = fileList

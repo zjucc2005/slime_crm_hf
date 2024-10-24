@@ -22,8 +22,12 @@
                     <%= f.text_area :content, :required => true, :rows => 5, :class => 'form-control' %>
                 </div>
                 <div class="col-12 form-group">
-                    <%= f.label :demand_number %>
-                    <%= f.number_field :demand_number, :min => 1, :class => 'form-control' %>
+                    <%= f.label :category, '需求类型' %><span class="text-red">*</span>
+                    <%= f.select :category, ProjectRequirement::CATEGORIES, { prompt: default_prompt}, required: true, class: 'form-control select2' %>
+                </div>
+                <div class="col-12 form-group">
+                    <%= f.label :demand_number %><span class="text-red">*</span>
+                    <%= f.number_field :demand_number, min: 1, required: true, class: 'form-control' %>
                 </div>
                 <% [:file, :file1, :file2].each do |attr| %>
                     <div class="col-12 form-group">

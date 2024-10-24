@@ -6,6 +6,7 @@ class ProjectRequirement < ApplicationRecord
     :finished    => '已完成',
     :cancelled   => '已取消'
   }.stringify_keys
+  CATEGORIES = ['医生', 'CI', '官员', '患者']
 
   # Associations
   belongs_to :creator, :class_name => 'User', :foreign_key => :created_by

@@ -55,7 +55,7 @@ class StatisticsController < ApplicationController
 
     s_month = (params[:month].to_time rescue nil) || current_month  # 统计月份
     result = []
-    if current_user.admin?
+    if current_user.admin? || current_user.finance?
       users = User.active.where(role: %w[admin pm pa])  # 激活中用户 + 角色admin/pm/pa
     else
       users = User.where(id: current_user.id)
