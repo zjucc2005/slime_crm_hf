@@ -3,11 +3,54 @@ class CallRecordsController < ApplicationController
   load_and_authorize_resource
   before_action :authenticate_user!
 
+  def v_index; end
+  def v_load_index
+    begin
+      page = Integer(params[:page]) rescue 1
+      per_page = Integer(params[:per_page]) rescue 10
+      query = CallRecord.all
+      query = query.where('created_at >= ?', params[:created_at_ge]) if params[:created_at_ge].present?
+      query = query.where('created_at <= ?', params[:created_at_le]) if params[:created_at_le].present?
+      %w[category].each do |field|
+        query = query.where(field.to_sym => params[field.to_sym]) if params[field.to_sym].present?
+      end
+      %w[name phone company].each do |field|
+        query = query.where("#{field} ILIKE ?", "%#{params[field.to_sym].strip}%") if params[field.to_sym].present?
+      end
+      @call_records = query.order(id: :desc).paginate(page: page, per_page: per_page)
+      render json: { 
+        status: 0, 
+        data: {
+          call_records: @call_records.map(&:to_api),
+          total: query.count, page: page, per_page: per_page
+        }
+      }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
 
   # GET /call_records
   def index
     query = current_user.admin? ? CallRecord.all : CallRecord.where(operator_id: current_user.id)
     query = user_channel_filter(query)
+    query = query.where(category: 'expert')
+    query = query.where('created_at >= ?', params[:created_at_ge]) if params[:created_at_ge].present?
+    query = query.where('created_at <= ?', params[:created_at_le]) if params[:created_at_le].present?
+    %w[name phone company title].each do |field|
+      query = query.where("#{field} ILIKE ?", "%#{params[field].strip}%") if params[field].present?
+    end
+    %w[status project_id candidate_id].each do |field|
+      query = query.where(field.to_sym => params[field]) if params[field].present?
+    end
+
+    @call_records = query.order(:updated_at => :desc).paginate(:page => params[:page], :per_page => 100)
+  end
+
+  def index_doctor
+    query = current_user.admin? ? CallRecord.all : CallRecord.where(operator_id: current_user.id)
+    query = user_channel_filter(query)
+    query = query.where(category: 'doctor')
     query = query.where('created_at >= ?', params[:created_at_ge]) if params[:created_at_ge].present?
     query = query.where('created_at <= ?', params[:created_at_le]) if params[:created_at_le].present?
     %w[name phone company title].each do |field|
@@ -275,12 +318,18 @@ class CallRecordsController < ApplicationController
   # == Vue actions begin ==
   def v_create
     begin
-      @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
-      @call_record = CallRecord.new(v_call_record_params.merge(
-        created_by: current_user.id,
-        project_id: @project_requirement.project_id,
-        project_requirement_id: @project_requirement.id
-      ))
+      attrs = v_call_record_params
+      attrs[:created_by] = current_user.id
+      if params[:project_requirement_id].present?
+        @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
+        attrs[:project_id] = @project_requirement.project_id
+        attrs[:project_requirement_id] = @project_requirement.id
+      end
+      @call_record = CallRecord.new(attrs)
+      if attrs[:memo].present?
+        @call_record.memo_logs << [Time.now.to_s, attrs[:memo]]
+        @call_record.memo = @call_record.memo_logs.map{|log| log[1]}.join('; ')
+      end
       @call_record.save!
       render json: { status: 0, data: { call_record:  @call_record.to_api } }
     rescue => e
@@ -315,6 +364,11 @@ class CallRecordsController < ApplicationController
     begin
       @call_record = CallRecord.find(params[:id])
       @call_record.update!(v_call_record_params)
+      if params[:memo].present?
+        @call_record.memo_logs << [Time.now.to_s, params[:memo]]
+        @call_record.memo = @call_record.memo_logs.map{|log| log[1]}.join('; ')
+        @call_record.save!
+      end
       if @call_record.rec_status == 'ok'
         @project = Project.find(@call_record.project_id)
         @project.project_candidates.expert.find_or_create_by!(candidate_id: @call_record.candidate_id) # 把专家加入项目中
@@ -407,7 +461,8 @@ class CallRecordsController < ApplicationController
   end
 
   def v_call_record_params
-    params.permit(:category, :name, :phone, :company, :department, :title, :memo, :status, :rec_status)
+    params.permit(:category, :name, :nickname, :gender, :phone, :email, :city, :company, :department,
+                  :title, :title1, :academic_field, :remark, :memo, :status, :rec_status)
   end
 
   def load_call_record

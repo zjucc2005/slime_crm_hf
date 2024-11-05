@@ -56,12 +56,14 @@ class CallRecord < ApplicationRecord
 
   def to_api
     expose_fields(
-      :id, :category, :name, :company, :department, :title, :phone,
-      :number_of_calls, :status, :memo, :rec_status, :rec_description,
+      :id, :uid, :category, :name, :nickname, :gender, :phone, :company, :department, :title, :title1, :academic_field, :remark,
+      :number_of_calls, :status, :rec_status, :rec_description, :memo, :memo_logs, :email, :city,
       :created_by, :project_id, :project_requirement_id, :project_task_id, :candidate_id,
+      creator: creator&.name_cn,
       operator: operator&.name_cn,
       created_at: created_at.strftime('%F %T'),
-      updated_at: updated_at.strftime('%F %T')
+      updated_at: updated_at.strftime('%F %T'),
+      last_logged_at: memo_logs[-1] ? Time.parse(memo_logs[-1][0]).strftime('%F %T') : updated_at.strftime('%F %T')
     )
   end
 

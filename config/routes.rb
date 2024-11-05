@@ -194,7 +194,10 @@ Rails.application.routes.draw do
 
     post :two_way_call, on: :collection
 
-    post :v_create, on: :collection
+    get :v_index, on: :collection
+    get :v_load_index, on: :collection
+
+    post :v_create, on: :collection 
     post :v_create_batch, on: :collection
     post :v_update, on: :collection
     get :v_match_candidates, on: :collection

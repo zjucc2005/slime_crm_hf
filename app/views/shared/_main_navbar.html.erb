@@ -86,6 +86,19 @@
                     <li class="nav-item">
                         <%= link_to mt(:call_record), call_records_path, class:"nav-link #{yield :nav_call_records}" %>
                     </li>
+                    <li class="nav-item dropdown">
+                        <%= link_to '#', id: 'call-record-drop', data: { toggle: 'dropdown' }, class: "nav-link dropdown-toggle #{yield :nav_call_records}" do %>
+                            通话记录
+                        <% end %>
+                        <div class="dropdown-menu fa-fixed">
+                            <%= link_to v_index_call_records_path(category: 'expert'), data: { turbolinks: false }, class: 'dropdown-item' do %>
+                                <i class="fa fa-phone text-primary"></i>通话记录 - 专家
+                            <% end %>
+                            <%= link_to v_index_call_records_path(category: 'doctor'), data: { turbolinks: false }, class: 'dropdown-item' do %>
+                                <i class="fa fa-phone text-danger"></i>通话记录 - 医生
+                            <% end %>
+                        </div>
+                    </li>
                 <% end %>
                 <% if can? :index, Finance %>
                     <li class="nav-item">

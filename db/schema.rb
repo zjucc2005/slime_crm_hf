@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_24_145510) do
+ActiveRecord::Schema.define(version: 2024_11_01_135033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,14 @@ ActiveRecord::Schema.define(version: 2024_08_24_145510) do
     t.string "rec_status"
     t.string "rec_description"
     t.bigint "project_task_id"
+    t.string "nickname"
+    t.string "gender"
+    t.string "title1"
+    t.string "academic_field"
+    t.string "remark"
+    t.jsonb "memo_logs", default: []
+    t.string "email"
+    t.string "city"
     t.index ["candidate_id"], name: "index_call_records_on_candidate_id"
     t.index ["project_id"], name: "index_call_records_on_project_id"
   end
