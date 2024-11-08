@@ -1,7 +1,7 @@
 <div id="app">
     <el-card class="box-card top-bar-cc mb-1">
         <% if can?(:new, Project) %>
-            <el-button @click="handleProjectNew" type="primary" size="medium" icon="el-icon-plus">新增项目</el-button>
+            <el-button @click="handleProjectNew" type="primary" size="mini" icon="el-icon-plus">新增项目</el-button>
         <% else %>
             <div></div><!--占位dom-->
         <% end %>
@@ -12,20 +12,20 @@
                         @click="handleSearchRec"
                         :type="search_form.is_rec ? 'danger' : ''"
                         :icon="search_form.is_rec ? 'el-icon-check' : ''"
-                        size="medium" plain>
+                        size="mini" plain>
                         只看推荐
                     </el-button>
                 </el-badge>
             <% end %>
-            <el-input v-model="search_form._v" placeholder="请输入内容" size="medium" style="width: 640px;" clearable class="input-with-select">
+            <el-input v-model="search_form._v" placeholder="请输入内容" size="mini" style="width: 640px;" clearable class="input-with-select">
                 <el-select v-model="search_form._k" slot="prepend" placeholder="请选择" style="width: 160px;">
                     <el-option value="name" label="项目名称"></el-option>
                     <el-option value="code" label="项目编码"></el-option>
                     <el-option value="company_name_abbr" label="公司简称"></el-option>
                 </el-select>
             </el-input>
-            <el-button @click="handleSearch" type="primary" size="medium" icon="el-icon-search">搜索</el-button>
-            <el-button @click="handleSearchReset" size="medium" icon="el-icon-refresh" title="重置">重置</el-button>
+            <el-button @click="handleSearch" type="primary" size="mini" icon="el-icon-search">搜索</el-button>
+            <el-button @click="handleSearchReset" size="mini" icon="el-icon-refresh" title="重置">重置</el-button>
         </div>
     </el-card>
     <!-- 进展中的项目 -->
@@ -203,13 +203,13 @@
                 :on-change="handleReqFileChange"
                 :on-remove="handleReqFileChange"
             >
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button slot="trigger" size="mini" type="primary">选取文件</el-button>
               <div slot="tip" class="el-upload__tip">最多选择3个文件上传</div>
             </el-upload>
         </el-form>
         <span slot="footer">
-            <el-button size="small" @click="reqFormVisible = false">取消</el-button>
-            <el-button type="primary" size="small" @click="handleReqSubmit">确定</el-button>
+            <el-button size="mini" @click="reqFormVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="handleReqSubmit">确定</el-button>
         </span>
     </el-dialog>
 
@@ -234,8 +234,17 @@
             <el-table-column prop="company" label="公司/医院" width="140"></el-table-column>
             <el-table-column prop="department" label="部门/科室" width="140"></el-table-column>
             <el-table-column prop="title" label="职位" width="140"></el-table-column>
-            <el-table-column prop="memo" label="反馈"></el-table-column>
-            <el-table-column prop="phone" label="电话" width="140"></el-table-column>
+            <el-table-column prop="memo" label="沟通记录">
+                <template slot-scope="scope">
+                    <div v-for="(m, index) in scope.row.memo_logs">{{ m[1] }}</div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="phone" label="电话" width="140">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.phone_visible">{{ scope.row.phone }}</span>
+                    <el-link v-else @click="show_phone(scope.row)" type="primary" class="cc-link">查看联系方式</el-link>
+                </template>
+            </el-table-column>
             <el-table-column prop="status" label="通话状态" width="90">
                 <template slot-scope="scope">
                     <el-tag :type="call_status_tag_type[scope.row.status]" size="mini">{{ call_status_dict[scope.row.status] }}</el-tag>
@@ -256,8 +265,8 @@
             </el-table-column>
         </el-table>
         <span slot="footer">
-            <el-button @click="callShowVisible = false" size="small">取消</el-button>
-            <el-button v-if="callShow.length" @click="handleCallExport" type="warning" size="small" icon="el-icon-download">导出</el-button>
+            <el-button @click="callShowVisible = false" size="mini">取消</el-button>
+            <el-button v-if="callShow.length" @click="handleCallExport" type="warning" size="mini" icon="el-icon-download">导出</el-button>
         </span>
     </el-dialog>
 
@@ -282,8 +291,17 @@
             <el-table-column prop="company" label="公司/医院" width="140"></el-table-column>
             <el-table-column prop="department" label="部门/科室" width="140"></el-table-column>
             <el-table-column prop="title" label="职位" width="140"></el-table-column>
-            <el-table-column prop="memo" label="反馈"></el-table-column>
-            <el-table-column prop="phone" label="电话" width="140"></el-table-column>
+            <el-table-column prop="memo" label="沟通记录">
+                <template slot-scope="scope">
+                    <div v-for="(m, index) in scope.row.memo_logs">{{ m[1] }}</div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="phone" label="电话" width="140">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.phone_visible">{{ scope.row.phone }}</span>
+                    <el-link v-else @click="show_phone(scope.row)" type="primary" class="cc-link">查看联系方式</el-link>
+                </template>
+            </el-table-column>
             <el-table-column prop="rec_description" label="推荐描述" width="90">
                 <template slot-scope="scope">
                     <el-button @click="handleRecDescription(scope.row.rec_description)" size="mini">查看</el-button>
@@ -316,14 +334,14 @@
             </el-table-column>
         </el-table>
         <span slot="footer">
-            <el-button size="small" @click="callOverviewVisible = false">取消</el-button>
+            <el-button size="mini" @click="callOverviewVisible = false">取消</el-button>
         </span>
     </el-dialog>
 
     <el-dialog title="推荐描述" :visible.sync="recDescriptionVisible" :close-on-click-modal="false">
         <div id="rec-description-content" class="rec-description-cc">{{ recDescription }}</div>
         <span slot="footer">
-            <el-button @click="clipboard" type="primary" size="small">复制</el-button>
+            <el-button @click="clipboard" type="primary" size="mini">复制</el-button>
         </span>
     </el-dialog>
 </div>
@@ -614,7 +632,10 @@
             },
             clipboard () {
                 clipboard('rec-description-content')
-            }
+            },
+            show_phone(call_record) {
+                Vue.set(call_record, 'phone_visible', true)
+            },
         }
     })
 </script>
@@ -630,7 +651,7 @@
         align-items: center;
     }
     .el-card__header { padding: 9px 12px; }
-    .el-card__body { padding: 12px; }
+    .el-card__body { padding: 6px; }
     .drawer-content {
         padding: 0 20px;
         font-size: 0.9rem;
@@ -643,5 +664,8 @@
     }
     .rec-description-cc {
         white-space: pre-line;
+    }
+    .cc-link {
+        font-size: 12px;
     }
 </style>

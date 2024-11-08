@@ -374,7 +374,7 @@ zh_cn:
         phone: "电话"
         number_of_calls: "拨打次数"
         status: "状态"
-        memo: "反馈"
+        memo: "沟通记录"
         operator: "操作员"
         project_id: "关联项目ID"
         project: "关联项目"

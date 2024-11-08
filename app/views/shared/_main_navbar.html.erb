@@ -83,9 +83,6 @@
                     </li>
                 <% end %>
                 <% if can? :index, CallRecord %>
-                    <li class="nav-item">
-                        <%= link_to mt(:call_record), call_records_path, class:"nav-link #{yield :nav_call_records}" %>
-                    </li>
                     <li class="nav-item dropdown">
                         <%= link_to '#', id: 'call-record-drop', data: { toggle: 'dropdown' }, class: "nav-link dropdown-toggle #{yield :nav_call_records}" do %>
                             通话记录

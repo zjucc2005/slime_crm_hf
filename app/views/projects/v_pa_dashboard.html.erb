@@ -122,7 +122,11 @@
                             <el-table-column prop="company" label="公司/医院" width="140"></el-table-column>
                             <el-table-column prop="department" label="部门/科室" width="140"></el-table-column>
                             <el-table-column prop="title" label="职位" width="140"></el-table-column>
-                            <el-table-column prop="memo" label="反馈"></el-table-column>
+                            <el-table-column prop="memo" label="沟通记录">
+                                <template slot-scope="scope">
+                                    <div v-for="(m, index) in scope.row.memo_logs">{{ m[1] }}</div>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="phone" label="电话" width="140"></el-table-column>
                             <el-table-column prop="status" label="通话状态" width="100">
                                 <template slot-scope="scope">
@@ -217,7 +221,12 @@
             <el-form-item label="职位" prop="title">
                 <el-input v-model="callForm.title" clearable></el-input>
             </el-form-item>
-            <el-form-item label="反馈" prop="memo">
+            <el-timeline style="margin-left: 10px;">
+                <el-timeline-item v-for="(item, index) in callForm.memo_logs" :key="index" :timestamp="item[0]">
+                    {{ item[1] }}
+                </el-timeline-item>
+            </el-timeline>
+            <el-form-item label="沟通记录" prop="memo">
                 <el-input v-model="callForm.memo" clearable></el-input>
             </el-form-item>
             <el-form-item label="通话状态" prop="status" :rules="callFormRules.status">
@@ -229,8 +238,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button size="small" @click="callFormVisible = false">取消</el-button>
-            <el-button type="primary" size="small" @click="handleCallSubmit">确定</el-button>
+            <el-button size="mini" @click="callFormVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="handleCallSubmit">确定</el-button>
         </span>
     </el-dialog>
 
@@ -250,13 +259,13 @@
                 <el-table-column prop="company" label="公司/医院"></el-table-column>
                 <el-table-column prop="department" label="部门/科室"></el-table-column>
                 <el-table-column prop="title" label="职位"></el-table-column>
-                <el-table-column prop="memo" label="反馈"></el-table-column>
+                <el-table-column prop="memo" label="沟通记录"></el-table-column>
             </el-table>
         </template>
         <span slot="footer" class="dialog-footer">
-            <el-button v-if="callBatchStep == 1 && callBatchForm.raw" @click="handleCallBatchPreview" type="primary" size="small">预览</el-button>
-            <el-button v-if="callBatchStep == 2" @click="handleCallBatchReset" size="small">重置</el-button>
-            <el-button v-if="callBatchStep == 2 && callBatchForm.call_records.length" @click="handleCallBatchSubmit" type="primary" size="small">确定</el-button>
+            <el-button v-if="callBatchStep == 1 && callBatchForm.raw" @click="handleCallBatchPreview" type="primary" size="mini">预览</el-button>
+            <el-button v-if="callBatchStep == 2" @click="handleCallBatchReset" size="mini">重置</el-button>
+            <el-button v-if="callBatchStep == 2 && callBatchForm.call_records.length" @click="handleCallBatchSubmit" type="primary" size="mini">确定</el-button>
         </span>
     </el-dialog>
 
@@ -371,12 +380,12 @@
         </template>
         <span slot="footer" class="dialog-footer-cc">
             <div>
-                <el-button v-if="rukuStep===2" type="primary" size="small" @click="rukuStep=1;rukuForm={};">上一步</el-button>
+                <el-button v-if="rukuStep===2" type="primary" size="mini" @click="rukuStep=1;rukuForm={};">上一步</el-button>
             </div>
             <div>
-                <el-button size="small" @click="rukuFormVisible = false">取消</el-button>
-                <el-button v-if="rukuStep===1" type="primary" size="small" @click="handleRukuNew">新增专家</el-button>
-                <el-button v-if="rukuStep===2" type="primary" size="small" @click="handleRukuSubmit">确定</el-button>
+                <el-button size="mini" @click="rukuFormVisible = false">取消</el-button>
+                <el-button v-if="rukuStep===1" type="primary" size="mini" @click="handleRukuNew">新增专家</el-button>
+                <el-button v-if="rukuStep===2" type="primary" size="mini" @click="handleRukuSubmit">确定</el-button>
             </div>
         </span>
     </el-dialog>
@@ -402,8 +411,8 @@
         </el-form>
           
         <span slot="footer">
-            <el-button size="small" @click="tuijianFormVisible = false">取消</el-button>
-            <el-button type="primary" size="small" @click="handleTuijianSubmit">确定</el-button>
+            <el-button size="mini" @click="tuijianFormVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="handleTuijianSubmit">确定</el-button>
         </span>
     </el-dialog>
 
@@ -415,8 +424,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer">
-            <el-button size="small" @click="hosDepFormVisible = false">取消</el-button>
-            <el-button type="primary" size="small" @click="handleHosDepSubmit">确定</el-button>
+            <el-button size="mini" @click="hosDepFormVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="handleHosDepSubmit">确定</el-button>
         </span>
     </el-dialog>
 </div>
@@ -612,6 +621,7 @@
             handleCallEdit (call_record) {
                 this.callFormVisible = true
                 this.callForm = call_record
+                this.callForm.memo = ''
             },
             handleCallSubmit () {
                 let _this_ = this;
