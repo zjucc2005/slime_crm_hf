@@ -327,8 +327,7 @@ class CallRecordsController < ApplicationController
       end
       @call_record = CallRecord.new(attrs)
       if attrs[:memo].present?
-        @call_record.memo_logs << [Time.now.to_s, attrs[:memo]]
-        @call_record.memo = @call_record.memo_logs.map{|log| log[1]}.join('; ')
+        @call_record.add_memo(attrs[:memo])
       end
       @call_record.save!
       render json: { status: 0, data: { call_record:  @call_record.to_api } }
@@ -339,17 +338,24 @@ class CallRecordsController < ApplicationController
 
   def v_create_batch
     begin
-      @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
+      if params[:project_requirement_id].present?
+        @project_requirement = ProjectRequirement.find(params[:project_requirement_id])
+      end
       @call_records = []
       ActiveRecord::Base.transaction do
         params[:call_records].each do |k, item|
           call_record = CallRecord.new(
             created_by: current_user.id,
-            project_id: @project_requirement.project_id,
-            project_requirement_id: @project_requirement.id,
-            category: item[:category], name: item[:name], phone: item[:phone],
-            company: item[:company], department: item[:department], title: item[:title], memo: item[:memo]
+            project_id: @project_requirement&.project_id,
+            project_requirement_id: @project_requirement&.id,
+            category: item[:category], name: item[:name], nickname: item[:nickname], gender: item[:gender],
+            phone: item[:phone], email: item[:email], city: item[:city],
+            company: item[:company], department: item[:department], title: item[:title], title1: item[:title1],
+            academic_field: item[:academic_field], remark: item[:remark]
           )
+          if item[:memo].present?
+            call_record.add_memo(item[:memo])
+          end
           call_record.save!
           @call_records << call_record
         end
@@ -365,8 +371,7 @@ class CallRecordsController < ApplicationController
       @call_record = CallRecord.find(params[:id])
       @call_record.update!(v_call_record_params)
       if params[:memo].present?
-        @call_record.memo_logs << [Time.now.to_s, params[:memo]]
-        @call_record.memo = @call_record.memo_logs.map{|log| log[1]}.join('; ')
+        @call_record.add_memo(params[:memo])
         @call_record.save!
       end
       if @call_record.rec_status == 'ok'

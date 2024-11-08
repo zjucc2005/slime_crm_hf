@@ -81,6 +81,11 @@ class CallRecord < ApplicationRecord
     query # return
   end
 
+  def add_memo(text)
+    self.memo_logs << [Time.now.to_s, text.strip]
+    self.memo = self.memo_logs.map{|log| log[1]}.join('; ')
+  end
+
   private
   def setup
     self.status ||= 'pending'

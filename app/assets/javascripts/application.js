@@ -27,6 +27,29 @@ Vue.filter('url_basename', function(val) {
   return decodeURI(res || '')
 })
 
+const open_spreadsheet = (file) => {
+  return new Promise((resolve, reject) => {
+    let arr = file.name.split('.');
+    let extname = arr[arr.length - 1]
+    if (!['xlsx', 'xls'].includes(extname)) {
+      return reject({ msg: '不支持解析该文件格式' })
+    }
+
+    const reader = new FileReader();
+      reader.readAsBinaryString(file.raw);
+      reader.onload = e => {
+          const data = e.target.result;
+          const excel = window.XLS.read(data, { type: 'binary' });
+          const sheet = window.XLS.utils.sheet_to_csv(excel.Sheets[excel.SheetNames[0]], { FS: '|' })
+          let rows = []
+          sheet.split("\n").forEach((item, index) => {
+            rows.push(item.split('|'))
+          })
+          resolve({ rows: rows, sheet_name: excel.SheetNames[0] })
+      }
+  })
+}
+
 // 导出excel的封装方法
 function exportDataAsExcel(header, dataList, filename) {
   // 验证是否有导出数据
