@@ -93,7 +93,7 @@ class CardTemplatesController < ApplicationController
     # 套用模板
     begin
       @card_template = CardTemplate.find(params[:id])
-      render json: { status: 0, data: { content: @card_template.result(params[:candidate_id]) } }
+      render json: { status: 0, data: { content: @card_template.result(params[:candidate_id])&.gsub("\n", "\r\n") } }
     rescue => e
       render json: { status: 1, msg: e.message }
     end

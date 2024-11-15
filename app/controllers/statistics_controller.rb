@@ -61,7 +61,9 @@ class StatisticsController < ApplicationController
       users = User.where(id: current_user.id)
     end
     users = user_channel_filter(users)
-    project_tasks = ProjectTask.where(status: 'finished').where('started_at >= ? AND started_at < ?', s_month, s_month + 1.month)
+    project_tasks = ProjectTask.where(status: 'finished').where('started_at BETWEEN ? AND ?', s_month, s_month + 1.month)
+    project_requirements = ProjectRequirement.where.not(status: 'cancelled').where('created_at BETWEEN ? AND ?', s_month, s_month + 1.month)
+    call_records = CallRecord.where('created_at BETWEEN ? AND ?', s_month, s_month + 1.month)
     users.each do |user|
       if user.is_role?('admin', 'pm')
         interview_minutes = project_tasks.where(created_by: user.id).sum(:charge_duration)
@@ -76,6 +78,8 @@ class StatisticsController < ApplicationController
         manage_minutes = 0.0
         manage_minutes_detail = []
       end
+      sum_demand = project_requirements.where(operator_id: user.id).sum(:demand_number)
+      sum_succ = call_records.where(rec_status: 'succ', created_by: user.id).count
       total_minutes = interview_minutes + manage_minutes
       if total_minutes > 0
         new_expert_count = project_tasks.where(created_by: user.id, is_new_expert: true).count
@@ -87,7 +91,8 @@ class StatisticsController < ApplicationController
           manage_minutes: manage_minutes,
           manage_minutes_detail: manage_minutes_detail,
           total_minutes: total_minutes,
-          new_expert_rate: new_expert_rate
+          new_expert_rate: new_expert_rate,
+          zhuanhualv: sum_demand.zero? ? 0 : (sum_succ.to_f / sum_demand).round(3)
         }
       end
 
@@ -270,6 +275,61 @@ class StatisticsController < ApplicationController
       rescue => e
         render json: { status: 1, msg: e.message }
       end
+    end
+  end
+
+  def v_ongoing_sta
+    begin
+      sum_project = current_user.projects.where(status: 'ongoing').count
+      sum_demand = 0
+      sum_recommended = 0
+      sum_hold = 0
+      sum_succ = 0
+      infos = [] # 明细 { user_id: 1, username: 'xx', sum_demand: 1, sum_succ: 1, zhuanhualv: 1.0 }
+      if current_user.is_role? 'pm'
+        current_user.projects.where(status: 'ongoing').each do |project|
+          sum_demand += project.project_requirements.where.not(status: 'cancelled').sum(:demand_number)
+          sum_recommended += project.call_records.where(rec_status: 'recommended').count
+          sum_hold += project.call_records.where(rec_status: 'hold').count
+          sum_succ += project.call_records.where(rec_status: 'succ').count
+          project.users.each do |user|
+            _info = infos.select{ |info| info[:user_id] == user.id }[0]
+            _sum_demand = project.project_requirements.where.not(status: 'cancelled').where(operator_id: user.id).sum(:demand_number)
+            _sum_succ = project.call_records.where(rec_status: 'succ', created_by: user.id).count
+            next if _sum_demand.zero?
+            if _info
+              _info[:sum_demand] += _sum_demand
+              _info[:sum_succ] += _sum_succ
+            else
+              infos << { user_id: user.id, username: user.name_cn, sum_demand: _sum_demand, sum_succ: _sum_succ }
+            end
+          end
+        end
+      elsif current_user.is_role? 'pa'
+        current_user.projects.where(status: 'ongoing').each do |project|
+          sum_demand += project.project_requirements.where.not(status: 'cancelled').where(operator_id: current_user.id).sum(:demand_number)
+          sum_recommended += project.call_records.where(rec_status: 'recommended', created_by: current_user.id).count
+          sum_hold += project.call_records.where(rec_status: 'hold', created_by: current_user.id).count
+          sum_succ += project.call_records.where(rec_status: 'succ', created_by: current_user.id).count
+        end
+      end
+
+      infos.each do |info|
+        info[:zhuanhualv] = (info[:sum_succ].to_f / info[:sum_demand]).round(3)
+      end
+
+      @data = {
+        sum_project: sum_project,
+        sum_demand: sum_demand,
+        sum_recommended: sum_recommended,
+        sum_hold: sum_hold,
+        sum_succ: sum_succ,
+        zhuanhualv: sum_demand.zero? ? 0 : (sum_succ.to_f / sum_demand).round(3),
+        infos: infos
+      }
+      render json: { status: 0, data: @data }
+    rescue => e
+      render json: { status: 1, msg: e.message }
     end
   end
 

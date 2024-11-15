@@ -242,6 +242,8 @@ Rails.application.routes.draw do
     get :finance_summary,            on: :collection
 
     get :v_monthly_new, on: :collection
+
+    get :v_ongoing_sta, on: :collection
   end
 
   resources :extras do

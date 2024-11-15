@@ -40,7 +40,11 @@
             <el-table-column prop="department" label="部门"></el-table-column>
             <el-table-column prop="title" label="职位"></el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
-            <el-table-column prop="number_of_calls" label="拨打次数" width="70"></el-table-column>
+            <el-table-column prop="number_of_calls" label="拨打次数" width="70">
+                <template slot-scope="scope">
+                    {{ scope.row.memo_logs.length }}
+                </template>
+            </el-table-column>
             <el-table-column prop="creator" label="创建者" width="70"></el-table-column>
             <el-table-column prop="updated_at" label="最后沟通时间" width="100">
                 <template slot-scope="scope">
@@ -477,9 +481,7 @@
             },
             debug() {
                 console.log('this.$data', this.$data)
-            },
-            
-
+            }
         }
     })
 </script>
