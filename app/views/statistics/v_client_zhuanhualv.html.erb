@@ -86,6 +86,7 @@
                     return
                 }
                 $.get('/statistics/v_client_zhuanhualv_data', this.search_form, (res) => {
+                    console.log('load_sta_data res', res)
                     this.sta_data = res.data
                 })
             },
