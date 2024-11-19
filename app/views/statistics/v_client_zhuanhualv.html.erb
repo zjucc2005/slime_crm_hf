@@ -38,14 +38,14 @@
     <!-- 统计结果 -->
     <el-card class="box-card mb-1">
         <el-table :data="sta_data" size="mini" border stripe>
-            <el-table-column prop="uid" label="ID" width="62"></el-table-column>
+            <el-table-column prop="uid" label="ID" width="70"></el-table-column>
             <el-table-column prop="name" label="姓名"></el-table-column>
             <el-table-column prop="nickname" label="昵称"></el-table-column>
             <el-table-column prop="company_name" label="公司"></el-table-column>
             <el-table-column prop="title" label="职位"></el-table-column>
-            <el-table-column prop="sum_demand" label="需求总人数"></el-table-column>
-            <el-table-column prop="sum_succ" label="约访总人数"></el-table-column>
-            <el-table-column prop="zhuanhualv" label="转化率" >
+            <el-table-column prop="sum_demand" label="需求总人数" sortable></el-table-column>
+            <el-table-column prop="sum_succ" label="约访总人数" sortable></el-table-column>
+            <el-table-column prop="zhuanhualv" label="转化率" sortable>
                 <template slot-scope="scope">{{ scope.row.zhuanhualv * 1000 / 10 }} %</template>
             </el-table-column>
         </el-table>

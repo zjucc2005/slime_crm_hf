@@ -375,14 +375,16 @@ class StatisticsController < ApplicationController
         item[:nickname] = client.nickname
         item[:company_name] = client.company.name
         item[:title] = client.title
-        if item[:sum_demand].zero?
-          item[:zhuanhualv] = item[:sum_succ].zero? ? 0 : 1
+        if item[:sum_succ].zero?
+          item[:zhuanhualv] = 0
+        elsif item[:sum_demand].zero?
+          item[:zhuanhualv] = 1
         else
           item[:zhuanhualv] = (item[:sum_succ].to_f / item[:sum_demand]).round(3)
         end
       end
-      @data = @data.sort_by{ |x| x[:zhuanhualv] }
-      render json: { status: 0, data: @data.reverse }
+      # @data = @data.sort_by{ |x| x[:zhuanhualv] }
+      render json: { status: 0, data: @data }
     rescue => e
       render json: { status: 1, msg: e.message }
     end
