@@ -346,15 +346,14 @@ class StatisticsController < ApplicationController
       raise '统计时间不能为空' if stime.blank?
       etime = etime || Time.now
       @data = []
-      project_requirements = ProjectRequirement.where.not(status: 'cancelled').where('created_at BETWEEN ? AND ?', stime, etime)
+      project_requirements = ProjectRequirement.where.not(status: 'cancelled').where('demand_number > 0').where('created_at BETWEEN ? AND ?', stime, etime)
       project_requirements.each do |req|
-        next if req.demand_number.zero?
         req.project.project_candidates.client.each do |p_c|
           item = @data.select{|x| x[:id] == p_c.candidate_id }[0]
           if item
             item[:sum_demand] += req.demand_number
           else
-            @data << { id: p_c.candidate_id, sum_demand: req.demand_number || 0, sum_succ: 0 }
+            @data << { id: p_c.candidate_id, sum_demand: req.demand_number, sum_succ: 0 }
           end
         end
       end
