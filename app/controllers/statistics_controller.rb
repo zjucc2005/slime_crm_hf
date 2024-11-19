@@ -348,6 +348,7 @@ class StatisticsController < ApplicationController
       @data = []
       project_requirements = ProjectRequirement.where.not(status: 'cancelled').where('created_at BETWEEN ? AND ?', stime, etime)
       project_requirements.each do |req|
+        next if req.demand_number.zero?
         req.project.project_candidates.client.each do |p_c|
           item = @data.select{|x| x[:id] == p_c.candidate_id }[0]
           if item
