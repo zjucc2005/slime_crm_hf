@@ -244,6 +244,9 @@ Rails.application.routes.draw do
     get :v_monthly_new, on: :collection
 
     get :v_ongoing_sta, on: :collection
+
+    get :v_client_zhuanhualv, on: :collection
+    get :v_client_zhuanhualv_data, on: :collection
   end
 
   resources :extras do

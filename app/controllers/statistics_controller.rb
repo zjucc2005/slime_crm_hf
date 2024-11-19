@@ -333,4 +333,55 @@ class StatisticsController < ApplicationController
     end
   end
 
+  def v_client_zhuanhualv_data
+    begin
+      if params[:time_range] == 'season'
+        stime = Time.now.beginning_of_quarter
+      elsif params[:time_range] == 'year'
+        stime = Time.now.beginning_of_year
+      else
+        stime = params[:stime]&.to_time
+        etime = params[:etime]&.to_time
+      end
+      raise '统计时间不能为空' if stime.blank?
+      etime = etime || Time.now
+      @data = []
+      project_requirements = ProjectRequirement.where.not(status: 'cancelled').where('created_at BETWEEN ? AND ?', stime, etime)
+      project_requirements.each do |req|
+        req.project.project_candidates.client.each do |p_c|
+          item = @data.select{|x| x[:id] == p_c.candidate_id }[0]
+          if item
+            item[:sum_demand] += req.demand_number
+          else
+            @data << { id: p_c.candidate_id, sum_demand: req.demand_number || 0, sum_succ: 0 }
+          end
+        end
+      end
+      project_tasks = ProjectTask.where(status: 'finished').where('started_at BETWEEN ? AND ?', stime, etime)
+      project_tasks.each do |task|
+        task.project.project_candidates.client.each do |p_c|
+          item = @data.select{|x| x[:id] == p_c.candidate_id }[0]
+          if item
+            item[:sum_succ] += 1
+          else
+            @data << { id: p_c.candidate_id, sum_demand: 0, sum_succ: 1 }
+          end
+        end
+      end
+      @data.each do |item|
+        client = Candidate.find(item[:id])
+        item[:uid] = client.uid
+        item[:name] = client.name
+        item[:nickname] = client.nickname
+        item[:company_name] = client.company.name
+        item[:title] = client.title
+        item[:zhuanhualv] = (item[:sum_succ].to_f / item[:sum_demand]).round(3)
+      end
+      @data.sort_by!{ |x| x[:zhuanhualv] }.reverse!
+      render json: { status: 0, data: @data }
+    rescue => e
+      render json: { status: 1, msg: e.message }
+    end
+  end
+
 end

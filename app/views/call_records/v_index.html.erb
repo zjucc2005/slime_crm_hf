@@ -1,13 +1,13 @@
 <div id="app">
     <!-- 工具栏 -->
-    <el-card class="box-card cc-top-bar mb-1">
+    <el-card class="mb-1">
         <el-radio-group v-model="category" size="mini" @input="category_change">
             <el-radio-button label="expert">专家</el-radio-button>
             <el-radio-button label="doctor">医生</el-radio-button>
         </el-radio-group>
         <el-button type="primary" size="mini" icon="el-icon-plus" @click="call_record_new">新增通话记录</el-button>
         <el-button type="warning" size="mini" icon="el-icon-upload2" @click="import_dialog_visible = true">批量导入</el-button>
-        <el-button size="mini" icon="el-icon-search" @click="search_form.visible = true">搜索</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-search" @click="search_form.visible = true">搜索</el-button>
         <%# <el-button size="mini" @click="debug">DEBUG</el-button> %>
     </el-card>
     <!-- 通话记录列表 -->
@@ -471,7 +471,7 @@
                                 this.$refs.import_upload.clearFiles()
                                 this.$message({ message: '提交成功', type: 'success' })
                             } else if (res.status === 1) {
-                                _this_.$message({ message: res.msg, type: 'error' })
+                                this.$message({ message: res.msg, type: 'error' })
                             }
                         }
                     })

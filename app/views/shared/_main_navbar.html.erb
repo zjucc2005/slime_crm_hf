@@ -126,6 +126,9 @@
                             <%= link_to current_month_task_ranking_statistics_path, class: 'dropdown-item' do %>
                                 <i class="fa fa-sort-amount-desc text-danger"></i> 收费小时数排名
                             <% end %>
+                            <%= link_to v_client_zhuanhualv_statistics_path, data: { turbolinks: false }, class: 'dropdown-item' do %>
+                                <i class="fa fa-sort-amount-desc text-danger"></i> 转化率排名 - 客户联系人
+                            <% end %>
                         </div>
                     </li>
                 <% end %>
