@@ -49,13 +49,13 @@
                 let loading = this.$loading()
                 let _this_ = this;
                 $.get('/statistics/v_monthly_new', this.search_form, function (res) {
+                    loading.close()
                     _this_.res_data = res.data
                     let _data_ = res.data
                     if (_data_.length === 0) {
                         _data_ = [{ name: '无数据', income: 0, profit: 0 }]
                     }
                     _this_.set_line_chart(_data_)
-                    loading.close()
                 })
             },
             set_line_chart (data) {

@@ -72,11 +72,11 @@
                     <template #title>
                         转化率
                         <el-popover placement="bottom" width="400" trigger="click">
-                            <el-table :data="ongoing_sta.infos">
+                            <el-table :data="ongoing_sta.infos.filter(x => x.zhuanhualv > 0)" size="mini">
                                 <el-table-column property="username" label="名字(中文)"></el-table-column>
                                 <el-table-column property="zhuanhualv" label="转化率">
                                     <template slot-scope="scope">
-                                        {{ scope.row.zhuanhualv * 100 }} %
+                                        {{ scope.row.zhuanhualv * 1000 / 10 }} %
                                     </template>
                                 </el-table-column>
                             </el-table>
