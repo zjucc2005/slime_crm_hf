@@ -348,6 +348,7 @@ class StatisticsController < ApplicationController
       @data = []
       project_requirements = ProjectRequirement.where.not(status: 'cancelled').where('demand_number > 0').where('created_at BETWEEN ? AND ?', stime, etime)
       project_requirements.each do |req|
+        next if req.project.nil?
         req.project.project_candidates.client.each do |p_c|
           item = @data.select{|x| x[:id] == p_c.candidate_id }[0]
           if item
@@ -359,6 +360,7 @@ class StatisticsController < ApplicationController
       end
       project_tasks = ProjectTask.where(status: 'finished').where('started_at BETWEEN ? AND ?', stime, etime)
       project_tasks.each do |task|
+        next if task.project.nil?
         task.project.project_candidates.client.each do |p_c|
           item = @data.select{|x| x[:id] == p_c.candidate_id }[0]
           if item

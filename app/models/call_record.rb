@@ -54,6 +54,10 @@ class CallRecord < ApplicationRecord
     end
   end
 
+  def last_logged_at
+    memo_logs[-1] ? Time.parse(memo_logs[-1][0]) : created_at
+  end
+
   def to_api
     expose_fields(
       :id, :uid, :category, :name, :nickname, :gender, :phone, :company, :department, :title, :title1, :academic_field, :remark,
@@ -63,7 +67,7 @@ class CallRecord < ApplicationRecord
       operator: operator&.name_cn,
       created_at: created_at.strftime('%F %T'),
       updated_at: updated_at.strftime('%F %T'),
-      last_logged_at: memo_logs[-1] ? Time.parse(memo_logs[-1][0]).strftime('%F %T') : updated_at.strftime('%F %T')
+      last_logged_at: last_logged_at.strftime('%F %T')
     )
   end
 

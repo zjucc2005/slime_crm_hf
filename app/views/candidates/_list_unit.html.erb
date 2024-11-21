@@ -58,7 +58,7 @@
             <% call_record = user_channel_filter(candidate.call_records).order(:updated_at => :desc).first %>
             <% if call_record %>
                 <div class="text-smaller" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="<%= call_record.memo %>">
-                    <span class="text-gray mr-1"><%= call_record.updated_at.strftime('%F') %></span>
+                    <span class="text-gray mr-1"><%= call_record.last_logged_at.strftime('%F') %></span>
                     <span>[<%= call_record.operator.name_cn %>]</span>
                     <%= call_record_status_badge(call_record.status) %>
                     <span><%= truncate(call_record.memo, length: 20) %></span>

@@ -264,11 +264,15 @@
                                         <span class="badge badge-light"><%= show_creator(call_record) %></span>
                                         <span class="badge badge-light"><%= "#{mt(:user, :created_at)}: #{call_record.created_at.strftime('%F %T')}" %></span>
                                     </div>
+                                    <% if call_record.project %>
                                     <div>
                                         <span class="badge badge-light"><%= call_record.project&.name %></span> /
                                         <span class="badge badge-light"><%= call_record.project_requirement&.title %></span>
                                     </div>
-                                    <p class="content"><%= call_record.memo %></p>
+                                    <% end %>
+                                    <% call_record.memo_logs.each do |log| %>
+                                        <div class="text-smaller"><%= [log[0].to_time.strftime('%F %T'), log[1]].join(' ') %></div>
+                                    <% end %>
                                 </div>
                             <% end %>
                             <% @candidate_comments.each do |comment| %>

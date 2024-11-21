@@ -48,7 +48,7 @@
             <el-table-column prop="creator" label="创建者" width="70"></el-table-column>
             <el-table-column prop="updated_at" label="最后沟通时间" width="100">
                 <template slot-scope="scope">
-                    <el-tooltip :content="scope.row.updated_at.split(' ')[1]" placement="right">
+                    <el-tooltip :content="scope.row.last_logged_at.split(' ')[1]" placement="right">
                         <el-button size="mini" type="text">{{ scope.row.updated_at.split(' ')[0] }}</el-button>
                     </el-tooltip>
                 </template>
