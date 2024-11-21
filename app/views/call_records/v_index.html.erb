@@ -418,9 +418,7 @@
                 for (let field of ['created_at_ge', 'created_at_le', 'name', 'phone', 'company']) {
                     if (this.search_form[field]) params[field] = this.search_form[field]
                 }
-                let loading = this.$loading()
                 $.get('/call_records/v_load_index', params, (res) => {
-                    loading.close()
                     this.call_records = res.data.call_records
                     this.total = res.data.total
                 })

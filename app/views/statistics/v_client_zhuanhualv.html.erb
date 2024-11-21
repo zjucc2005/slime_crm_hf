@@ -85,7 +85,9 @@
                     this.$message({ message: '统计时间不能为空', type: 'error' })
                     return
                 }
+                let loading = this.$loading()
                 $.get('/statistics/v_client_zhuanhualv_data', this.search_form, (res) => {
+                    loading.close()
                     console.log('load_sta_data res', res)
                     this.sta_data = res.data
                 })
