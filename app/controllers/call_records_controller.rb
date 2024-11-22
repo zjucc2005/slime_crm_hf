@@ -100,6 +100,9 @@ class CallRecordsController < ApplicationController
   def remote_create_for_candidate
     begin
       @call_record = CallRecord.new(call_record_params.merge(created_by: current_user.id))
+      if params[:call_record][:memo].present?
+        @call_record.add_memo(params[:call_record][:memo])
+      end
       @error = nil
       if @call_record.save
         # 自动添加通话记录中专家到项目, 补齐关联关系
@@ -461,13 +464,13 @@ class CallRecordsController < ApplicationController
 
   private
   def call_record_params
-    params.require(:call_record).permit(:name, :phone, :company, :department, :title, :status, :memo, :project_id,
+    params.require(:call_record).permit(:name, :phone, :company, :department, :title, :status, :project_id,
                                         :project_requirement_id, :candidate_id, :operator_id, :category)
   end
 
   def v_call_record_params
     params.permit(:category, :name, :nickname, :gender, :phone, :email, :city, :company, :department,
-                  :title, :title1, :academic_field, :remark, :memo, :status, :rec_status)
+                  :title, :title1, :academic_field, :remark, :status, :rec_status)
   end
 
   def load_call_record
