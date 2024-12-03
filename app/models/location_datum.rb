@@ -121,16 +121,34 @@ class LocationDatum < ApplicationRecord
     # mobile location api
     def mobile_location(num)
       begin
-        url = "https://tool.bitefu.net/shouji/?mobile=#{num}"
-        res = Utils::Api.get(url)
+        
+        url = "http://phone.yinhangkadata.com/Mobilegsd"
+        res = Utils::Api.post(url, { mobile: num }, {}, { set_form_data: true })
         if res.code == '200'
-          data = JSON.parse res.body
-          city = "#{data['province']}#{data['city']}"
-          type = data['isp']
+          data = res.body.force_encoding('utf-8')
+          puts "data: #{data}"
+          arr = data.split("\n")
+          raw_city = arr[7]
+          m_city = raw_city.match(/<p align="center">(.+)<\/td>/)
+          city = m_city ? m_city[1].gsub(' - ', '') : ''
+          raw_type = arr[11]
+          m_type = raw_type.match(/<p align="center">(.+)<\/td>/)
+          type = m_type ? m_type[1] : ''
           [city, type]
         else
           raise "http code: #{res.code}"
         end
+
+        # url = "https://tool.bitefu.net/shouji/?mobile=#{num}"
+        # res = Utils::Api.get(url)
+        # if res.code == '200'
+        #   data = JSON.parse res.body
+        #   city = "#{data['province']}#{data['city']}"
+        #   type = data['isp']
+        #   [city, type]
+        # else
+        #   raise "http code: #{res.code}"
+        # end
 
         # url = "http://ip168.com/chxip/doGetMobile.do?keyword=#{num}"
         # res = Utils::Api.get(url)
@@ -148,6 +166,7 @@ class LocationDatum < ApplicationRecord
         #   raise "http code: #{res.code}"
         # end
       rescue => e
+        puts e.message
         []
       end
     end

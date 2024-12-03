@@ -46,6 +46,9 @@ module Utils
         when 'DELETE' then request.set_form_data(params)
         else raise NoMethodError
       end
+      if options[:set_form_data]
+        request.set_form_data(params)
+      end
 
       Rails.logger.info("CALL: url[#{url}]")
       unless Rails.env.production?

@@ -329,8 +329,8 @@ class CallRecordsController < ApplicationController
         attrs[:project_requirement_id] = @project_requirement.id
       end
       @call_record = CallRecord.new(attrs)
-      if attrs[:memo].present?
-        @call_record.add_memo(attrs[:memo])
+      if params[:memo].present?
+        @call_record.add_memo(params[:memo])
       end
       @call_record.save!
       render json: { status: 0, data: { call_record:  @call_record.to_api } }
