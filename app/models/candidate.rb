@@ -222,7 +222,6 @@ class Candidate < ApplicationRecord
     else
       nil
     end
-s
     # case cpt
     # when 0..1000 then 0
     # when 1000..1500 then 200
