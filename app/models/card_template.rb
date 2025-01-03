@@ -4,7 +4,7 @@ class CardTemplate < ApplicationRecord
 
   # ENUM
   CATEGORY = {
-    :Candidate => %w[uid name first_name last_name city phone description company department hospital_level title title2 expert_level rate rate_2 gj_rate iqvia_rate iqvia_rate2]
+    :Candidate => %w[uid name first_name last_name city phone description company department hospital_level title title2 expert_level rate rate_2 gj_rate iqvia_rate]
   }.stringify_keys
   CATEGORY_DESC = {
     :Candidate => '专家'

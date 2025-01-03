@@ -155,7 +155,7 @@ class Candidate < ApplicationRecord
     when :rate_2       then _c_t_rate_2_
     when :gj_rate      then self._c_t_gj_rate_
     when :iqvia_rate   then _c_t_iqvia_rate_
-    when :iqvia_rate2  then _c_t_iqvia_rate2_
+    # when :iqvia_rate2  then _c_t_iqvia_rate2_
     else nil
     end
   end
@@ -207,18 +207,32 @@ class Candidate < ApplicationRecord
   # 费率映射规则, 招募费
   # ProjectTask#recruitment_fee_for_iqvia 有引用
   def _c_t_iqvia_rate_mapping_
+    if cpt < 1000
+      0
+    elsif cpt < 1500
+      200
+    elsif cpt < 2000
+      300
+    elsif cpt < 2500
+      400
+    elsif cpt < 3000
+      500
+    elsif cpt == 3000
+      600
+    else
+      nil
+    end
+s
     # case cpt
-    # when 0 then 0
-    # when 0..1000 then 2500 - cpt.to_i
-    # when 1000..1500 then 3250 - cpt.to_i
-    # when 1500..2000 then 4000 - cpt.to_i
-    # when 2000..2500 then 4750 - cpt.to_i
-    # when 2500..3000 then 5500 - cpt.to_i
-    # when 3000..3500 then 6250 - cpt.to_i
-    # when 3500..4000 then 7000 - cpt.to_i
+    # when 0..1000 then 0
+    # when 1000..1500 then 200
+    # when 1500..2000 then 300
+    # when 2000..2500 then 400
+    # when 2500..3000 then 500
+    # when 3000..3000 then 600
     # else nil
     # end
-    cpt.to_i.zero? ? 0 : (840 + 0.26 * cpt.to_i).ceil  # integer
+    # cpt.to_i.zero? ? 0 : (840 + 0.26 * cpt.to_i).ceil  # integer
   end
 
   def _c_t_iqvia_rate_
@@ -229,16 +243,16 @@ class Candidate < ApplicationRecord
     _rate_ == 0 ? '' : "#{_rate_}/小时"
   end
 
-  def _c_t_iqvia_rate2_
-    result = 0
-    if currency == 'RMB'
-      iqvia_rate = _c_t_iqvia_rate_mapping_
-      if iqvia_rate
-        result = (cpt + iqvia_rate) * 0.84 - cpt
-      end
-    end
-    result
-  end
+  # def _c_t_iqvia_rate2_
+  #   result = 0
+  #   if currency == 'RMB'
+  #     iqvia_rate = _c_t_iqvia_rate_mapping_
+  #     if iqvia_rate
+  #       result = (cpt + iqvia_rate) * 0.84 - cpt
+  #     end
+  #   end
+  #   result
+  # end
 
   # 搜索权重算法
   def calculate_coef
