@@ -129,7 +129,7 @@ class ProjectTask < ApplicationRecord
     if expert_alias.present?
       expert_alias
     else
-      expert.category == 'doctor' ? expert.name : expert.mr_name
+      expert.category == 'doctor' ? expert.name : expert.mr_name_cn
     end
   end
 

@@ -112,6 +112,11 @@ class Candidate < ApplicationRecord
     "#{_mr_} #{_name_}"
   end
 
+  def mr_name_cn
+    _mr_   = gender == 'female' ? '女士' : '先生'
+    "#{last_name}#{_mr_}"
+  end
+
   # uid + name
   def uid_name
     "#{uid} #{name}"
