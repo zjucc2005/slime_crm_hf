@@ -30,6 +30,8 @@ class FinanceController < ApplicationController
       when '中文模板' then export_project_tasks(query, category='cn') and return
       when '英文模板' then export_project_tasks(query, category='en') and return
       when '专家费打款' then export_project_tasks(query, category='expert_fee') and return
+      when 'BDA-专家访谈账单模板' then export_project_tasks(query, category='bda') and return
+      when 'IQVIA信息表' then export_project_tasks(query, category='iqvia_info') and return
       else nil
     end
 
@@ -133,6 +135,7 @@ class FinanceController < ApplicationController
         when 'en' then export_project_tasks(query, 'en')
         when 'expert_fee' then export_project_tasks(query, 'expert_fee')
         when 'bda' then export_project_tasks(query, 'bda')
+        when 'iqvia_info' then export_project_tasks(query, 'iqvia_info')
         else raise('params error')
       end
     rescue Exception => e
@@ -163,6 +166,7 @@ class FinanceController < ApplicationController
                     when 'en' then 'public/templates/finance_template.xlsx'
                     when 'expert_fee' then 'public/templates/finance_template_expert_fee.xlsx'
                     when 'bda' then 'public/templates/finance_template_20211206.xlsx'
+                    when 'iqvia_info' then 'public/templates/settlement_template_20230217.xlsx'
                     else ''
                     end
 
@@ -175,6 +179,7 @@ class FinanceController < ApplicationController
     when 'en' then set_sheet_cn_en(sheet, query, 'en')
     when 'expert_fee' then set_sheet_expert_fee(sheet, query)
     when 'bda' then set_sheet_bda_fee(sheet, query)
+    when 'iqvia_info' then set_sheet_iqvia_info(sheet, query)
     else raise("invalid category[#{category}]")
     end
 
@@ -308,6 +313,32 @@ class FinanceController < ApplicationController
       sheet.add_cell(row, 12, task.expert_rate)                  # M, Multiple/费率倍数
       sheet.add_cell(row, 13, task.charge_rate)                  # N, Price Per Hour/单价（含税）
       sheet.add_cell(row, 14, task.actual_price)                 # O, Charge/费用（含税）
+    end
+  end
+
+  def set_sheet_iqvia_info(sheet, query)
+    query.each_with_index do |task, index|
+      row = index + 2
+      sheet.add_cell(row, 0, index + 1)                                                       # A, 序号
+      sheet.add_cell(row, 1, 'hci consulting')                                                # B, 供应商
+      sheet.add_cell(row, 2, task.project.code)                                                    # C, Internal code
+      sheet.add_cell(row, 3, task.expert_name_for_external)                                   # D, 专家名称
+      # exp = task.expert.latest_work_experience
+      exp = task.active_exp
+      sheet.add_cell(row, 4, exp.org_cn)                                                      # E, 公司/医院/单位
+      sheet.add_cell(row, 5, exp.department)                                                  # F, 部门/科室
+      sheet.add_cell(row, 6, exp.title)                                                       # G, 职位/职称
+      sheet.add_cell(row, 7, (task.started_at.strftime('%Y/%m/%d') rescue ''))                # H, 访谈日期
+      sheet.add_cell(row, 8, 2100)                                                            # I, 标准费率/RMB/元
+      sheet.add_cell(row, 9, task.charge_duration)                                            # J, 访问时长/分钟
+      sheet.add_cell(row, 10, task.total_price - task.lijin_for_settlement)                   # K, 招募费用
+      sheet.add_cell(row, 11, task.lijin_for_settlement)                                      # L, 礼金（专家实际领取费用）
+      sheet.add_cell(row, 12, task.expert_rate)                                               # M, 专家倍率
+      sheet.add_cell(row, 13, task.total_price)                                               # N, 总费用RMB/元
+      sheet.add_cell(row, 14, 0)                                                              # O, 招募费用-未超时部分
+      sheet.add_cell(row, 15, 0)                                                              # P, 时长超出90分钟后招募费5折减免金额
+      sheet.add_cell(row, 16, 0)                                                              # Q, 礼金（专家实际领取费用）
+      sheet.add_cell(row, 17, 0)                                                              # R, 实际费用RMB/元
     end
   end
 
