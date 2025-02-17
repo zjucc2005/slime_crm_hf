@@ -208,6 +208,7 @@ en:
         tax_rate: "Tax rate"
         is_invoice_needed: "Invoice needed"
         shorthand_rate: "Shorthand rate"
+        recruitment_rate: "Recruitment rate"
         financial_info:
           name_cn: "Contact name(CN)"
           name_en: "Contact name(EN)"

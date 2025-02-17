@@ -95,6 +95,10 @@
         <%= f.text_field :shorthand_price, :disabled => true, :class => 'form-control' %>
     </div>
     <div class="col-lg-3 col-12 form-group">
+        <%= f.label :recruitment_fee %>
+        <%= f.number_field :recruitment_fee, class: 'form-control' %>
+    </div>
+    <div class="col-lg-3 col-12 form-group">
         <%= f.label :is_taxed %>
         <%= f.text_field :is_taxed, :disabled => true, :class => 'form-control' %>
     </div>
@@ -118,10 +122,7 @@
         <%= f.label :expert_alias %>
         <%= f.text_field :expert_alias, class: 'form-control' %>
     </div>
-    <div class="col-lg-3 col-12 form-group">
-        <%= f.label :recruitment_fee %>
-        <%= f.number_field :recruitment_fee, class: 'form-control' %>
-    </div>
+    
     <div class="col-lg-3 col-12 form-group">
         <%= f.label :candidate_experience_id, '前任公司' %>
         <%= f.select :candidate_experience_id, @project_task.expert.work_experiences.pluck(:org_cn, :id), { include_blank: default_prompt }, class: 'form-control select2' %>
@@ -143,6 +144,14 @@
     </div>
     <div id="jiesuan_file" class="col-lg-6 col-12 form-group">
         <%= f.label :jiesuan_file %>
+        <el-image
+            ref="previewBtn"
+            :src="srcList[0]"
+            style="width: 0; height: 0;"
+            :preview-src-list="srcList">
+            预览
+        </el-image>
+        <el-link type="primary" @click="handleJiesuanPreview">预览</el-link>
         <el-upload
             action="#"
             :http-request="handleJiesuanUpload"
@@ -164,6 +173,7 @@
         data: {
             project_task_id: <%= @project_task.id %>,
             jiesuan_files: <%= @project_task.jiesuan_files.map { |f| { name: f.identifier, url: f.url} }.to_json.html_safe %>,
+            srcList: <%= @project_task.jiesuan_files.map(&:url).to_json.html_safe %>
         },
         methods: {
             handleJiesuanUpload (ele) {
@@ -187,7 +197,8 @@
                 })
             },
             handleJiesuanPreview (file) {
-                console.log('handleJiesuanPreview', file)
+                this.$refs.previewBtn.showViewer = true
+                console.log('handleJiesuanPreview', this.$refs)
             },
             handleJiesuanRemove (file, fileList) {
                 console.log('handleJiesuanRemove', file, fileList)
@@ -248,6 +259,7 @@
         let is_shorthand = $('#project_task_is_shorthand').val();
         let base_price = $('#project_task_base_price');
         let shorthand_price = $('#project_task_shorthand_price');
+        let recruitment_fee = $('#project_task_recruitment_fee');
         let currency = $('#project_task_currency');
         let is_taxed = $('#project_task_is_taxed');
         let tax_rate = $('#tax_rate');
@@ -265,8 +277,9 @@
                 currency.val(data.currency);
                 is_taxed.val(data.is_taxed);
                 tax_rate.val(data.tax_rate);
+                if (!recruitment_fee.val()) recruitment_fee.val(data.recruitment_fee);
                 let _actual_price = actual_price.val() ? parseFloat(actual_price.val()) : parseFloat(base_price.val())
-                tax.val((_actual_price + parseFloat(data.shorthand_price)) * parseFloat(tax_rate.val()));
+                tax.val((_actual_price + parseFloat(data.shorthand_price) + parseFloat(data.recruitment_fee || 0)) * parseFloat(tax_rate.val()));
             }
         })
     }

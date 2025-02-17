@@ -1,5 +1,5 @@
 <div class="badge badge-danger mb-3 px-4"><%= t(:charge_info) %></div>
-<div class="row border-bottom mb-3">
+<div class="row">
     <!-- line 1 -->
     <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
         <div class="input-group-prepend">
@@ -85,6 +85,12 @@
     </div>
     <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
         <div class="input-group-prepend">
+          <span class="input-group-text"><%= mt(:project_task, :recruitment_fee) %></span>
+        </div>
+        <%= content_tag :span, @project_task.recruitment_fee || 0, :class => 'form-control text-bold' %>
+    </div>
+    <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+        <div class="input-group-prepend">
             <span class="input-group-text"><%= mt(:project_task, :tax) %></span>
         </div>
         <%= content_tag :span, @project_task.tax, :class => 'form-control text-bold' %>
@@ -95,6 +101,8 @@
         </div>
         <%= content_tag :span, @project_task.total_price, :class => 'form-control text-bold' %>
     </div>
+</div>
+<div class="row border-bottom mb-3">
     <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
         <div class="input-group-prepend">
             <span class="input-group-text"><%= mt(:project_task, :charge_status) %></span>

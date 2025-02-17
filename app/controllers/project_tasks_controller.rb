@@ -182,7 +182,8 @@ class ProjectTasksController < ApplicationController
              :currency => ApplicationRecord::CURRENCY[contract.currency],
              :is_taxed => t(contract.is_taxed.to_s),
              :tax_rate => contract.tax_rate,
-             :shorthand_price => shorthand_price
+             :shorthand_price => shorthand_price,
+             :recruitment_fee => contract.recruitment_rate
            }
   end
 
