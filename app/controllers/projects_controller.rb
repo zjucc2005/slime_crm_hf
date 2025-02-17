@@ -250,7 +250,8 @@ class ProjectsController < ApplicationController
   def add_project_task
     begin
       load_project
-      @project_task = @project.project_tasks.new(expert_id: params[:expert_id])
+      @contract = @project.active_contract
+      @project_task = @project.project_tasks.new(expert_id: params[:expert_id], expert_level: @contract.expert_level)
 
       if request.put?
         raise t(:not_authorized) unless @project.can_add_task?

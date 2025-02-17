@@ -100,7 +100,7 @@ class ProjectTask < ApplicationRecord
 
   def charge_rate_realtime
     contract = active_contract
-    contract ? contract.charge_rate : charge_rate
+    (contract ? contract.charge_rate : charge_rate) || 0
   end
 
   # 实际费率，精确到1

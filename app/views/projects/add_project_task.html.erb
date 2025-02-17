@@ -49,8 +49,24 @@
                     <%= f.select :expert_level, ProjectTask::EXPERT_LEVEL.to_a.map(&:reverse), {}, :class => 'form-control select2' %>
                 </div>
                 <div class="col-lg-3 col-12 form-group">
-                    <%= f.label :expert_rate %><span class="text-red">*</span>
-                    <%= f.text_field :expert_rate, :value => @project_task.expert_rate || 1, :required => true, :readonly => true, :class => 'form-control' %>
+                    <%= f.label :expert_rate do %>
+                        <%= mt(:project_task, :expert_rate) %>
+                        <i class="fa fa-refresh"></i>
+                        <%= mt(:contract, :charge_rate) %> * <%= mt(:project_task, :expert_rate) %>
+                    <% end %>
+                    <span class="text-red">*</span>
+                    <div class="form-group-range">
+                        <div class="form-group-range-input">
+                            <%= f.text_field :expert_rate, value: @project_task.expert_rate || 1, required: true, readonly: true, class: 'form-control' %>
+                        </div>
+                        <div class="form-group-range-divider">
+                            <i class="fa fa-refresh"></i>
+                        </div>
+                        <div class="form-group-range-input">
+                            <%= hidden_field_tag :charge_rate, @contract.charge_rate, readonly: true %>
+                            <%= text_field_tag :charge_rate_mod, @contract.charge_rate, class: 'form-control' %>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-3 col-12 form-group">
                     <%= f.label :expert_alias %>
@@ -88,6 +104,7 @@
             text: function(){ return $('#expert_info').val(); }
         });
         getExpertInfo();
+        get_expert_rate();
     });
     $('#project_task_expert_id').change(function(){
         getExpertInfo();
@@ -95,6 +112,19 @@
     $('#project_task_expert_level').change(function(){
         get_expert_rate();
     });
+    $('#project_task_expert_rate').change(function(){
+        let expert_rate = $('#project_task_expert_rate')[0];
+        let charge_rate = $('#charge_rate')[0];
+        let charge_rate_mod = $('#charge_rate_mod')[0];
+        charge_rate_mod.value = Math.round(charge_rate.value * expert_rate.value);
+    });
+    $('#charge_rate_mod').change(function(){
+        let expert_rate = $('#project_task_expert_rate')[0];
+        let charge_rate = $('#charge_rate')[0];
+        let charge_rate_mod = $('#charge_rate_mod')[0];
+        expert_rate.value = charge_rate_mod.value / charge_rate.value;
+    });
+
     // 获取专家简易信息, 用于剪切板
     function getExpertInfo(){
         var expert_id = $('#project_task_expert_id').val();
@@ -114,11 +144,16 @@
     function get_expert_rate(){
         let expert_level = $('#project_task_expert_level')[0];
         let expert_rate = $('#project_task_expert_rate')[0];
+        let charge_rate = $('#charge_rate')[0];
+        let charge_rate_mod = $('#charge_rate_mod')[0];
         if(expert_level.value == 'standard'){
             expert_rate.readOnly = true;
             expert_rate.value = 1;
+            charge_rate_mod.readOnly = true;
+            charge_rate_mod.value = charge_rate.value;
         }else if(expert_level.value == 'premium'){
             expert_rate.readOnly = false;
+            charge_rate_mod.readOnly = false;
         }
     }
 </script>
