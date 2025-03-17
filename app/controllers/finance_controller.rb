@@ -286,6 +286,7 @@ class FinanceController < ApplicationController
           sheet.add_cell(row, 12, tax_cost&.price)
         end
         sheet.add_cell(row, 13, cost.memo)
+        sheet.add_cell(row, 14, task.project.company.name_abbr)
 
         sum_price += cost.price
         row += 1
