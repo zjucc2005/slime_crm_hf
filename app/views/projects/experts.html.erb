@@ -59,7 +59,7 @@
                             <% exp = expert.latest_work_experience %>
                             <td><%= check_box_tag :'uids[]', expert.id, false %></td>
                             <td><%= content_tag :span, "# #{expert.uid}", :class => 'text-gray' %></td>
-                            <td><%= link_to expert.name, candidate_path(expert), :target => '_blank' %></td>
+                            <td><%= link_to expert.name, expert.category == 'doctor' ? doctor_path(expert) : candidate_path(expert), :target => '_blank' %></td>
                             <td>
                                 <%= content_tag :span, :id => "show_phone_wrapper_#{expert.id}", :class => 'mr-1' do %>
                                     <%= link_to '查看联系方式', show_phone_candidate_path(expert), :remote => true %>
