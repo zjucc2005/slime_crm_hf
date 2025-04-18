@@ -377,7 +377,7 @@ class ProjectsController < ApplicationController
           params.require(:project_invoice).permit!
         )
         @invoice.save
-        @project.status = 'billing' if project.status == 'finished'
+        @project.status = 'billing' if @project.status == 'finished'
         @project.billing_at ||= Time.now
         @project.save!
       end
