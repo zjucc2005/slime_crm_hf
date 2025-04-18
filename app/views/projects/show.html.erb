@@ -84,38 +84,40 @@
                 <%= content_tag :span, @project.ended_at.try(:strftime, '%F'), :class => 'form-control' %>
             </div>
         </div>
-        <% if @project.invoice_file.present? %>
+        <% if @project.invoices.any? %>
         <div class="badge badge-info mb-3 px-4">开票信息</div>
-        <div class="row">
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">发票号</span>
+            <% @project.invoices.each_with_index do |invoice, index| %>
+            <div class="row">
+                <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">发票号 <%= index + 1 %></span>
+                    </div>
+                    <%= content_tag :span, invoice.invoice_no, class: 'form-control' %>
                 </div>
-                <%= content_tag :span, @project.invoice_no, class: 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">预计收款时间</span>
+                <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">预计收款时间</span>
+                    </div>
+                    <%= content_tag :span, invoice.payment_date&.strftime('%F'), class: 'form-control' %>
                 </div>
-                <%= content_tag :span, @project.invoice_payment_date&.strftime('%F'), class: 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">发票金额</span>
+                <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">发票金额</span>
+                    </div>
+                    <%= content_tag :span, invoice.amount, class: 'form-control' %>
                 </div>
-                <%= content_tag :span, @project.invoice_amount, class: 'form-control' %>
-            </div>
-            <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">发票附件</span>
+                <div class="col-lg-3 col-6 input-group input-group-sm input-group-align">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">发票附件</span>
+                    </div>
+                    <% if invoice.file.present? %>
+                        <%= link_to invoice.file.identifier, invoice.file.url, target: '_blank', class: 'form-control' %>
+                    <% else %>
+                        <%= content_tag :span, nil, class: 'form-control' %>
+                    <% end %>
                 </div>
-                <% if @project.invoice_file.present? %>
-                    <%= link_to @project.invoice_file.identifier, @project.invoice_file.url, target: '_blank', class: 'form-control' %>
-                <% else %>
-                    <%= content_tag :span, nil, class: 'form-control' %>
-                <% end %>
             </div>
-        </div>
+            <% end %>
         <% end %>
 
         <div class="row">

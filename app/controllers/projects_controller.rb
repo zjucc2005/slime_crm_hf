@@ -372,16 +372,15 @@ class ProjectsController < ApplicationController
     begin
       load_project
       raise t(:not_authorized) unless @project.can_billing?
-      @project.invoice_no = params[:invoice_no]
-      @project.attributes = {
-        invoice_no: params[:invoice_no],
-        invoice_payment_date: params[:invoice_payment_date],
-        invoice_amount: params[:invoice_amount],
-        invoice_file: params[:invoice_file],
-      }
-      @project.status = 'billing'
-      @project.billing_at ||= Time.now
-      @project.save!
+      ActiveRecord::Base.transaction do
+        @invoice = @project.invoices.new(
+          params.require(:project_invoice).permit!
+        )
+        @invoice.save
+        @project.status = 'billing' if project.status == 'finished'
+        @project.billing_at ||= Time.now
+        @project.save!
+      end
       flash[:success] = t(:operation_succeeded)
       redirect_to project_path(@project)
     rescue => e

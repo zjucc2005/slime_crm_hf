@@ -15,19 +15,19 @@
                     <div class="row">
                         <div class="col-lg-6 col-12 form-group">
                             <%= label_tag :invoice_no, '发票号' %>
-                            <%= text_field_tag :invoice_no, nil, class: 'form-control' %>
+                            <%= text_field_tag 'project_invoice[invoice_no]', nil, class: 'form-control' %>
                         </div>
                         <div class="col-lg-6 col-12 form-group">
                             <%= label_tag :invoice_payment_date, '预计收款时间' %><span class="text-red">*</span>
-                            <%= text_field_tag :invoice_payment_date, nil, class: 'form-control datepicker', required: true %>
+                            <%= text_field_tag 'project_invoice[payment_date]', nil, class: 'form-control datepicker', required: true %>
                         </div>
                         <div class="col-lg-6 col-12 form-group">
                             <%= label_tag :invoice_amount, '发票金额' %><span class="text-red">*</span>
-                            <%= number_field_tag :invoice_amount, nil, min: 0, step: 0.01, class: 'form-control', required: true %>
+                            <%= number_field_tag 'project_invoice[amount]', nil, min: 0, step: 0.01, class: 'form-control', required: true %>
                         </div>
                     </div>
                     <%= label_tag :invoice_file, '发票附件' %><span class="text-red">*</span>
-                    <%= file_field_tag :invoice_file, class: 'form-control-file', required: true %>
+                    <%= file_field_tag 'project_invoice[file]', class: 'form-control-file', required: true %>
                     
                 </div>
                 <div class="modal-footer">

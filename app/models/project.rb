@@ -20,6 +20,7 @@ class Project < ApplicationRecord
   has_many :project_requirements, :class_name => 'ProjectRequirement'
   has_many :project_tasks, :class_name => 'ProjectTask'
   has_many :call_records, class_name: 'CallRecord'
+  has_many :invoices, class_name: 'ProjectInvoice'
 
   # Validations
   validates_presence_of :name
@@ -80,7 +81,7 @@ class Project < ApplicationRecord
   end
 
   def can_billing?
-    %w[finished].include?(status)
+    %w[finished billing billed].include?(status)
   end
 
   def can_billed?
