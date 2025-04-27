@@ -29,6 +29,7 @@ class ProjectTasksController < ApplicationController
   def update
     begin
       load_project_task
+      @project_task.shorthand_price = nil # 速记费清空重新计算
       if @project_task.update(project_task_params)
         if params[:commit] == t('action.preview')
           respond_to { |f| f.js }
